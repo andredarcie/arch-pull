@@ -9,7 +9,11 @@
       "Bash(powershell -Command \"Remove-Item -Path ''src\\\\App.css'' -Force -ErrorAction SilentlyContinue; Remove-Item -Path ''src\\\\assets'' -Recurse -Force -ErrorAction SilentlyContinue\")",
       "Bash(npx tsc:*)",
       "Bash(npm run build:*)",
-      "Bash(timeout 8 npm run dev:*)"
+      "Bash(timeout 8 npm run dev:*)",
+      "Bash(start chrome)",
+      "Bash(npm run dev:*)",
+      "Bash(timeout:*)",
+      "Bash(start chrome:*)"
     ]
   }
 }

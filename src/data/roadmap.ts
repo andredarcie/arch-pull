@@ -148,13 +148,48 @@ export const roadmapNodes: RoadmapNode[] = [
     ],
   },
 
-  // ===== Level 4 — Cloud & DevOps =====
+  // ===== Level 4 — Apache Kafka =====
+  {
+    id: "kafka",
+    title: "Apache Kafka",
+    icon: "\u{1F4E8}",
+    level: 4,
+    prerequisites: ["microsservicos", "distribuidos"],
+    pairs: [
+      { a: "Servidor que armazena e serve mensagens no Kafka", b: "Broker", match: true },
+      { a: "Garante que reprocessar uma mensagem n\u00E3o causa efeito duplo", b: "Idempot\u00EAncia", match: true },
+      { a: "Divis\u00E3o de um topic que permite paralelismo de consumo", b: "Parti\u00E7\u00E3o", match: true },
+      { a: "Conjunto de brokers Kafka que operam juntos", b: "Cluster", match: true },
+      { a: "API para processar e transformar streams dentro do pr\u00F3prio Kafka", b: "Kafka Streams", match: true },
+      { a: "C\u00F3pia de uma parti\u00E7\u00E3o em outro broker para toler\u00E2ncia a falhas", b: "R\u00E9plica (Replica)", match: true },
+      { a: "Quantas parti\u00E7\u00F5es um t\u00F3pico tem define o limite de paralelismo do", b: "Consumer Group", match: true },
+      { a: "Broker eleito respons\u00E1vel por uma parti\u00E7\u00E3o espec\u00EDfica", b: "Leader", match: true },
+      { a: "Dois consumers do mesmo grupo lendo a mesma parti\u00E7\u00E3o", b: "Causa processamento duplicado", match: true },
+      { a: "Producer com acks=all garante que a mensagem foi confirmada por", b: "Todas as r\u00E9plicas in-sync (ISR)", match: true },
+      { a: "Um broker cai e o Kafka continua funcionando normalmente", b: "Requer fator de replica\u00E7\u00E3o \u2265 2", match: true },
+      { a: "Kafka Streams vs consumidor simples: a principal diferen\u00E7a \u00E9", b: "Kafka Streams processa e republica no pr\u00F3prio Kafka", match: true },
+      { a: "Offset \u00E9 um n\u00FAmero que identifica", b: "A posi\u00E7\u00E3o de uma mensagem dentro de uma parti\u00E7\u00E3o", match: true },
+      { a: "Para garantir ordem global das mensagens em um topic", b: "Use apenas 1 parti\u00E7\u00E3o", match: true },
+      { a: "Um consumer group com 3 consumers lendo um topic de 2 parti\u00E7\u00F5es", b: "1 consumer ficar\u00E1 ocioso", match: true },
+      { a: "Broker que n\u00E3o \u00E9 l\u00EDder de nenhuma parti\u00E7\u00E3o serve para", b: "Manter r\u00E9plicas e assumir lideran\u00E7a se necess\u00E1rio", match: true },
+      { a: "Aumentar parti\u00E7\u00F5es de um topic j\u00E1 existente", b: "N\u00E3o redistribui mensagens antigas, apenas novas", match: true },
+      { a: "Idempot\u00EAncia no producer Kafka \u00E9 ativada com", b: "enable.idempotence=true", match: true },
+      { a: "Cada broker em um cluster Kafka \u00E9 identificado por um", b: "Broker ID \u00FAnico", match: true },
+      { a: "Kafka retém mensagens mesmo ap\u00F3s consumo porque", b: "O log \u00E9 imut\u00E1vel e controlado por retention policy", match: true },
+      { a: "Kafka Streams \u00E9 melhor que um consumer simples quando voc\u00EA precisa", b: "Join, agrega\u00E7\u00E3o ou janelas de tempo nos dados", match: true },
+      { a: "Um topic com replication-factor=3 e min.insync.replicas=2 aceita perda de", b: "At\u00E9 1 broker sem parar de aceitar escritas", match: true },
+      { a: "Adicionar mais brokers ao cluster Kafka automaticamente", b: "N\u00E3o rebalanceia parti\u00E7\u00F5es existentes (precisa de reassign)", match: true },
+      { a: "Consumer que commitou offset antes de processar e caiu", b: "Perde a mensagem (at-most-once)", match: true },
+    ],
+  },
+
+  // ===== Level 5 — Cloud & DevOps =====
   {
     id: "cloud-devops",
     title: "Cloud & DevOps",
     icon: "\u2601\uFE0F",
-    level: 4,
-    prerequisites: ["microsservicos", "distribuidos"],
+    level: 5,
+    prerequisites: ["kafka"],
     pairs: [
       { a: "Infraestrutura reproduz\u00EDvel", b: "Infrastructure as Code", match: true },
       { a: "Deploy sem downtime", b: "Blue-Green Deployment", match: true },
@@ -171,12 +206,12 @@ export const roadmapNodes: RoadmapNode[] = [
     ],
   },
 
-  // ===== Level 5 — Escalabilidade (left) =====
+  // ===== Level 6 — Escalabilidade (left) =====
   {
     id: "escalabilidade",
     title: "Escalabilidade",
     icon: "\u{1F4C8}",
-    level: 5,
+    level: 6,
     prerequisites: ["cloud-devops"],
     pairs: [
       { a: "Picos de tr\u00E1fego", b: "Auto-scaling", match: true },
@@ -194,12 +229,12 @@ export const roadmapNodes: RoadmapNode[] = [
     ],
   },
 
-  // ===== Level 5 — Seguran\u00E7a (right) =====
+  // ===== Level 6 — Seguran\u00E7a (right) =====
   {
     id: "seguranca",
     title: "Seguran\u00E7a",
     icon: "\u{1F6E1}\uFE0F",
-    level: 5,
+    level: 6,
     prerequisites: ["cloud-devops"],
     pairs: [
       { a: "Autentica\u00E7\u00E3o de API", b: "OAuth 2.0 / JWT", match: true },
@@ -217,12 +252,12 @@ export const roadmapNodes: RoadmapNode[] = [
     ],
   },
 
-  // ===== Level 6 — Lideran\u00E7a T\u00E9cnica =====
+  // ===== Level 7 — Lideran\u00E7a T\u00E9cnica =====
   {
     id: "lideranca",
     title: "Lideran\u00E7a T\u00E9cnica",
     icon: "\u{1F451}",
-    level: 6,
+    level: 7,
     prerequisites: ["escalabilidade", "seguranca"],
     pairs: [
       { a: "Decis\u00E3o arquitetural importante", b: "ADR documentado", match: true },

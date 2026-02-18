@@ -7,17 +7,17 @@ interface Props {
   onSelectNode: (nodeId: string) => void;
 }
 
-type NodeStatus = "completed" | "unlocked" | "locked";
+type NodeStatus = "completed" | "unlocked";
 
 function getNodeStatus(node: RoadmapNode, completed: string[]): NodeStatus {
   if (completed.includes(node.id)) return "completed";
-  if (node.prerequisites.every((p) => completed.includes(p))) return "unlocked";
-  return "locked";
+  return "unlocked";
 }
 
-// Pre-compute levels (0–6)
+// Pre-compute levels dynamically
+const maxLevel = Math.max(...roadmapNodes.map((n) => n.level));
 const levels: RoadmapNode[][] = [];
-for (let i = 0; i <= 6; i++) {
+for (let i = 0; i <= maxLevel; i++) {
   levels.push(roadmapNodes.filter((n) => n.level === i));
 }
 
@@ -130,23 +130,17 @@ export function RoadmapScreen({ completedNodes, onSelectNode }: Props) {
                       key={node.id}
                       ref={isFirstUnlocked ? firstUnlockedRef : undefined}
                       className={`roadmap-node ${status}`}
-                      onClick={() =>
-                        status !== "locked" && onSelectNode(node.id)
-                      }
-                      disabled={status === "locked"}
+                      onClick={() => onSelectNode(node.id)}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{
                         delay: levelIndex * 0.08 + nodeIndex * 0.04,
                       }}
-                      whileHover={status !== "locked" ? { scale: 1.1 } : {}}
-                      whileTap={status !== "locked" ? { scale: 0.92 } : {}}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.92 }}
                     >
                       <div className="node-circle">
                         <span className="node-icon">{node.icon}</span>
-                        {status === "locked" && (
-                          <span className="node-badge lock">{"\u{1F512}"}</span>
-                        )}
                         {status === "completed" && (
                           <span className="node-badge check">{"\u2713"}</span>
                         )}
