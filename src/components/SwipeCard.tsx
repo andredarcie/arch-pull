@@ -1,52 +1,71 @@
 import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSwipe } from "../hooks/useSwipe";
-import type { Pair } from "../data/pairs";
+import type { Card, Pair } from "../data/pairs";
+import { isPair } from "../data/pairs";
 
 interface SwipeCardProps {
-  pairs: Pair[];
-  onFinish: (score: number) => void;
+  cards: Card[];
+  onFinish: (score: number, wrongPairs: Pair[]) => void;
 }
 
 type Feedback = "correct" | "wrong" | null;
 
-export function SwipeCard({ pairs, onFinish }: SwipeCardProps) {
+export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
+  const [wrongPairs, setWrongPairs] = useState<Pair[]>([]);
   const [feedback, setFeedback] = useState<Feedback>(null);
   const [exitDirection, setExitDirection] = useState(0);
   const [showCard, setShowCard] = useState(true);
+  const [isFlipped, setIsFlipped] = useState(false);
 
-  const currentPair = pairs[currentIndex];
-  const total = pairs.length;
+  const currentCard = cards[currentIndex];
+  const pairTotal = cards.filter(isPair).length;
+  const pairsDone = cards.slice(0, currentIndex).filter(isPair).length;
+
+  // Reset flip state when the card changes
+  useEffect(() => {
+    setIsFlipped(false);
+  }, [currentIndex]);
+
+  const advance = useCallback(
+    (nextScore: number, nextWrong: Pair[]) => {
+      setShowCard(false);
+      setTimeout(() => {
+        if (currentIndex + 1 >= cards.length) {
+          onFinish(nextScore, nextWrong);
+        } else {
+          setCurrentIndex((i) => i + 1);
+          setFeedback(null);
+          setExitDirection(0);
+          setShowCard(true);
+        }
+      }, 150);
+    },
+    [currentIndex, cards.length, onFinish]
+  );
 
   const handleAnswer = useCallback(
     (userSaysMatch: boolean) => {
-      if (feedback) return;
-      const isCorrect = userSaysMatch === currentPair.match;
+      if (feedback || !isPair(currentCard)) return;
+      const isCorrect = userSaysMatch === currentCard.match;
       const newScore = isCorrect ? score + 1 : score;
+      const newWrong = isCorrect ? wrongPairs : [...wrongPairs, currentCard];
 
       setFeedback(isCorrect ? "correct" : "wrong");
       setExitDirection(userSaysMatch ? 1 : -1);
-
       if (isCorrect) setScore(newScore);
+      else setWrongPairs(newWrong);
 
-      setTimeout(() => {
-        setShowCard(false);
-        setTimeout(() => {
-          if (currentIndex + 1 >= total) {
-            onFinish(newScore);
-          } else {
-            setCurrentIndex((i) => i + 1);
-            setFeedback(null);
-            setExitDirection(0);
-            setShowCard(true);
-          }
-        }, 150);
-      }, 400);
+      setTimeout(() => advance(newScore, newWrong), 400);
     },
-    [currentIndex, currentPair, feedback, score, total, onFinish]
+    [currentCard, feedback, score, wrongPairs, advance]
   );
+
+  const handleInfoContinue = useCallback(() => {
+    advance(score, wrongPairs);
+  }, [score, wrongPairs, advance]);
 
   const handleSwipeRight = useCallback(() => handleAnswer(true), [handleAnswer]);
   const handleSwipeLeft = useCallback(() => handleAnswer(false), [handleAnswer]);
@@ -59,12 +78,19 @@ export function SwipeCard({ pairs, onFinish }: SwipeCardProps) {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isPair(currentCard)) {
+        if (e.key === "Enter" || e.key === " ") {
+          if (!isFlipped) setIsFlipped(true);
+          else handleInfoContinue();
+        }
+        return;
+      }
       if (e.key === "ArrowRight") handleSwipeRight();
       if (e.key === "ArrowLeft") handleSwipeLeft();
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleSwipeRight, handleSwipeLeft]);
+  }, [currentCard, isFlipped, handleSwipeRight, handleSwipeLeft, handleInfoContinue]);
 
   const rotation = isSwiping ? offsetX * 0.1 : 0;
   const swipeIndicatorOpacity = Math.min(Math.abs(offsetX) / 100, 1);
@@ -75,92 +101,128 @@ export function SwipeCard({ pairs, onFinish }: SwipeCardProps) {
         <div className="score-display">
           Acertos: <strong>{score}</strong>
         </div>
-        <div className="progress-display">
-          {currentIndex + 1} / {total}
-        </div>
+        {isPair(currentCard) ? (
+          <div className="progress-display">
+            {pairsDone + 1} / {pairTotal}
+          </div>
+        ) : (
+          <div className="progress-display info-tag">💡 Flashcard</div>
+        )}
       </div>
 
       <div className="card-area">
         <AnimatePresence mode="wait">
           {showCard && (
-            <motion.div
-              key={currentIndex}
-              className={`swipe-card ${feedback ?? ""}`}
-              initial={{ opacity: 0, scale: 0.8, y: 30 }}
-              animate={{
-                opacity: 1,
-                scale: 1,
-                y: 0,
-                x: feedback ? exitDirection * 300 : offsetX,
-                rotate: feedback ? exitDirection * 20 : rotation,
-              }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{
-                type: "spring",
-                stiffness: 300,
-                damping: 25,
-              }}
-              {...handlers}
-              style={{ touchAction: "pan-y" }}
-            >
-              {/* Swipe indicators */}
-              <div
-                className="swipe-indicator nope"
-                style={{ opacity: offsetX < 0 ? swipeIndicatorOpacity : 0 }}
+            isPair(currentCard) ? (
+              <motion.div
+                key={currentIndex}
+                className={`swipe-card ${feedback ?? ""}`}
+                initial={{ opacity: 0, scale: 0.8, y: 30 }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                  y: 0,
+                  x: feedback ? exitDirection * 300 : offsetX,
+                  rotate: feedback ? exitDirection * 20 : rotation,
+                }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                {...handlers}
+                style={{ touchAction: "pan-y" }}
               >
-                ✗
-              </div>
-              <div
-                className="swipe-indicator like"
-                style={{ opacity: offsetX > 0 ? swipeIndicatorOpacity : 0 }}
+                <div
+                  className="swipe-indicator nope"
+                  style={{ opacity: offsetX < 0 ? swipeIndicatorOpacity : 0 }}
+                >
+                  ✗
+                </div>
+                <div
+                  className="swipe-indicator like"
+                  style={{ opacity: offsetX > 0 ? swipeIndicatorOpacity : 0 }}
+                >
+                  ✓
+                </div>
+
+                <div className="card-content">
+                  <div className="concept concept-a">
+                    <span className="concept-icon">{"{ }"}</span>
+                    <span className="concept-text">{currentCard.a}</span>
+                  </div>
+                  <div className="separator">+</div>
+                  <div className="concept concept-b">
+                    <span className="concept-icon">{"< />"}</span>
+                    <span className="concept-text">{currentCard.b}</span>
+                  </div>
+                </div>
+
+                {feedback && (
+                  <div className={`feedback-overlay ${feedback}`}>
+                    {feedback === "correct" ? "✓" : "✗"}
+                  </div>
+                )}
+              </motion.div>
+            ) : (
+              <motion.div
+                key={currentIndex}
+                className="flashcard-scene"
+                initial={{ opacity: 0, scale: 0.8, y: 30 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
               >
-                ✓
-              </div>
+                <div
+                  className={`flashcard-inner ${isFlipped ? "flipped" : ""}`}
+                  onClick={() => !isFlipped && setIsFlipped(true)}
+                >
+                  {/* Front */}
+                  <div className="flashcard-face flashcard-front">
+                    <span className="flashcard-label">Pergunta</span>
+                    <p className="flashcard-text">{currentCard.front}</p>
+                    <span className="flashcard-hint">Toque para revelar</span>
+                  </div>
 
-              <div className="card-content">
-                <div className="concept concept-a">
-                  <span className="concept-icon">{"{ }"}</span>
-                  <span className="concept-text">{currentPair.a}</span>
+                  {/* Back */}
+                  <div className="flashcard-face flashcard-back">
+                    <span className="flashcard-label">Resposta</span>
+                    <p className="flashcard-text">{currentCard.back}</p>
+                    <motion.button
+                      className="btn-play flashcard-btn"
+                      onClick={(e) => { e.stopPropagation(); handleInfoContinue(); }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      Continuar →
+                    </motion.button>
+                  </div>
                 </div>
-
-                <div className="separator">+</div>
-
-                <div className="concept concept-b">
-                  <span className="concept-icon">{"< />"}</span>
-                  <span className="concept-text">{currentPair.b}</span>
-                </div>
-              </div>
-
-              {feedback && (
-                <div className={`feedback-overlay ${feedback}`}>
-                  {feedback === "correct" ? "✓" : "✗"}
-                </div>
-              )}
-            </motion.div>
+              </motion.div>
+            )
           )}
         </AnimatePresence>
       </div>
 
-      <div className="action-buttons">
-        <motion.button
-          className="btn-action btn-nope"
-          onClick={() => handleAnswer(false)}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          disabled={!!feedback}
-        >
-          ✗
-        </motion.button>
-        <motion.button
-          className="btn-action btn-like"
-          onClick={() => handleAnswer(true)}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          disabled={!!feedback}
-        >
-          ✓
-        </motion.button>
-      </div>
+      {isPair(currentCard) && (
+        <div className="action-buttons">
+          <motion.button
+            className="btn-action btn-nope"
+            onClick={() => handleAnswer(false)}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            disabled={!!feedback}
+          >
+            ✗
+          </motion.button>
+          <motion.button
+            className="btn-action btn-like"
+            onClick={() => handleAnswer(true)}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            disabled={!!feedback}
+          >
+            ✓
+          </motion.button>
+        </div>
+      )}
     </div>
   );
 }

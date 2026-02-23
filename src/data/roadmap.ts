@@ -1,4 +1,6 @@
-import type { Pair } from "./pairs";
+import type { Card, Pair } from "./pairs";
+import { isPair } from "./pairs";
+import { config } from "../config";
 
 export interface RoadmapNode {
   id: string;
@@ -6,7 +8,7 @@ export interface RoadmapNode {
   icon: string;
   level: number;
   prerequisites: string[];
-  pairs: Pair[];
+  pairs: Card[];
 }
 
 export const roadmapNodes: RoadmapNode[] = [
@@ -18,6 +20,21 @@ export const roadmapNodes: RoadmapNode[] = [
     level: 0,
     prerequisites: [],
     pairs: [
+      {
+        kind: "info",
+        front: "Como os conceitos s\u00e3o avaliados neste jogo?",
+        back: "Cada card mostra dois conceitos. Deslize \u2192 se eles combinam, \u2190 se n\u00e3o combinam. Voc\u00ea precisa de 70% de acertos para passar de fase.",
+      },
+      {
+        kind: "info",
+        front: "Quando usar banco de dados relacional?",
+        back: "Quando os dados t\u00eam relacionamentos bem definidos, precisam de integridade transacional (ACID) ou a aplica\u00e7\u00e3o faz consultas complexas com JOINs.",
+      },
+      {
+        kind: "info",
+        front: "Qual a diferen\u00e7a entre processamento s\u00edncrono e ass\u00edncrono?",
+        back: "S\u00edncrono: o chamador espera a resposta antes de continuar. Ass\u00edncrono: envia a tarefa e segue em frente, recebendo o resultado depois via callback, fila ou evento.",
+      },
       { a: "CRUD b\u00E1sico", b: "Banco relacional", match: true },
       { a: "Processamento pesado", b: "Execu\u00E7\u00E3o ass\u00EDncrona", match: true },
       { a: "Dados tempor\u00E1rios", b: "Cache em mem\u00F3ria", match: true },
@@ -41,6 +58,21 @@ export const roadmapNodes: RoadmapNode[] = [
     level: 1,
     prerequisites: ["fundamentos"],
     pairs: [
+      {
+        kind: "info",
+        front: "O que \u00e9 um Design Pattern?",
+        back: "Uma solu\u00e7\u00e3o reutiliz\u00e1vel para um problema recorrente de design. N\u00e3o \u00e9 c\u00f3digo pronto, mas um template. Dividem-se em Criacionais, Estruturais e Comportamentais.",
+      },
+      {
+        kind: "info",
+        front: "Qual a diferen\u00e7a entre Singleton e uma classe est\u00e1tica?",
+        back: "Singleton garante uma \u00fanica inst\u00e2ncia com estado e suporta heran\u00e7a e interfaces. Classe est\u00e1tica \u00e9 apenas um container de m\u00e9todos sem inst\u00e2ncia. Use Singleton quando precisar de inje\u00e7\u00e3o de depend\u00eancia.",
+      },
+      {
+        kind: "info",
+        front: "Quando usar Observer vs Pub/Sub?",
+        back: "Observer: o subject conhece os observers (acoplamento direto). Pub/Sub: publishers e subscribers n\u00e3o se conhecem, comunicam via broker (desacoplado). Use Pub/Sub para sistemas distribu\u00eddos.",
+      },
       { a: "Cria\u00E7\u00E3o complexa de objetos", b: "Factory Method", match: true },
       { a: "Inst\u00E2ncia \u00FAnica global", b: "Singleton", match: true },
       { a: "Notificar m\u00FAltiplos ouvintes", b: "Observer", match: true },
@@ -64,6 +96,21 @@ export const roadmapNodes: RoadmapNode[] = [
     level: 1,
     prerequisites: ["fundamentos"],
     pairs: [
+      {
+        kind: "info",
+        front: "Por que o SRP (Single Responsibility) \u00e9 importante?",
+        back: "Uma classe com uma \u00fanica responsabilidade tem apenas um motivo para mudar. Isso torna o c\u00f3digo mais f\u00e1cil de testar, manter e entender sem efeitos colaterais inesperados.",
+      },
+      {
+        kind: "info",
+        front: "O que significa 'depender de abstra\u00e7\u00f5es' no DIP?",
+        back: "M\u00f3dulos de alto n\u00edvel n\u00e3o devem depender de m\u00f3dulos de baixo n\u00edvel diretamente. Ambos devem depender de interfaces. Isso facilita troca de implementa\u00e7\u00f5es e testes com mocks.",
+      },
+      {
+        kind: "info",
+        front: "Como o Open/Closed Principle se aplica na pr\u00e1tica?",
+        back: "Adicione comportamento via extens\u00e3o (heran\u00e7a, composi\u00e7\u00e3o, plugins), sem modificar c\u00f3digo existente. Exemplo: Strategy Pattern permite trocar algoritmos sem alterar a classe que os usa.",
+      },
       { a: "Classe faz s\u00F3 uma coisa", b: "Single Responsibility", match: true },
       { a: "Extens\u00EDvel sem modificar", b: "Open/Closed", match: true },
       { a: "Subtipo substitui tipo base", b: "Liskov Substitution", match: true },
@@ -87,6 +134,21 @@ export const roadmapNodes: RoadmapNode[] = [
     level: 2,
     prerequisites: ["design-patterns", "solid"],
     pairs: [
+      {
+        kind: "info",
+        front: "Quando usar Event-Driven Architecture?",
+        back: "Quando os componentes precisam ser desacoplados, h\u00e1 processamento ass\u00edncrono, m\u00faltiplos consumidores do mesmo evento, ou quando a ordem dos eventos importa para o estado do sistema.",
+      },
+      {
+        kind: "info",
+        front: "O que \u00e9 CQRS e qual seu benef\u00edcio?",
+        back: "Separa opera\u00e7\u00f5es de leitura (Query) das de escrita (Command). Permite otimizar cada lado independentemente: escrita com consist\u00eancia forte, leitura com modelos desnormalizados e r\u00e1pidos.",
+      },
+      {
+        kind: "info",
+        front: "Qual a diferen\u00e7a entre DDD e arquitetura em camadas?",
+        back: "Camadas organiza por fun\u00e7\u00e3o t\u00e9cnica (UI, Service, Repository). DDD organiza por dom\u00ednio de neg\u00f3cio (Bounded Contexts, Aggregates, Entities), priorizando a linguagem ub\u00edqua.",
+      },
       { a: "App corporativo tradicional", b: "Arquitetura em camadas", match: true },
       { a: "App web com formul\u00E1rios", b: "MVC", match: true },
       { a: "Dom\u00EDnio com regras complexas", b: "Domain-Driven Design", match: true },
@@ -110,6 +172,21 @@ export const roadmapNodes: RoadmapNode[] = [
     level: 3,
     prerequisites: ["arquiteturas"],
     pairs: [
+      {
+        kind: "info",
+        front: "O que \u00e9 um Bounded Context em microsservi\u00e7os?",
+        back: "Limite l\u00f3gico dentro do qual um modelo de dom\u00ednio \u00e9 consistente. Cada microsservi\u00e7o deve ter seu pr\u00f3prio Bounded Context, com banco de dados pr\u00f3prio e linguagem ub\u00edqua.",
+      },
+      {
+        kind: "info",
+        front: "O que \u00e9 Circuit Breaker e quando us\u00e1-lo?",
+        back: "Detecta falhas em um servi\u00e7o dependente e para de cham\u00e1-lo temporariamente, retornando um fallback. Evita falha em cascata. Estados: Closed (normal), Open (bloqueado), Half-Open (testando recupera\u00e7\u00e3o).",
+      },
+      {
+        kind: "info",
+        front: "Qual a diferen\u00e7a entre orquestra\u00e7\u00e3o e coreografia?",
+        back: "Orquestra\u00e7\u00e3o: um servi\u00e7o central coordena os passos (mais f\u00e1cil de rastrear). Coreografia: cada servi\u00e7o reage a eventos autonomamente (mais desacoplado, mais dif\u00edcil de depurar).",
+      },
       { a: "Times independentes", b: "Microsservi\u00E7os", match: true },
       { a: "Deploy independente", b: "Bounded Context", match: true },
       { a: "Roteamento de servi\u00E7os", b: "API Gateway", match: true },
@@ -133,6 +210,21 @@ export const roadmapNodes: RoadmapNode[] = [
     level: 3,
     prerequisites: ["arquiteturas"],
     pairs: [
+      {
+        kind: "info",
+        front: "O que diz o Teorema CAP?",
+        back: "Em um sistema distribu\u00eddo, voc\u00ea s\u00f3 pode garantir 2 de 3: Consist\u00eancia (todos v\u00eaem os mesmos dados), Disponibilidade (sempre responde) e Toler\u00e2ncia a Parti\u00e7\u00f5es. Na pr\u00e1tica, P \u00e9 obrigat\u00f3rio, ent\u00e3o escolhe-se C ou A.",
+      },
+      {
+        kind: "info",
+        front: "O que \u00e9 consist\u00eancia eventual?",
+        back: "Garante que, sem novas atualiza\u00e7\u00f5es, todos os n\u00f3s convergem para o mesmo valor. Aceita leituras desatualizadas temporariamente em troca de maior disponibilidade e performance.",
+      },
+      {
+        kind: "info",
+        front: "O que \u00e9 o algoritmo Raft?",
+        back: "Algoritmo de consenso distribu\u00eddo que elege um leader para gerenciar o log replicado. O leader recebe escritas e as replica para followers. Se o leader cai, uma nova elei\u00e7\u00e3o ocorre. Mais leg\u00edvel que Paxos.",
+      },
       { a: "Toler\u00E2ncia a falhas", b: "Replica\u00E7\u00E3o", match: true },
       { a: "Dados em m\u00FAltiplas regi\u00F5es", b: "Consist\u00EAncia eventual", match: true },
       { a: "Alta disponibilidade", b: "Cluster ativo-ativo", match: true },
@@ -156,6 +248,21 @@ export const roadmapNodes: RoadmapNode[] = [
     level: 4,
     prerequisites: ["microsservicos", "distribuidos"],
     pairs: [
+      {
+        kind: "info",
+        front: "O que \u00e9 Apache Kafka e para que ele serve?",
+        back: "Kafka \u00e9 uma plataforma de streaming distribu\u00eddo. Mensagens s\u00e3o publicadas em t\u00f3picos, divididos em parti\u00e7\u00f5es, e consumidos por consumer groups. O offset marca a posi\u00e7\u00e3o de leitura de cada consumer.",
+      },
+      {
+        kind: "info",
+        front: "O que \u00e9 um Consumer Group no Kafka?",
+        back: "Conjunto de consumers que cooperam para consumir um t\u00f3pico. Cada parti\u00e7\u00e3o \u00e9 atribu\u00edda a exatamente um consumer do grupo. Mais consumers = mais throughput, at\u00e9 o limite de parti\u00e7\u00f5es.",
+      },
+      {
+        kind: "info",
+        front: "Qual a diferen\u00e7a entre acks=0, acks=1 e acks=all no Kafka?",
+        back: "acks=0: producer n\u00e3o espera confirma\u00e7\u00e3o (r\u00e1pido, pode perder dados). acks=1: aguarda confirma\u00e7\u00e3o do leader. acks=all: aguarda todas as r\u00e9plicas in-sync (mais seguro, mais lento).",
+      },
       { a: "Servidor que armazena e serve mensagens no Kafka", b: "Broker", match: true },
       { a: "Garante que reprocessar uma mensagem n\u00E3o causa efeito duplo", b: "Idempot\u00EAncia", match: true },
       { a: "Divis\u00E3o de um topic que permite paralelismo de consumo", b: "Parti\u00E7\u00E3o", match: true },
@@ -191,6 +298,21 @@ export const roadmapNodes: RoadmapNode[] = [
     level: 5,
     prerequisites: ["kafka"],
     pairs: [
+      {
+        kind: "info",
+        front: "O que \u00e9 Infrastructure as Code (IaC)?",
+        back: "Gerenciar e provisionar infraestrutura via arquivos de configura\u00e7\u00e3o versionados (Terraform, Pulumi). Permite reprodutibilidade, revis\u00e3o em PR, hist\u00f3rico de mudan\u00e7as e rollback.",
+      },
+      {
+        kind: "info",
+        front: "O que \u00e9 Blue-Green Deployment?",
+        back: "Dois ambientes id\u00eanticos: Blue (produ\u00e7\u00e3o atual) e Green (nova vers\u00e3o). O tr\u00e1fego \u00e9 alternado para Green ap\u00f3s valida\u00e7\u00e3o. Permite rollback instant\u00e2neo revertendo o roteamento.",
+      },
+      {
+        kind: "info",
+        front: "Qual a diferen\u00e7a entre Container e VM?",
+        back: "VM virtualiza hardware completo com SO pr\u00f3prio (pesado, segundos para iniciar). Container compartilha o kernel do host, isolando apenas o processo (leve, milissegundos). Docker \u00e9 o runtime mais popular.",
+      },
       { a: "Infraestrutura reproduz\u00EDvel", b: "Infrastructure as Code", match: true },
       { a: "Deploy sem downtime", b: "Blue-Green Deployment", match: true },
       { a: "Integra\u00E7\u00E3o cont\u00EDnua", b: "Pipeline CI/CD", match: true },
@@ -206,6 +328,48 @@ export const roadmapNodes: RoadmapNode[] = [
     ],
   },
 
+  // ===== Level 6 — Observabilidade (center) =====
+  {
+    id: "observabilidade",
+    title: "Observabilidade",
+    icon: "\u{1F4CA}",
+    level: 6,
+    prerequisites: ["cloud-devops"],
+    pairs: [
+      {
+        kind: "info",
+        front: "Quais s\u00e3o os 3 pilares da Observabilidade?",
+        back: "Logs: eventos discretos do sistema.\nM\u00e9tricas: n\u00fameros ao longo do tempo (lat\u00eancia, erros, throughput).\nTraces: rastreamento de uma requisi\u00e7\u00e3o de ponta a ponta entre servi\u00e7os.",
+      },
+      {
+        kind: "info",
+        front: "O que \u00e9 SLO e como ele se relaciona com Error Budget?",
+        back: "SLO (Service Level Objective) \u00e9 a meta de confiabilidade (ex: 99,9% de uptime). Error Budget \u00e9 quanto voc\u00ea pode errar sem violar o SLO. Se o budget acabar, pausam-se deploys e prioriza-se estabilidade.",
+      },
+      {
+        kind: "info",
+        front: "O que \u00e9 OpenTelemetry?",
+        back: "Framework open-source que padroniza a coleta de logs, m\u00e9tricas e traces. Funciona com m\u00faltiplos backends (Jaeger, Prometheus, Datadog) via OTLP, sem vendor lock-in.",
+      },
+      { a: "Rastrear uma requisi\u00E7\u00E3o entre v\u00E1rios servi\u00E7os", b: "Distributed Tracing", match: true },
+      { a: "M\u00E9tricas de lat\u00EAncia e throughput", b: "Prometheus + Grafana", match: true },
+      { a: "Logs estruturados e centraliz\u00E1veis", b: "ELK Stack", match: true },
+      { a: "Defini\u00E7\u00E3o de n\u00EDvel de servi\u00E7o aceit\u00E1vel", b: "SLO (Service Level Objective)", match: true },
+      { a: "Instrumenta\u00E7\u00E3o padronizada multi-vendor", b: "OpenTelemetry", match: true },
+      { a: "Alerta quando m\u00E9trica ultrapassa limiar", b: "Alertmanager", match: true },
+      { a: "Propagac\u00E3o de contexto entre servi\u00E7os", b: "Trace ID / Span ID", match: true },
+      { a: "Taxa de erros acima do SLO consome", b: "Error Budget", match: true },
+      { a: "Diferenc\u0327a entre logs, m\u00E9tricas e traces", b: "Os tr\u00EAs pilares da observabilidade", match: true },
+      { a: "Dashboards de sa\u00FAde em tempo real", b: "Grafana", match: true },
+      { a: "App com 10 usuarios internos", b: "Distributed Tracing completo", match: false },
+      { a: "Log de debug no console local", b: "ELK Stack em produ\u00E7\u00E3o", match: false },
+      { a: "Script bash pontual", b: "SLO e Error Budget", match: false },
+      { a: "Servi\u00E7o monol\u00EDtico simples", b: "Jaeger com 50 servi\u00E7os", match: false },
+      { a: "Alta disponibilidade", b: "Desativar alertas", match: false },
+      { a: "SLA de 99.9%", b: "N\u00E3o monitorar latencia", match: false },
+    ],
+  },
+
   // ===== Level 6 — Escalabilidade (left) =====
   {
     id: "escalabilidade",
@@ -214,6 +378,21 @@ export const roadmapNodes: RoadmapNode[] = [
     level: 6,
     prerequisites: ["cloud-devops"],
     pairs: [
+      {
+        kind: "info",
+        front: "Qual a diferen\u00e7a entre escala vertical e horizontal?",
+        back: "Vertical (Scale Up): mais CPU/RAM na mesma m\u00e1quina. Tem limite f\u00edsico e \u00e9 mais caro. Horizontal (Scale Out): mais m\u00e1quinas. Mais flex\u00edvel e resiliente, mas exige que a aplica\u00e7\u00e3o seja stateless.",
+      },
+      {
+        kind: "info",
+        front: "Quais s\u00e3o as armadilhas do cache?",
+        back: "Cache invalidation (quando invalidar?), thundering herd (muitas requisi\u00e7\u00f5es simult\u00e2neas ap\u00f3s expirar) e stale data (dados desatualizados). Use TTL curto para dados vol\u00e1teis.",
+      },
+      {
+        kind: "info",
+        front: "O que \u00e9 sharding e quando aplicar?",
+        back: "Particionamento horizontal de um banco de dados, distribuindo dados entre m\u00faltiplos n\u00f3s por uma shard key. Aplique quando um \u00fanico n\u00f3 n\u00e3o aguenta o volume de dados ou throughput de escrita.",
+      },
       { a: "Picos de tr\u00E1fego", b: "Auto-scaling", match: true },
       { a: "Leitura frequente dos mesmos dados", b: "Cache em mem\u00F3ria", match: true },
       { a: "Banco sobrecarregado", b: "Read replicas", match: true },
@@ -237,6 +416,21 @@ export const roadmapNodes: RoadmapNode[] = [
     level: 6,
     prerequisites: ["cloud-devops"],
     pairs: [
+      {
+        kind: "info",
+        front: "O que \u00e9 OAuth 2.0 e para que serve?",
+        back: "Protocolo de autoriza\u00e7\u00e3o que permite uma aplica\u00e7\u00e3o acessar recursos em nome de um usu\u00e1rio sem expor credenciais. Fluxos: Authorization Code (web), PKCE (mobile/SPA), Client Credentials (server-to-server).",
+      },
+      {
+        kind: "info",
+        front: "O que \u00e9 mTLS e quando usar?",
+        back: "Mutual TLS: ambos cliente e servidor apresentam certificados para autentica\u00e7\u00e3o m\u00fatua. Use para comunica\u00e7\u00e3o segura entre microsservi\u00e7os, garantindo que ambos os lados s\u00e3o leg\u00edtimos.",
+      },
+      {
+        kind: "info",
+        front: "Como Prepared Statements previnem SQL Injection?",
+        back: "Separam o c\u00f3digo SQL dos dados do usu\u00e1rio. O banco compila a query primeiro, depois insere os par\u00e2metros como dados puros. Isso impede que input malicioso altere a estrutura da query.",
+      },
       { a: "Autentica\u00E7\u00E3o de API", b: "OAuth 2.0 / JWT", match: true },
       { a: "Dados sens\u00EDveis em disco", b: "Criptografia em repouso", match: true },
       { a: "Comunica\u00E7\u00E3o entre servi\u00E7os", b: "mTLS", match: true },
@@ -258,8 +452,23 @@ export const roadmapNodes: RoadmapNode[] = [
     title: "Lideran\u00E7a T\u00E9cnica",
     icon: "\u{1F451}",
     level: 7,
-    prerequisites: ["escalabilidade", "seguranca"],
+    prerequisites: ["escalabilidade", "observabilidade", "seguranca"],
     pairs: [
+      {
+        kind: "info",
+        front: "O que \u00e9 um ADR (Architecture Decision Record)?",
+        back: "Documento que registra uma decis\u00e3o arquitetural: contexto, op\u00e7\u00f5es consideradas, decis\u00e3o tomada e consequ\u00eancias. Cria um hist\u00f3rico do 'porqu\u00ea' das decis\u00f5es, essencial para onboarding e revis\u00e3o futura.",
+      },
+      {
+        kind: "info",
+        front: "O que s\u00e3o Fitness Functions em arquitetura evolutiva?",
+        back: "Mecanismos automatizados que verificam se a arquitetura continua atendendo seus objetivos ao longo do tempo (acoplamento, performance, seguran\u00e7a em CI). Garantem que a evolu\u00e7\u00e3o n\u00e3o degrade propriedades importantes.",
+      },
+      {
+        kind: "info",
+        front: "Como gerenciar d\u00e9bito t\u00e9cnico de forma estrat\u00e9gica?",
+        back: "Classifique por impacto e urg\u00eancia. Crie um roadmap de refatora\u00e7\u00e3o e aloque % do sprint para pagamento do d\u00e9bito. Use m\u00e9tricas como complexidade ciclom\u00e1tica para priorizar. D\u00e9bito ignorado acumula juros.",
+      },
       { a: "Decis\u00E3o arquitetural importante", b: "ADR documentado", match: true },
       { a: "D\u00E9bito t\u00E9cnico crescente", b: "Roadmap de refatora\u00E7\u00E3o", match: true },
       { a: "Onboarding de novos devs", b: "Documenta\u00E7\u00E3o arquitetural", match: true },
@@ -280,8 +489,22 @@ export function getNodeById(id: string): RoadmapNode | undefined {
   return roadmapNodes.find((n) => n.id === id);
 }
 
-export function getShuffledNodePairs(nodeId: string, count = 10): Pair[] {
+export function getShuffledNodePairs(nodeId: string, count = config.questionsPerModule): Card[] {
   const node = getNodeById(nodeId);
   if (!node) return [];
-  return [...node.pairs].sort(() => Math.random() - 0.5).slice(0, count);
+
+  const infos = node.pairs.filter((c) => !isPair(c));
+  const pairs = (node.pairs.filter(isPair) as Pair[])
+    .sort(() => Math.random() - 0.5)
+    .slice(0, count);
+
+  // Interleave: insert 1 info card after every 3 pairs
+  const result: Card[] = [];
+  for (let i = 0; i < pairs.length; i++) {
+    result.push(pairs[i]);
+    if ((i + 1) % 3 === 0 && infos.length > 0) {
+      result.push(infos[Math.floor((i + 1) / 3) - 1] ?? infos[infos.length - 1]);
+    }
+  }
+  return result;
 }

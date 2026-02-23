@@ -4,7 +4,7 @@ import type { Pair } from "../data/pairs";
 interface ScoreScreenProps {
   score: number;
   total: number;
-  pairs: Pair[];
+  wrongPairs: Pair[];
   onRestart: () => void;
   nodeTitle?: string;
   passed?: boolean;
@@ -21,7 +21,7 @@ function getMessage(percentage: number): string {
 export function ScoreScreen({
   score,
   total,
-  pairs,
+  wrongPairs,
   onRestart,
   nodeTitle,
   passed,
@@ -63,27 +63,29 @@ export function ScoreScreen({
 
       <p className="score-message">{getMessage(percentage)}</p>
 
-      <div className="pairs-review">
-        <h3>Respostas</h3>
-        {pairs.map((pair, i) => (
-          <motion.div
-            key={i}
-            className={`pair-review ${pair.match ? "match" : "no-match"}`}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 + i * 0.05 }}
-          >
-            <div className="pair-concepts">
-              <span>{pair.a}</span>
-              <span className="pair-plus">+</span>
-              <span>{pair.b}</span>
-            </div>
-            <span className={`pair-badge ${pair.match ? "match" : "no-match"}`}>
-              {pair.match ? "Combinam" : "Nao combinam"}
-            </span>
-          </motion.div>
-        ))}
-      </div>
+      {wrongPairs.length > 0 && (
+        <div className="pairs-review">
+          <h3>Erros</h3>
+          {wrongPairs.map((pair, i) => (
+            <motion.div
+              key={i}
+              className="pair-review no-match"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 + i * 0.05 }}
+            >
+              <div className="pair-concepts">
+                <span>{pair.a}</span>
+                <span className="pair-plus">+</span>
+                <span>{pair.b}</span>
+              </div>
+              <span className="pair-badge no-match">
+                {pair.match ? "Combinam" : "Nao combinam"}
+              </span>
+            </motion.div>
+          ))}
+        </div>
+      )}
 
       <motion.button
         className="btn-play"

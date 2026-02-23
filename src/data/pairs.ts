@@ -1,7 +1,21 @@
+import { config } from "../config";
+
 export interface Pair {
   a: string;
   b: string;
   match: boolean;
+}
+
+export interface InfoCard {
+  kind: "info";
+  front: string;
+  back: string;
+}
+
+export type Card = Pair | InfoCard;
+
+export function isPair(card: Card): card is Pair {
+  return (card as InfoCard).kind !== "info";
 }
 
 export const allPairs: Pair[] = [
@@ -43,7 +57,7 @@ export const allPairs: Pair[] = [
   { a: "Relógio digital", b: "Saga Pattern", match: false },
 ];
 
-export function getShuffledPairs(count = 10): Pair[] {
+export function getShuffledPairs(count = config.questionsPerModule): Pair[] {
   const shuffled = [...allPairs].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, count);
 }
