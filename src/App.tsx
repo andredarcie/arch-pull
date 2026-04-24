@@ -4,6 +4,7 @@ import { StartScreen } from "./components/StartScreen";
 import { RoadmapScreen } from "./components/RoadmapScreen";
 import { SwipeCard } from "./components/SwipeCard";
 import { ScoreScreen } from "./components/ScoreScreen";
+import { BackofficeScreen } from "./components/BackofficeScreen";
 import { getShuffledNodePairs, getNodeById } from "./data/roadmap";
 import type { Card, Pair } from "./data/pairs";
 import { isPair } from "./data/pairs";
@@ -16,7 +17,7 @@ import {
   saveProgressUpdate,
 } from "./lib/progressApi";
 
-type Screen = "start" | "roadmap" | "game" | "score";
+type Screen = "start" | "roadmap" | "game" | "score" | "backoffice";
 
 const PASS_THRESHOLD = config.passThreshold;
 const STORAGE_KEY = config.storageKey;
@@ -119,6 +120,7 @@ function App() {
   }, []);
 
   const goToRoadmap = useCallback(() => setScreen("roadmap"), []);
+  const goToBackoffice = useCallback(() => setScreen("backoffice"), []);
 
   const selectNode = useCallback((nodeId: string) => {
     setSelectedNodeId(nodeId);
@@ -194,9 +196,8 @@ function App() {
             authError={authError}
             currentUser={authState.user}
             onLogin={handleLogin}
-            onLogout={() => {
-              void handleLogout();
-            }}
+            onLogout={() => { void handleLogout(); }}
+            onBackoffice={goToBackoffice}
           />
         )}
         {screen === "roadmap" && (
@@ -219,6 +220,9 @@ function App() {
             nodeTitle={selectedNode?.title}
             passed={passed}
           />
+        )}
+        {screen === "backoffice" && (
+          <BackofficeScreen key="backoffice" onBack={() => setScreen("start")} />
         )}
       </AnimatePresence>
     </div>

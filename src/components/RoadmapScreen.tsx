@@ -28,6 +28,8 @@ function Connector({ type }: { type: "split" | "merge" }) {
       className="roadmap-connector"
       viewBox="0 0 300 50"
       preserveAspectRatio="xMidYMid meet"
+      role="img"
+      aria-label={type === "split" ? "Conector de ramificacao" : "Conector de convergencia"}
     >
       {type === "split" ? (
         <>
@@ -51,6 +53,8 @@ function StraightConnector() {
       className="roadmap-connector"
       viewBox="0 0 300 50"
       preserveAspectRatio="xMidYMid meet"
+      role="img"
+      aria-label="Conector entre fases"
     >
       <path d="M 150,0 L 150,50" />
     </svg>
@@ -68,7 +72,8 @@ function getConnectorType(
 
 export function RoadmapScreen({ completedNodes, onSelectNode }: Props) {
   const firstUnlockedRef = useRef<HTMLButtonElement>(null);
-  let firstUnlockedFound = false;
+  const firstUnlockedNodeId =
+    roadmapNodes.find((node) => getNodeStatus(node, completedNodes) === "unlocked")?.id ?? null;
 
   const progress = completedNodes.length;
   const total = roadmapNodes.length;
@@ -92,7 +97,7 @@ export function RoadmapScreen({ completedNodes, onSelectNode }: Props) {
     >
       <div className="roadmap-header">
         <h2>Arquiteto de Software</h2>
-        <p className="roadmap-subtitle">Trilha do basico ao avancado</p>
+        <p className="roadmap-subtitle">Trilha do básico ao avançado</p>
         <div className="roadmap-progress-bar">
           <div
             className="roadmap-progress-fill"
@@ -121,9 +126,7 @@ export function RoadmapScreen({ completedNodes, onSelectNode }: Props) {
               <div className={`roadmap-level ${isBranch ? "branch" : ""}`}>
                 {levelNodes.map((node, nodeIndex) => {
                   const status = getNodeStatus(node, completedNodes);
-                  const isFirstUnlocked =
-                    status === "unlocked" && !firstUnlockedFound;
-                  if (isFirstUnlocked) firstUnlockedFound = true;
+                  const isFirstUnlocked = node.id === firstUnlockedNodeId;
 
                   return (
                     <motion.button
@@ -131,6 +134,11 @@ export function RoadmapScreen({ completedNodes, onSelectNode }: Props) {
                       ref={isFirstUnlocked ? firstUnlockedRef : undefined}
                       className={`roadmap-node ${status}`}
                       onClick={() => onSelectNode(node.id)}
+                      aria-label={`${node.title} - ${
+                        status === "completed"
+                          ? "concluido"
+                          : "disponivel"
+                      }`}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{

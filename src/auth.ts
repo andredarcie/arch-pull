@@ -4,6 +4,7 @@ export interface AuthUser {
   name: string | null;
   avatarUrl: string | null;
   email: string | null;
+  isAdmin?: boolean;
 }
 
 export type AuthState =

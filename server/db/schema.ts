@@ -1,6 +1,7 @@
 import {
   boolean,
   bigint,
+  date,
   integer,
   pgTable,
   text,
@@ -49,4 +50,31 @@ export const matchSessions = pgTable("match_sessions", {
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
+});
+
+export const dailyThemes = pgTable("daily_themes", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  date: date("date").notNull().unique(),
+  title: text("title").notNull(),
+  description: text("description"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+export const dailyCards = pgTable("daily_cards", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  themeId: uuid("theme_id")
+    .notNull()
+    .references(() => dailyThemes.id, { onDelete: "cascade" }),
+  kind: text("kind").notNull(), // "pair" | "info"
+  position: integer("position").notNull().default(0),
+  conceptA: text("concept_a"),
+  conceptB: text("concept_b"),
+  match: boolean("match"),
+  front: text("front"),
+  back: text("back"),
 });

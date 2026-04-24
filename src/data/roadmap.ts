@@ -126,13 +126,54 @@ export const roadmapNodes: RoadmapNode[] = [
     ],
   },
 
+  // ===== Level 1 — Object Calisthenics (center) =====
+  {
+    id: "object-calisthenics",
+    title: "Object Calisthenics",
+    icon: "\u{1F3CB}\uFE0F",
+    level: 1,
+    prerequisites: ["fundamentos"],
+    pairs: [
+      {
+        kind: "info",
+        front: "O que \u00e9 Object Calisthenics?",
+        back: "S\u00e3o 9 regras pr\u00e1ticas propostas por Jeff Bay para escrever c\u00f3digo orientado a objetos melhor. N\u00e3o s\u00e3o leis universais, mas exerc\u00edcios que for\u00e7am boas pr\u00e1ticas de design.",
+      },
+      {
+        kind: "info",
+        front: "Por que 'apenas um n\u00edvel de indenta\u00e7\u00e3o por m\u00e9todo'?",
+        back: "M\u00e9todos com v\u00e1rios n\u00edveis de indenta\u00e7\u00e3o indicam l\u00f3gica aninhada complexa. Extrair loops internos ou condicionais em m\u00e9todos separados melhora legibilidade e testabilidade.",
+      },
+      {
+        kind: "info",
+        front: "O que significa 'n\u00e3o usar else'?",
+        back: "Usar early return (guard clauses) ao inv\u00e9s de if/else encadeados. Reduz o aninhamento, torna o fluxo principal mais claro e elimina ramos alternativos que aumentam a complexidade cognitiva.",
+      },
+      { a: "Um n\u00edvel de indenta\u00E7\u00E3o por m\u00E9todo", b: "M\u00E9todo com l\u00F3gica simples e focada", match: true },
+      { a: "N\u00E3o usar else", b: "Early return / guard clauses", match: true },
+      { a: "Primitivos e strings", b: "Encapsular em Value Objects", match: true },
+      { a: "Cole\u00E7\u00F5es", b: "Encapsular em classe pr\u00F3pria", match: true },
+      { a: "Uma opera\u00E7\u00E3o de acesso por linha", b: "Lei de Demeter", match: true },
+      { a: "Sem abrevia\u00E7\u00F5es em nomes", b: "Nomes descritivos e intencionais", match: true },
+      { a: "Entidades pequenas (50 linhas)", b: "Alta coес\u00E3o e baixo acoplamento", match: true },
+      { a: "M\u00E1ximo 2 vari\u00E1veis de inst\u00E2ncia por classe", b: "Responsabilidade bem delimitada", match: true },
+      { a: "Sem getters e setters p\u00FAblicos", b: "Comportamento dentro do objeto", match: true },
+      { a: "Classe com 500 linhas", b: "Entidades pequenas", match: false },
+      { a: "M\u00E9todo com 4 n\u00EDveis de indenta\u00E7\u00E3o", b: "Um n\u00EDvel de indenta\u00E7\u00E3o", match: false },
+      { a: "String solta 'CPF'", b: "Encapsular primitivos", match: false },
+      { a: "Getter p\u00FAblico para tudo", b: "Sem getters e setters", match: false },
+      { a: "Nome de vari\u00E1vel 'dt'", b: "Sem abrevia\u00E7\u00F5es", match: false },
+      { a: "if/else com 5 branches", b: "N\u00E3o usar else", match: false },
+    ],
+  },
+
   // ===== Level 2 — Estilos Arquiteturais =====
   {
     id: "arquiteturas",
     title: "Estilos Arquiteturais",
     icon: "\u{1F3DB}\uFE0F",
     level: 2,
-    prerequisites: ["design-patterns", "solid"],
+    prerequisites: ["design-patterns", "solid", "object-calisthenics"],
     pairs: [
       {
         kind: "info",

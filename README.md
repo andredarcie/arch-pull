@@ -200,6 +200,7 @@ GITHUB_CLIENT_SECRET=...
 SESSION_SECRET=...
 APP_URL=http://localhost:3000
 DATABASE_URL=postgresql://...
+ADMIN_GITHUB_LOGINS=your-github-login
 ```
 
 ### What each variable does
@@ -218,6 +219,9 @@ DATABASE_URL=postgresql://...
 
 - `DATABASE_URL`
   Neon connection string
+
+- `ADMIN_GITHUB_LOGINS`
+  Comma-separated list of GitHub logins with access to the backoffice (e.g., `andrendarcie`)
 
 ## GitHub Login
 

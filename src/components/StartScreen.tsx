@@ -8,6 +8,7 @@ interface StartScreenProps {
   currentUser: AuthUser | null;
   onLogin: () => void;
   onLogout: () => void;
+  onBackoffice: () => void;
 }
 
 export function StartScreen({
@@ -17,6 +18,7 @@ export function StartScreen({
   currentUser,
   onLogin,
   onLogout,
+  onBackoffice,
 }: StartScreenProps) {
   return (
     <motion.div
@@ -83,6 +85,12 @@ export function StartScreen({
       >
         Jogar
       </motion.button>
+
+      {currentUser?.isAdmin && (
+        <button className="btn-backoffice" onClick={onBackoffice}>
+          Backoffice
+        </button>
+      )}
     </motion.div>
   );
 }

@@ -20,4 +20,9 @@ export const serverConfig = {
   sessionDurationSeconds: SESSION_DURATION_SECONDS,
   oauthStateDurationSeconds: OAUTH_STATE_DURATION_SECONDS,
   isProduction: process.env.NODE_ENV === "production",
+  adminGithubLogins: () =>
+    (process.env.ADMIN_GITHUB_LOGINS ?? "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean),
 } as const;

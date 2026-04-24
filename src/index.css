@@ -959,3 +959,303 @@ body {
   padding-top: 4px;
   flex-shrink: 0;
 }
+
+/* ==================== */
+/*   BACKOFFICE LINK    */
+/* ==================== */
+
+.btn-backoffice {
+  margin-top: 12px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: color 0.2s, border-color 0.2s;
+}
+.btn-backoffice:hover {
+  color: var(--text);
+  border-color: var(--text-secondary);
+}
+
+/* ==================== */
+/*     BACKOFFICE UI    */
+/* ==================== */
+
+.backoffice {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+}
+
+.bo-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.bo-back {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: color 0.2s;
+}
+.bo-back:hover { color: var(--text); }
+
+.bo-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.bo-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  height: calc(100vh - 57px);
+}
+
+.bo-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 16px;
+  gap: 12px;
+}
+
+.bo-btn-new {
+  width: 100%;
+  padding: 10px;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: opacity 0.2s;
+}
+.bo-btn-new:hover { opacity: 0.85; }
+
+.bo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bo-list-item {
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+.bo-list-item.active { border-color: var(--accent); }
+
+.bo-list-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 10px 12px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.bo-list-date {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  font-family: monospace;
+}
+.bo-list-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.bo-list-count {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+.bo-list-delete {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  padding: 0 10px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: color 0.15s;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+}
+.bo-list-delete:hover { color: var(--red); }
+
+.bo-form {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 760px;
+}
+
+.bo-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bo-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.bo-input {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.15s;
+  width: 100%;
+  box-sizing: border-box;
+}
+.bo-input:focus { border-color: var(--accent); }
+.bo-textarea { resize: vertical; min-height: 72px; font-family: inherit; }
+
+.bo-cards-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.bo-card-actions { display: flex; gap: 8px; }
+.bo-btn-add {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: color 0.15s, border-color 0.15s;
+}
+.bo-btn-add:hover { color: var(--accent); border-color: var(--accent); }
+
+.bo-cards-list { display: flex; flex-direction: column; gap: 10px; }
+
+.bo-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.bo-card-pair { border-left: 3px solid var(--accent); }
+.bo-card-info { border-left: 3px solid var(--green); }
+
+.bo-card-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.bo-card-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  flex: 1;
+}
+.bo-card-order { display: flex; gap: 4px; }
+.bo-card-order button {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bo-card-order button:disabled { opacity: 0.3; cursor: default; }
+.bo-card-remove {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: color 0.15s;
+}
+.bo-card-remove:hover { color: var(--red); }
+
+.bo-card-fields { display: flex; flex-direction: column; gap: 8px; }
+
+.bo-match-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.bo-match-label input { cursor: pointer; accent-color: var(--accent); }
+
+.bo-error {
+  color: var(--red);
+  font-size: 0.85rem;
+  background: var(--red-bg);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+}
+
+.bo-hint {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 8px 0;
+}
+
+.bo-btn-save {
+  width: 100%;
+  padding: 14px;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.bo-btn-save:hover:not(:disabled) { opacity: 0.85; }
+.bo-btn-save:disabled { opacity: 0.5; cursor: default; }
