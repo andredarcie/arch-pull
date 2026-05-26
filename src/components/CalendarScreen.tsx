@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import type { Card } from "../data/pairs";
 import type { LocalDailyTheme } from "../data/dailyThemeFallback";
 import { todayTheme } from "../data/dailyThemeFallback";
+import { CalendarDays, Play, Flame } from "lucide-react";
 
 type DailyTheme = LocalDailyTheme & { description: string | null };
 
@@ -24,12 +25,22 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-function mapToCards(daily: LocalDailyTheme["cards"]): Card[] {
-  // Split into groups: each info card starts a new group with its following pairs
+function mapToCards(theme: LocalDailyTheme): Card[] {
+  const result: Card[] = [];
+
+  if (theme.context) {
+    result.push({
+      kind: "context",
+      origin: theme.context.origin,
+      motivation: theme.context.motivation,
+      relevance: theme.context.relevance,
+    });
+  }
+
   const groups: LocalDailyTheme["cards"][] = [];
   let current: LocalDailyTheme["cards"] = [];
 
-  for (const c of daily) {
+  for (const c of theme.cards) {
     if (c.kind === "info" && current.length > 0) {
       groups.push(current);
       current = [];
@@ -38,12 +49,9 @@ function mapToCards(daily: LocalDailyTheme["cards"]): Card[] {
   }
   if (current.length > 0) groups.push(current);
 
-  // Shuffle group order (except the very first intro card which stays first)
   const [intro, ...rest] = groups;
   const shuffled = [intro, ...shuffle(rest)];
 
-  // Within each group, shuffle only the pairs (info card stays first)
-  const result: Card[] = [];
   for (const group of shuffled) {
     const [infoCard, ...pairs] = group;
     result.push({ kind: "info" as const, front: infoCard.front ?? "", back: infoCard.back ?? "" });
@@ -56,15 +64,13 @@ function mapToCards(daily: LocalDailyTheme["cards"]): Card[] {
 
 function buildWeeks(activeSet: Set<string>) {
   const today = new Date();
-  const startOfYear = new Date(today.getFullYear(), 0, 1);
-  const start = new Date(startOfYear);
+  const start = new Date(today.getFullYear(), today.getMonth() - 2, 1);
   start.setDate(start.getDate() - start.getDay());
 
   const weeks: { date: string; active: boolean; future: boolean }[][] = [];
   const cursor = new Date(start);
 
-  while (cursor.getFullYear() <= today.getFullYear()) {
-    if (cursor.getFullYear() === today.getFullYear() && cursor > today && cursor.getMonth() > today.getMonth()) break;
+  while (cursor <= today) {
     const week: { date: string; active: boolean; future: boolean }[] = [];
     for (let d = 0; d < 7; d++) {
       const iso = cursor.toISOString().slice(0, 10);
@@ -72,8 +78,6 @@ function buildWeeks(activeSet: Set<string>) {
       cursor.setDate(cursor.getDate() + 1);
     }
     weeks.push(week);
-    if (cursor.getFullYear() > today.getFullYear()) break;
-    if (cursor.getMonth() > today.getMonth() && cursor.getFullYear() === today.getFullYear()) break;
   }
 
   return weeks;
@@ -117,7 +121,7 @@ export function CalendarScreen({ activeDays, onStart }: CalendarScreenProps) {
 
   function handleStart() {
     if (!theme) return;
-    onStart(mapToCards(theme.cards), theme.title);
+    onStart(mapToCards(theme), theme.title);
   }
 
   return (
@@ -128,7 +132,10 @@ export function CalendarScreen({ activeDays, onStart }: CalendarScreenProps) {
       exit={{ opacity: 0, y: -20 }}
     >
       <div className="cal-header">
-        <span className="cal-day-name">{dayName}, {monthName} {year}</span>
+        <div className="cal-date-row">
+          <CalendarDays size={14} strokeWidth={2} />
+          <span className="cal-day-name">{dayName}, {monthName} {year}</span>
+        </div>
         {loading ? (
           <p className="cal-theme-name cal-theme-loading">Carregando tema...</p>
         ) : theme ? (
@@ -180,20 +187,24 @@ export function CalendarScreen({ activeDays, onStart }: CalendarScreenProps) {
           </div>
         </div>
 
-        <p className="cal-subtitle">
-          {totalActive === 0
-            ? "Nenhum exercício feito ainda este ano."
-            : `${totalActive} dia${totalActive > 1 ? "s" : ""} com exercício em ${today.getFullYear()}.`}
-        </p>
+        <div className="cal-footer">
+          <Flame size={14} strokeWidth={2} className={totalActive > 0 ? "cal-flame-active" : "cal-flame-dim"} />
+          <p className="cal-subtitle">
+            {totalActive === 0
+              ? "Nenhum exercício feito ainda este ano."
+              : `${totalActive} dia${totalActive > 1 ? "s" : ""} com exercício em ${today.getFullYear()}.`}
+          </p>
+        </div>
       </div>
 
       {!loading && (
         <motion.button
           className="btn-play"
           onClick={handleStart}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
         >
+          <Play size={18} strokeWidth={2.5} />
           Iniciar {theme?.title}
         </motion.button>
       )}

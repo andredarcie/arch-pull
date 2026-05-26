@@ -12,10 +12,21 @@ export interface InfoCard {
   back: string;
 }
 
-export type Card = Pair | InfoCard;
+export interface ContextCard {
+  kind: "context";
+  origin: string;
+  motivation: string;
+  relevance: string;
+}
+
+export type Card = Pair | InfoCard | ContextCard;
 
 export function isPair(card: Card): card is Pair {
-  return (card as InfoCard).kind !== "info";
+  return (card as InfoCard).kind !== "info" && (card as ContextCard).kind !== "context";
+}
+
+export function isContext(card: Card): card is ContextCard {
+  return (card as ContextCard).kind === "context";
 }
 
 export const allPairs: Pair[] = [

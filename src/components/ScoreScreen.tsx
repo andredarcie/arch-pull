@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import type { Pair } from "../data/pairs";
+import { CheckCircle2, XCircle, RotateCcw, Check, X } from "lucide-react";
 
 interface ScoreScreenProps {
   score: number;
@@ -60,7 +61,10 @@ export function ScoreScreen({
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.4 }}
           >
-            {passed ? "Fase completa!" : "Precisa de 70% para passar"}
+            {passed
+              ? <><CheckCircle2 size={16} strokeWidth={2.5} /> Fase completa!</>
+              : <><XCircle size={16} strokeWidth={2.5} /> Precisa de 70% para passar</>
+            }
           </motion.div>
         )}
 
@@ -69,7 +73,7 @@ export function ScoreScreen({
 
       {wrongPairs.length > 0 && (
         <div className="pairs-review">
-          <h3>Erros</h3>
+          <h3>Erros desta rodada</h3>
           {wrongPairs.map((pair, i) => (
             <motion.div
               key={i}
@@ -83,8 +87,11 @@ export function ScoreScreen({
                 <span className="pair-plus">+</span>
                 <span>{pair.b}</span>
               </div>
-              <span className="pair-badge no-match">
-                {pair.match ? "Combinam" : "Não combinam"}
+              <span className={`pair-badge ${pair.match ? "match" : "no-match"}`}>
+                {pair.match
+                  ? <><Check size={11} strokeWidth={3} /> Combinam</>
+                  : <><X size={11} strokeWidth={3} /> Não combinam</>
+                }
               </span>
             </motion.div>
           ))}
@@ -95,10 +102,11 @@ export function ScoreScreen({
         <motion.button
           className="btn-play"
           onClick={onRestart}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
         >
-          Voltar ao Mapa
+          <RotateCcw size={16} strokeWidth={2.5} />
+          Voltar ao início
         </motion.button>
       </div>
     </motion.div>

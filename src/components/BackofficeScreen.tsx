@@ -188,7 +188,7 @@ export function BackofficeScreen({ onBack }: Props) {
     <div className="backoffice">
       <header className="bo-header">
         <button className="bo-back" onClick={onBack}>← Voltar</button>
-        <h1 className="bo-title">Backoffice — Tema do Dia</h1>
+        <h1 className="bo-title">Backoffice: Tema do Dia</h1>
       </header>
 
       <div className="bo-layout">

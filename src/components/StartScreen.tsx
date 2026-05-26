@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Braces, Play } from "lucide-react";
 
 interface StartScreenProps {
   onStart: () => void;
@@ -13,7 +14,9 @@ export function StartScreen({ onStart }: StartScreenProps) {
       exit={{ opacity: 0, y: -20 }}
     >
       <div className="logo">
-        <span className="logo-icon">{"</>"}</span>
+        <div className="logo-icon-wrap">
+          <Braces size={36} strokeWidth={2} />
+        </div>
         <h1>ArchPull</h1>
         <p className="tagline">
           Prepare-se para entrevistas de desenvolvedor pleno e sênior.
@@ -24,9 +27,10 @@ export function StartScreen({ onStart }: StartScreenProps) {
       <motion.button
         className="btn-play"
         onClick={onStart}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+        whileHover={{ scale: 1.03 }}
+        whileTap={{ scale: 0.97 }}
       >
+        <Play size={18} strokeWidth={2.5} />
         Fazer exercício diário
       </motion.button>
     </motion.div>

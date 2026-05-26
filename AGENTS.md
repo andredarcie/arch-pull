@@ -24,17 +24,24 @@ src/
   data/
     pairs.ts             # Card / Pair types, base pairs, getShuffledPairs()
     roadmap.ts           # RoadmapNode type, roadmapNodes[], getShuffledNodePairs(), getNodeById()
+    dailyThemeFallback.ts # tema local usado quando /api/theme falha
   components/
-    StartScreen.tsx      # landing screen with GitHub login
-    RoadmapScreen.tsx    # node graph / progress overview
-    SwipeCard.tsx        # swipe-left / swipe-right game mechanic
-    ScoreScreen.tsx      # results and wrong-answer review
+    StartScreen.tsx      # tela inicial com botão de entrar
+    CalendarScreen.tsx   # calendário de atividade + tema do dia
+    SwipeCard.tsx        # mecânica de swipe (par ou flashcard)
+    ScoreScreen.tsx      # resultado e revisão de erros
     BackofficeScreen.tsx # admin view (isAdmin gate)
+    CodeBlock.tsx        # syntax highlighting via react-syntax-highlighter (PrismLight + vscDarkPlus)
+    RichText.tsx         # parser de texto misto: prosa + blocos ```lang\n...\n```
   lib/
     authApi.ts           # fetchAuthState(), logout()
     progressApi.ts       # fetchProgressSnapshot(), saveProgressUpdate()
   hooks/
     useSwipe.ts          # drag/swipe gesture hook
+
+content/
+  themes/                # temas diários em JSON prontos para importar via backoffice
+    YYYY-MM-DD-slug.json # convenção de nome de arquivo
 ```
 
 ## Coding conventions
@@ -91,6 +98,42 @@ All requests use `credentials: "include"`.
 1. Add the screen name to the `Screen` union in `App.tsx`.
 2. Create `src/components/<ScreenName>Screen.tsx`.
 3. Add the render branch inside the `<AnimatePresence>` block in `App.tsx`.
+
+## Temas diários (content/themes/)
+
+Cada arquivo JSON representa um tema do dia e segue a interface `DailyThemeInput` do servidor:
+
+```jsonc
+{
+  "date": "YYYY-MM-DD",
+  "title": "Nome do tema",
+  "description": "Subtítulo exibido na tela do calendário.",
+  "cards": [
+    // Flashcard informativo (leitura + virar)
+    { "kind": "info", "position": 0, "front": "Pergunta", "back": "Resposta longa..." },
+
+    // Par de conceitos (swipe sim/não)
+    { "kind": "pair", "position": 1, "conceptA": "Conceito A", "conceptB": "Conceito B", "match": true }
+  ]
+}
+```
+
+**Regras de composição de um tema:**
+
+- Cada regra/conceito deve ter exatamente **1 card `info`** seguido de **1 card `pair`** — não mais.
+- Manter entre **6 e 10 regras** por tema para sessões de 4–6 minutos.
+- O card de intro genérico (explicando o tema em si) deve ser omitido — a `description` do tema já cumpre esse papel na tela do calendário.
+- Alternar pares `match: true` e `match: false` para evitar que o usuário entre em piloto automático.
+- O campo `back` dos cards `info` suporta blocos de código com a sintaxe ` ```typescript\n...\n``` ` (renderizados pelo componente `RichText` com syntax highlighting).
+- O campo `position` deve ser sequencial a partir de 0.
+
+## UI e legibilidade
+
+- **Ícones**: usar exclusivamente `lucide-react`. Nunca usar emojis na interface.
+- **Tipografia**: fonte base 16 px, `line-height: 1.6`. Textos secundários em `var(--text-secondary)`.
+- **Barra de progresso**: linha de 3 px no rodapé da tela de jogo (`game-progress-bar`), animada pelo Framer Motion, mostra `currentIndex / cards.length`.
+- **Calendário**: exibe apenas os **3 últimos meses** (mês atual + 2 anteriores), não o ano inteiro.
+- **Flashcard — face de resposta**: layout em três zonas fixas — label no topo, área de texto com scroll (`flashcard-answer-wrap`), botão "Continuar" preso no rodapé. Altura via `clamp(340px, calc(100dvh - 185px), 560px)`.
 
 ## What agents should NOT do
 
