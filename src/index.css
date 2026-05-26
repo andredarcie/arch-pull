@@ -253,10 +253,28 @@ body {
 
 .game-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
   padding: 0 4px;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.lives-display {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.combo-slot {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .score-display,
@@ -288,6 +306,7 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
+  position: relative;
   position: relative;
   user-select: none;
   -webkit-user-select: none;
@@ -641,7 +660,7 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 6px;
   background: rgba(255, 255, 255, 0.06);
 }
 
@@ -650,6 +669,145 @@ body {
   background: linear-gradient(90deg, var(--accent), #a78bfa);
   border-radius: 0 2px 2px 0;
   min-width: 0;
+  transition: filter 0.2s ease;
+}
+
+.progress-milestone {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #a78bfa;
+  text-shadow: 0 0 10px rgba(167, 139, 250, 0.6);
+  pointer-events: none;
+}
+
+.bar-pulsing .game-progress-fill {
+  animation: bar-pulse 0.32s ease-out forwards;
+}
+
+@keyframes bar-pulse {
+  0%   { filter: brightness(1); box-shadow: none; }
+  40%  { filter: brightness(1.7); box-shadow: 0 0 8px var(--accent); }
+  100% { filter: brightness(1); box-shadow: none; }
+}
+
+/* ======================== */
+/*      COMBO SPLASH       */
+/* ======================== */
+
+.combo-splash {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.combo-splash-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  pointer-events: none;
+}
+
+.combo-splash--hot .combo-splash-ring {
+  border-color: #fb923c;
+}
+
+.combo-splash-number {
+  font-size: 4.5rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--accent);
+  text-shadow:
+    0 0 24px rgba(139, 92, 246, 0.9),
+    0 0 60px rgba(139, 92, 246, 0.5),
+    0 2px 10px rgba(0, 0, 0, 0.5);
+  letter-spacing: -0.02em;
+}
+
+.combo-splash--hot .combo-splash-number {
+  color: #fb923c;
+  text-shadow:
+    0 0 24px rgba(251, 146, 60, 0.9),
+    0 0 60px rgba(251, 146, 60, 0.5),
+    0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.combo-splash-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ======================== */
+/*   MOTIVATIONAL MESSAGE  */
+/* ======================== */
+
+.motiv-message {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 20;
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  text-shadow:
+    0 0 18px rgba(139, 92, 246, 0.9),
+    0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* ==================== */
+/*     COMBO BADGE      */
+/* ==================== */
+
+.combo-slot {
+  display: flex;
+  align-items: center;
+  min-width: 60px;
+  justify-content: flex-end;
+}
+
+.combo-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px 4px 8px;
+  border-radius: 99px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: rgba(139, 92, 246, 0.18);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  color: #a78bfa;
+}
+
+.combo-badge--hot {
+  background: rgba(251, 146, 60, 0.18);
+  border-color: rgba(251, 146, 60, 0.4);
+  color: #fb923c;
 }
 
 /* ==================== */
@@ -659,8 +817,13 @@ body {
 .flashcard-scene {
   width: 100%;
   max-width: 350px;
-  perspective: 1000px;
   height: clamp(340px, calc(100dvh - 185px), 560px);
+}
+
+.flashcard-perspective {
+  width: 100%;
+  height: 100%;
+  perspective: 1000px;
 }
 
 .flashcard-inner {
@@ -822,10 +985,11 @@ body {
   width: 100%;
   max-width: 420px;
   gap: 20px;
-  padding-top: 44px;
+  padding-top: 52px;
   padding-bottom: 36px;
   overflow: hidden;
   align-items: center;
+  justify-content: center;
 }
 
 .score-summary {
@@ -835,14 +999,6 @@ body {
   align-items: center;
   gap: 16px;
   flex-shrink: 0;
-}
-
-.score-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
 }
 
 .score-circle {
@@ -983,6 +1139,12 @@ body {
   color: var(--red);
 }
 
+.pair-badge--answer {
+  background: rgba(108, 99, 255, 0.12);
+  color: var(--accent);
+  border: 1px solid rgba(108, 99, 255, 0.25);
+}
+
 .node-phase {
   font-size: 0.8rem;
   color: var(--text-secondary);
@@ -1020,9 +1182,51 @@ body {
 .score-actions {
   width: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
   padding-top: 4px;
   flex-shrink: 0;
+}
+
+.btn-score {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 320px;
+  padding: 13px 24px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 0.01em;
+  transition: opacity 0.2s, background 0.2s, border-color 0.2s;
+  border: 1.5px solid transparent;
+}
+
+.btn-score--primary {
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), #7f72ff);
+  box-shadow: 0 4px 16px rgba(108, 99, 255, 0.28);
+}
+
+.btn-score--primary:hover {
+  opacity: 0.9;
+}
+
+.btn-score--ghost {
+  color: var(--text-secondary);
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-score--ghost:hover {
+  color: var(--text-primary);
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 /* ==================== */

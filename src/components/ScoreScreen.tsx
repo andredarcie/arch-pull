@@ -1,6 +1,7 @@
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import type { Pair } from "../data/pairs";
-import { CheckCircle2, XCircle, RotateCcw, Check, X } from "lucide-react";
+import { CheckCircle2, XCircle, RotateCcw, Share2, ClipboardCheck, Link2, Unlink2 } from "lucide-react";
 
 interface ScoreScreenProps {
   score: number;
@@ -30,6 +31,25 @@ export function ScoreScreen({
   const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
   const message =
     total > 0 ? getMessage(percentage) : "Nenhuma pergunta avaliável nesta rodada.";
+  const [copied, setCopied] = useState(false);
+  const [showList, setShowList] = useState(false);
+
+  useEffect(() => {
+    if (wrongPairs.length === 0) return;
+    const t = setTimeout(() => setShowList(true), 750);
+    return () => clearTimeout(t);
+  }, [wrongPairs.length]);
+
+  const handleShare = async () => {
+    const text = `Completei "${nodeTitle ?? "ArchPull"}" no ArchPull!\nAcertei ${score}/${total} (${percentage}%) -- sem Stack Overflow.`;
+    if (navigator.share) {
+      await navigator.share({ text }).catch(() => {});
+    } else {
+      await navigator.clipboard.writeText(text).catch(() => {});
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   return (
     <motion.div
@@ -38,16 +58,23 @@ export function ScoreScreen({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
     >
-      <div className="score-summary">
-        {nodeTitle && <p className="node-phase">Fase: {nodeTitle}</p>}
-
-        <h2 className="score-title">Resultado</h2>
+      <motion.div className="score-summary" layout="position">
+        {nodeTitle && (
+          <motion.p
+            className="node-phase"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.1 }}
+          >
+            {nodeTitle}
+          </motion.p>
+        )}
 
         <motion.div
           className="score-circle"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", delay: 0.2 }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 240, damping: 18, delay: 0.1 }}
         >
           <span className="score-number">{score}</span>
           <span className="score-of">de {total}</span>
@@ -57,8 +84,8 @@ export function ScoreScreen({
         {passed !== undefined && (
           <motion.div
             className={passed ? "passed-banner" : "failed-banner"}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
             {passed
@@ -68,47 +95,78 @@ export function ScoreScreen({
           </motion.div>
         )}
 
-        <p className="score-message">{message}</p>
-      </div>
+        <motion.p
+          className="score-message"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.55 }}
+        >
+          {message}
+        </motion.p>
+      </motion.div>
 
-      {wrongPairs.length > 0 && (
-        <div className="pairs-review">
-          <h3>Erros desta rodada</h3>
-          {wrongPairs.map((pair, i) => (
-            <motion.div
-              key={i}
-              className="pair-review no-match"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 + i * 0.05 }}
-            >
-              <div className="pair-concepts">
-                <span>{pair.a}</span>
-                <span className="pair-plus">+</span>
-                <span>{pair.b}</span>
-              </div>
-              <span className={`pair-badge ${pair.match ? "match" : "no-match"}`}>
-                {pair.match
-                  ? <><Check size={11} strokeWidth={3} /> Combinam</>
-                  : <><X size={11} strokeWidth={3} /> Não combinam</>
-                }
-              </span>
-            </motion.div>
-          ))}
-        </div>
-      )}
+      <AnimatePresence>
+        {showList && wrongPairs.length > 0 && (
+          <motion.div
+            className="pairs-review"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 28 }}
+          >
+            <h3>Erros desta rodada</h3>
+            {wrongPairs.map((pair, i) => (
+              <motion.div
+                key={i}
+                className="pair-review"
+                initial={{ opacity: 0, x: -14 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.07 }}
+              >
+                <div className="pair-concepts">
+                  <span>{pair.a}</span>
+                  <span className="pair-plus">+</span>
+                  <span>{pair.b}</span>
+                </div>
+                <span className="pair-badge pair-badge--answer">
+                  {pair.match
+                    ? <><Link2 size={11} strokeWidth={2.5} /> Combinam</>
+                    : <><Unlink2 size={11} strokeWidth={2.5} /> Não combinam</>
+                  }
+                </span>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <div className="score-actions">
+      <motion.div
+        className="score-actions"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+      >
         <motion.button
-          className="btn-play"
+          className="btn-score btn-score--primary"
+          onClick={handleShare}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+        >
+          {copied
+            ? <><ClipboardCheck size={16} strokeWidth={2.5} /> Copiado!</>
+            : <><Share2 size={16} strokeWidth={2.5} /> Compartilhar resultado</>
+          }
+        </motion.button>
+        <motion.button
+          className="btn-score btn-score--ghost"
           onClick={onRestart}
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
         >
-          <RotateCcw size={16} strokeWidth={2.5} />
+          <RotateCcw size={15} strokeWidth={2.5} />
           Voltar ao início
         </motion.button>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
