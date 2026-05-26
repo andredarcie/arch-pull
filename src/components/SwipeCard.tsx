@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSwipe } from "../hooks/useSwipe";
 import type { Card, Pair } from "../data/pairs";
 import { isPair, isContext } from "../data/pairs";
-import { X, Check, Lightbulb, Eye, ArrowRight, Layers, Box, BookOpen, Target, GraduationCap } from "lucide-react";
+import { X, Check, Lightbulb, Eye, ArrowRight, Layers, Box, BookOpen, Target, GraduationCap, Link2, Unlink2, Brain } from "lucide-react";
 import { RichText } from "./RichText";
 
 interface SwipeCardProps {
@@ -21,6 +21,7 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
   const [exitDirection, setExitDirection] = useState(0);
   const [showCard, setShowCard] = useState(true);
   const [isFlipped, setIsFlipped] = useState(false);
+  const [pendingAdvance, setPendingAdvance] = useState<{ score: number; wrong: Pair[] } | null>(null);
 
   const currentCard = cards[currentIndex];
   const pairTotal = cards.filter(isPair).length;
@@ -56,10 +57,22 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
       if (isCorrect) setScore(newScore);
       else setWrongPairs(newWrong);
 
-      setTimeout(() => advance(newScore, newWrong), 400);
+      if (isCorrect || !currentCard.explanation) {
+        setTimeout(() => advance(newScore, newWrong), 400);
+      } else {
+        setTimeout(() => setPendingAdvance({ score: newScore, wrong: newWrong }), 400);
+      }
     },
     [currentCard, feedback, score, wrongPairs, advance]
   );
+
+  const handleLearnedIt = useCallback(() => {
+    if (!pendingAdvance) return;
+    const { score: s, wrong: w } = pendingAdvance;
+    setPendingAdvance(null);
+    setFeedback(null);
+    advance(s, w);
+  }, [pendingAdvance, advance]);
 
   const handleInfoContinue = useCallback(() => {
     advance(score, wrongPairs);
@@ -180,13 +193,13 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
                   className="swipe-indicator nope"
                   style={{ opacity: offsetX < 0 ? swipeIndicatorOpacity : 0 }}
                 >
-                  <X size={28} strokeWidth={3} />
+                  <Unlink2 size={28} strokeWidth={2.5} />
                 </div>
                 <div
                   className="swipe-indicator like"
                   style={{ opacity: offsetX > 0 ? swipeIndicatorOpacity : 0 }}
                 >
-                  <Check size={28} strokeWidth={3} />
+                  <Link2 size={28} strokeWidth={2.5} />
                 </div>
 
                 <div className="card-content">
@@ -229,15 +242,26 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
               >
                 <div
                   className={`flashcard-inner ${isFlipped ? "flipped" : ""}`}
-                  onClick={() => !isFlipped && setIsFlipped(true)}
                 >
                   <div className="flashcard-face flashcard-front">
                     <span className="flashcard-label">Pergunta</span>
-                    <p className="flashcard-text">{currentCard.front}</p>
-                    <span className="flashcard-hint">
-                      <Eye size={14} strokeWidth={2} />
-                      Toque para revelar
-                    </span>
+                    <p className="flashcard-text">
+                      {currentCard.front.trimEnd().endsWith("?")
+                        ? currentCard.front
+                        : `${currentCard.front}?`}
+                    </p>
+                    <div className="flashcard-front-footer">
+                      <span className="flashcard-hint">Pense um pouco sobre a resposta</span>
+                      <motion.button
+                        className="btn-play flashcard-reveal-btn"
+                        onClick={(e) => { e.stopPropagation(); setIsFlipped(true); }}
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                      >
+                        <Eye size={16} strokeWidth={2.5} />
+                        Revelar resposta
+                      </motion.button>
+                    </div>
                   </div>
 
                   <div className="flashcard-face flashcard-back">
@@ -273,8 +297,8 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
             whileTap={{ scale: 0.92 }}
             disabled={!!feedback}
           >
-            <X size={20} strokeWidth={2.5} />
-            Não
+            <Unlink2 size={20} strokeWidth={2.5} />
+            Não combina
           </motion.button>
           <motion.button
             className="btn-action btn-like"
@@ -283,8 +307,8 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
             whileTap={{ scale: 0.92 }}
             disabled={!!feedback}
           >
-            <Check size={20} strokeWidth={2.5} />
-            Sim
+            <Link2 size={20} strokeWidth={2.5} />
+            Combina
           </motion.button>
         </div>
       )}
@@ -296,6 +320,39 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
           transition={{ duration: 0.35, ease: "easeOut" }}
         />
       </div>
+
+      <AnimatePresence>
+        {pendingAdvance && isPair(currentCard) && currentCard.explanation && (
+          <motion.div
+            className="explanation-overlay"
+            initial={{ opacity: 0, y: 32 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 32 }}
+            transition={{ type: "spring", stiffness: 300, damping: 28 }}
+          >
+            <div className="explanation-card">
+              <p className="explanation-title">
+                {currentCard.match ? "Na verdade, combinam." : "Na verdade, não combinam."}
+              </p>
+              <div className="explanation-pair">
+                <span className="explanation-concept">{currentCard.a}</span>
+                <Unlink2 size={14} strokeWidth={2} className="explanation-unlink" />
+                <span className="explanation-concept">{currentCard.b}</span>
+              </div>
+              <p className="explanation-text">{currentCard.explanation}</p>
+              <motion.button
+                className="btn-play explanation-btn"
+                onClick={handleLearnedIt}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                <Brain size={16} strokeWidth={2.5} />
+                Agora aprendi
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

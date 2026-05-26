@@ -56,7 +56,7 @@ function mapToCards(theme: LocalDailyTheme): Card[] {
     const [infoCard, ...pairs] = group;
     result.push({ kind: "info" as const, front: infoCard.front ?? "", back: infoCard.back ?? "" });
     for (const c of shuffle(pairs)) {
-      result.push({ a: c.conceptA ?? "", b: c.conceptB ?? "", match: c.match ?? false });
+      result.push({ a: c.conceptA ?? "", b: c.conceptB ?? "", match: c.match ?? false, explanation: c.explanation ?? undefined });
     }
   }
   return result;

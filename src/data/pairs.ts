@@ -4,6 +4,7 @@ export interface Pair {
   a: string;
   b: string;
   match: boolean;
+  explanation?: string;
 }
 
 export interface InfoCard {

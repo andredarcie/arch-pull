@@ -75,6 +75,7 @@ export const dailyCards = pgTable("daily_cards", {
   conceptA: text("concept_a"),
   conceptB: text("concept_b"),
   match: boolean("match"),
+  explanation: text("explanation"),
   front: text("front"),
   back: text("back"),
 });

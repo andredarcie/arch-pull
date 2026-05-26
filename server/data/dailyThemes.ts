@@ -8,6 +8,7 @@ export interface DailyCardInput {
   conceptA?: string;
   conceptB?: string;
   match?: boolean;
+  explanation?: string;
   front?: string;
   back?: string;
 }
@@ -26,6 +27,7 @@ export interface DailyCard {
   conceptA: string | null;
   conceptB: string | null;
   match: boolean | null;
+  explanation: string | null;
   front: string | null;
   back: string | null;
 }
@@ -48,6 +50,7 @@ function mapCard(c: typeof dailyCards.$inferSelect): DailyCard {
     conceptA: c.conceptA,
     conceptB: c.conceptB,
     match: c.match,
+    explanation: c.explanation,
     front: c.front,
     back: c.back,
   };
@@ -132,6 +135,7 @@ export async function upsertDailyTheme(input: DailyThemeInput): Promise<DailyThe
         conceptA: c.conceptA ?? null,
         conceptB: c.conceptB ?? null,
         match: c.match ?? null,
+        explanation: c.explanation ?? null,
         front: c.front ?? null,
         back: c.back ?? null,
       }))
