@@ -48,8 +48,6 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
   const [particles, setParticles] = useState<{ id: number; angle: number; distance: number; color: string; size: number }[]>([]);
 
   const currentCard = cards[currentIndex];
-  const pairTotal = cards.filter(isPair).length;
-  const pairsDone = cards.slice(0, currentIndex).filter(isPair).length;
 
   const advance = useCallback(
     (nextScore: number, nextWrong: Pair[]) => {
