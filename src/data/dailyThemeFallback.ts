@@ -26,7 +26,7 @@ function pair(conceptA: string, conceptB: string, match: boolean, explanation: s
 }
 
 function info(front: string, back: string): FallbackCard {
-  return { kind: "info", conceptA: null, conceptB: null, match: null, front, back };
+  return { kind: "info", conceptA: null, conceptB: null, match: null, explanation: null, front, back };
 }
 
 export const todayTheme: LocalDailyTheme = {
