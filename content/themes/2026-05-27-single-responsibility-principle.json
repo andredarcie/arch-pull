@@ -12,7 +12,7 @@
       "kind": "info",
       "position": 0,
       "front": "O que significa exatamente \"uma razão para mudar\"?",
-      "back": "A definição popular diz que SRP significa \"fazer uma coisa só\", mas essa versão é imprecisa. A definição de Uncle Bob é: uma classe deve ter apenas uma razão para mudar, ou seja, deve responder a apenas um ator (stakeholder).\n\nRuim:\n```typescript\nclass Invoice {\n  calculate(): number {\n    // time financeiro pede mudanças aqui\n    return this.items.reduce((sum, item) => sum + item.price, 0);\n  }\n\n  printToPDF(): string {\n    // time de design pede mudanças aqui\n    return `<html>...</html>`;\n  }\n}\n// Se o time financeiro mudar a regra de desconto, Invoice muda.\n// Se o time de design alterar o layout, Invoice também muda.\n// Duas razões: SRP violado.\n```\n\nBom:\n```typescript\nclass Invoice {\n  calculate(): number {\n    return this.items.reduce((sum, item) => sum + item.price, 0);\n  }\n}\n\nclass InvoicePrinter {\n  printToPDF(invoice: Invoice): string {\n    return `<html>...</html>`;\n  }\n}\n```\n\nAgora cada classe muda por uma única razão."
+      "back": "A definição popular diz que SRP significa \"fazer uma coisa só\", mas a definição precisa de Uncle Bob é: uma classe deve responder a apenas um ator (stakeholder).\n\nRuim:\n```typescript\nclass Invoice {\n  calculate(): number { ... }  // time financeiro\n  printToPDF(): string { ... } // time de design\n}\n```\n\nSe o time financeiro mudar a regra de desconto, Invoice muda. Se o time de design alterar o layout, Invoice também muda. Duas razões: SRP violado.\n\nBom:\n```typescript\nclass Invoice {\n  calculate(): number { ... }\n}\n\nclass InvoicePrinter {\n  printToPDF(invoice: Invoice): string { ... }\n}\n```\n\nAgora cada classe muda por uma única razão."
     },
     {
       "kind": "pair",
@@ -27,7 +27,7 @@
       "kind": "info",
       "position": 2,
       "front": "Como identificar uma violação de SRP na prática?",
-      "back": "Para cada método da classe, pergunte: quem pediria a mudança nesse método?\n\nRuim (três atores na mesma classe):\n```typescript\nclass UserService {\n  login(email: string, password: string): User {\n    // quem pede mudança aqui? time de segurança\n  }\n\n  sendWelcomeEmail(user: User): void {\n    // quem pede mudança aqui? time de marketing\n  }\n\n  generateActivityReport(): Report {\n    // quem pede mudança aqui? time de gestão\n  }\n}\n```\n\nTrês atores distintos respondem às perguntas acima: SRP violado três vezes na mesma classe.\n\nSe todos os métodos fossem respondidos pelo mesmo time, a classe seria coesa mesmo com muitos métodos."
+      "back": "Para cada método da classe, pergunte: quem pediria a mudança aqui?\n\nRuim:\n```typescript\nclass UserService {\n  login(email: string, password: string) { ... }  // segurança\n  sendWelcomeEmail(user: User) { ... }            // marketing\n  generateActivityReport() { ... }               // gestão\n}\n```\n\nTrês atores diferentes respondem: SRP violado três vezes.\n\nSe todos os métodos fossem respondidos pelo mesmo time, a classe seria coesa mesmo com muitos métodos."
     },
     {
       "kind": "pair",
@@ -42,7 +42,7 @@
       "kind": "info",
       "position": 4,
       "front": "SRP se aplica a funções, não apenas a classes",
-      "back": "Uma função viola SRP quando mistura duas responsabilidades distintas.\n\nRuim:\n```typescript\nasync function validateAndSaveUser(data: unknown): Promise<User> {\n  // responsabilidade 1: validar entrada\n  if (!data || typeof data !== 'object') throw new Error('Dados inválidos');\n  const { name, email } = data as any;\n  if (!email.includes('@')) throw new Error('Email inválido');\n\n  // responsabilidade 2: persistir\n  return db.users.create({ name, email });\n}\n```\n\nBom:\n```typescript\nfunction validateUserInput(data: unknown): { name: string; email: string } {\n  if (!data || typeof data !== 'object') throw new Error('Dados inválidos');\n  const { name, email } = data as any;\n  if (!email.includes('@')) throw new Error('Email inválido');\n  return { name, email };\n}\n\nasync function saveUser(input: { name: string; email: string }): Promise<User> {\n  return db.users.create(input);\n}\n```\n\nValidação muda quando as regras de negócio evoluem. Persistência muda quando o banco ou o ORM muda. Duas razões: funções separadas."
+      "back": "Uma função viola SRP quando mistura duas responsabilidades distintas.\n\nRuim:\n```typescript\nasync function validateAndSaveUser(data: UserDTO) {\n  if (!data.email.includes('@')) throw new Error('Email invalido');\n  return db.users.create(data);\n}\n```\n\nBom:\n```typescript\nfunction validateUser(data: UserDTO) {\n  if (!data.email.includes('@')) throw new Error('Email invalido');\n}\n\nasync function saveUser(data: UserDTO) {\n  return db.users.create(data);\n}\n```\n\nValidação muda quando as regras de negócio evoluem. Persistência muda quando o banco muda. Duas razões: funções separadas."
     },
     {
       "kind": "pair",
@@ -57,7 +57,7 @@
       "kind": "info",
       "position": 6,
       "front": "SRP não significa 'uma classe, um método'",
-      "back": "Um erro comum é achar que SRP exige que cada classe tenha apenas um método. Não é isso.\n\nUma classe pode ter vários métodos e ainda seguir SRP, desde que todos eles mudem pela mesma razão.\n\n```typescript\n// Classe com 5 métodos, SRP respeitado:\nclass PaymentProcessor {\n  charge(amount: number): Receipt { ... }\n  refund(receiptId: string): void { ... }\n  getStatus(receiptId: string): PaymentStatus { ... }\n  validateCard(card: Card): boolean { ... }\n  calculateFees(amount: number): number { ... }\n}\n```\n\nTodos esses métodos seriam solicitados pelo mesmo ator: o time financeiro. Se esse time precisar de uma mudança, os métodos acima podem ser afetados, mas nenhum outro stakeholder entraria nessa classe.\n\nDividir PaymentProcessor em 5 classes de um método seria over-engineering sem benefício real."
+      "back": "Uma classe pode ter vários métodos e ainda seguir SRP, desde que todos mudem pela mesma razão.\n\n```typescript\nclass PaymentProcessor {\n  charge(amount: number): Receipt { ... }\n  refund(receiptId: string): void { ... }\n  getStatus(receiptId: string): PaymentStatus { ... }\n  validateCard(card: Card): boolean { ... }\n  calculateFees(amount: number): number { ... }\n}\n```\n\nTodos esses métodos seriam solicitados pelo mesmo ator: o time financeiro. Dividir em 5 classes de um método seria over-engineering sem benefício real."
     },
     {
       "kind": "pair",
@@ -72,7 +72,7 @@
       "kind": "info",
       "position": 8,
       "front": "Por que SRP facilita testes unitários?",
-      "back": "Classes que seguem SRP são dramaticamente mais fáceis de testar.\n\nRuim (muitas dependências acopladas):\n```typescript\nclass UserService {\n  constructor(\n    private db: Database,\n    private mailer: EmailService,\n    private logger: Logger,\n    private cache: CacheService\n  ) {}\n\n  register(data: UserDTO): User { ... }\n}\n// Para testar register(), você precisa mockar 4 dependências.\n```\n\nBom (responsabilidade única):\n```typescript\nclass UserRegistrar {\n  constructor(private db: Database) {}\n\n  register(data: UserDTO): User { ... }\n}\n// Para testar register(), você precisa mockar apenas 1 dependência.\n```\n\nCada dependência extra é um eixo de variação que aumenta a complexidade do setup do teste. SRP reduz esse número ao mínimo necessário."
+      "back": "Classes que seguem SRP têm menos dependências, e menos dependências significam menos mocks no teste.\n\nRuim:\n```typescript\nclass UserService {\n  constructor(\n    private db: Database,\n    private mailer: EmailService,\n    private logger: Logger,\n    private cache: CacheService\n  ) {}\n}\n// 4 dependencias para mockar\n```\n\nBom:\n```typescript\nclass UserRegistrar {\n  constructor(private db: Database) {}\n}\n// 1 dependencia para mockar\n```"
     },
     {
       "kind": "pair",
@@ -87,7 +87,7 @@
       "kind": "info",
       "position": 10,
       "front": "Violação de SRP causa conflitos de merge",
-      "back": "Quando SRP é violado, mudanças de times diferentes colidem no mesmo arquivo.\n\nCenário: UserService com login, sendEmail e generateReport.\n\nSemana 1: o time de segurança muda o algoritmo de hash em UserService.\nSemana 1 (simultâneo): o time de marketing muda o template de e-mail em UserService.\n\nResultado: conflito de merge.\n\nPior ainda: ao resolver o conflito, alguém acidentalmente reverte parte da mudança de segurança. O teste de login passa, mas o hash voltou a ser fraco.\n\nSRP resolve na raiz: cada time edita apenas sua própria classe, nunca interferindo na classe do outro."
+      "back": "Quando SRP é violado, times diferentes editam o mesmo arquivo ao mesmo tempo.\n\nCenário: UserService com login, sendEmail e generateReport.\n\n- Time de segurança muda o hash de senha em UserService.\n- Time de marketing muda o template de e-mail, também em UserService.\n\nResultado: conflito de merge. E ao resolver, alguém acidentalmente reverte a mudança de segurança.\n\nCom SRP: cada time tem sua própria classe e nunca interfere no código do outro."
     },
     {
       "kind": "pair",
