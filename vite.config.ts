@@ -24,6 +24,7 @@ export default defineConfig({
             // no file for today
           }
           res.setHeader('Content-Type', 'application/json')
+          res.setHeader('Cache-Control', 'no-store')
           res.end(JSON.stringify(theme))
         })
       },

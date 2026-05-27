@@ -2,6 +2,7 @@ import { readFileSync, readdirSync } from "fs";
 import { join } from "path";
 
 interface ApiResponse {
+  setHeader(name: string, value: string): void;
   status(code: number): { json(payload: unknown): void };
 }
 
@@ -23,5 +24,6 @@ export default async function handler(
     // no file for today
   }
 
+  response.setHeader("Cache-Control", "no-store");
   response.status(200).json(theme ?? null);
 }
