@@ -1,0 +1,94 @@
+{
+  "date": "2026-05-29",
+  "title": "Open/Closed Principle",
+  "description": "O O do SOLID: aberto para extensao, fechado para modificacao.",
+  "context": {
+    "relevance": "OCP e o que separa codigo que envelhece bem de codigo que vira refatoracao constante. Dominar o principio significa saber quando criar uma abstracao e quando nao criar: a segunda parte e tao importante quanto a primeira. Em entrevistas sobre arquitetura, e comum pedir exemplos concretos de OCP aplicado, nao apenas a definicao."
+  },
+  "cards": [
+    {
+      "kind": "info",
+      "position": 0,
+      "front": "O que significa 'aberto para extensao, fechado para modificacao'?",
+      "back": "OCP tem dois lados que se complementam:\n- Aberto: deve ser possivel adicionar novos comportamentos.\n- Fechado: o codigo existente nao deve ser editado para isso.\n\nRuim:\n```typescript\nclass NotificationService {\n  send(type: string, msg: string) {\n    if (type === 'email') sendEmail(msg);\n    if (type === 'sms') sendSMS(msg);\n    // novo canal? editar aqui\n  }\n}\n```\n\nBom: o metodo send nunca muda. Cada canal novo chega como uma nova implementacao. O codigo existente fica estavel, novas features chegam como codigo novo."
+    },
+    {
+      "kind": "pair",
+      "position": 1,
+      "conceptA": "Aberto para extensao",
+      "conceptB": "Fechado para modificacao",
+      "match": true,
+      "explanation": "Combinam. Sao os dois lados da mesma regra: voce deve conseguir adicionar novos comportamentos (extensao) sem precisar editar o codigo que ja existe (fechado). Nao ha tensao entre eles: quando o design esta correto, voce extende criando codigo novo, sem abrir o que esta estavel."
+    },
+    {
+      "kind": "info",
+      "position": 2,
+      "front": "Como identificar uma violacao de OCP no codigo?",
+      "back": "O sinal mais claro e um metodo que voce precisa abrir toda vez que um novo tipo aparece.\n\nRuim:\n```typescript\nfunction calculateDiscount(\n  type: string, price: number\n): number {\n  if (type === 'student') return price * 0.8;\n  if (type === 'senior')  return price * 0.7;\n  // 'employee'? Modificar aqui\n  return price;\n}\n```\n\nCada nova categoria exige editar a funcao. Quem nao conhece a logica existente pode introduzir um bug ao adicionar o novo case."
+    },
+    {
+      "kind": "pair",
+      "position": 3,
+      "conceptA": "Metodo que muda a cada novo tipo de desconto",
+      "conceptB": "OCP respeitado",
+      "match": false,
+      "explanation": "Nao combinam. Se adicionar um novo tipo de desconto exige abrir e editar o metodo, ele esta aberto para modificacao: o oposto do OCP. Um metodo que precisa mudar para cada nova variacao e a definicao de violacao do principio."
+    },
+    {
+      "kind": "info",
+      "position": 4,
+      "front": "Qual mecanismo torna possivel estender sem modificar?",
+      "back": "Polimorfismo via interface e a solucao padrao.\n\n```typescript\ninterface DiscountStrategy {\n  apply(price: number): number;\n}\n\nclass StudentDiscount implements DiscountStrategy {\n  apply(price: number) { return price * 0.8; }\n}\n\nclass SeniorDiscount implements DiscountStrategy {\n  apply(price: number) { return price * 0.7; }\n}\n\nfunction calculateDiscount(\n  strategy: DiscountStrategy,\n  price: number\n): number {\n  return strategy.apply(price);\n}\n```\n\nNovo tipo: crie EmployeeDiscount. calculateDiscount nao muda nunca mais."
+    },
+    {
+      "kind": "pair",
+      "position": 5,
+      "conceptA": "Nova implementacao de interface existente",
+      "conceptB": "Extensao sem modificar codigo atual",
+      "match": true,
+      "explanation": "Combinam. Quando voce adiciona comportamento novo criando uma classe que implementa uma interface ja existente, o codigo antigo nao precisa ser tocado. A interface e a fronteira fechada: o que depende dela nao muda, mas o que a implementa pode crescer indefinidamente."
+    },
+    {
+      "kind": "info",
+      "position": 6,
+      "front": "OCP deve ser aplicado antes da segunda variacao existir?",
+      "back": "Nao. Criar abstracao sem necessidade concreta e over-engineering.\n\nRuim (prematuro):\n```typescript\ninterface Logger {\n  log(message: string): void;\n}\nclass ConsoleLogger implements Logger {\n  log(message: string) {\n    console.log(message);\n  }\n}\n// unica implementacao, sem variacao prevista\n```\n\nBom: comece simples.\n```typescript\nfunction log(message: string) {\n  console.log(message);\n}\n```\n\nRegra pratica: aplique OCP quando a segunda variacao aparecer. Na primeira, codigo direto."
+    },
+    {
+      "kind": "pair",
+      "position": 7,
+      "conceptA": "Interface com uma unica implementacao concreta",
+      "conceptB": "Aplicacao correta do OCP",
+      "match": false,
+      "explanation": "Nao combinam. Criar uma interface quando ha apenas uma implementacao e sem variacao prevista e abstracao prematura, nao OCP correto. O principio orienta como reagir quando a segunda variacao aparece, nao como antecipar todas as variacoes possiveis."
+    },
+    {
+      "kind": "info",
+      "position": 8,
+      "front": "Por que um switch/case que cresce e sinal de OCP violado?",
+      "back": "Cada novo case e uma modificacao em codigo existente.\n\nRuim:\n```typescript\nfunction area(shape: Shape): number {\n  switch (shape.type) {\n    case 'circle':\n      return Math.PI * shape.radius ** 2;\n    case 'rect':\n      return shape.width * shape.height;\n    // novo tipo? editar aqui\n  }\n}\n```\n\nBom (OCP):\n```typescript\ninterface Shape {\n  area(): number;\n}\nclass Circle implements Shape {\n  area() { return Math.PI * this.r ** 2; }\n}\nclass Rect implements Shape {\n  area() { return this.w * this.h; }\n}\n// novo tipo: nova classe. Nada mais.\n```"
+    },
+    {
+      "kind": "pair",
+      "position": 9,
+      "conceptA": "Switch/case que recebe novo case para cada tipo",
+      "conceptB": "Violacao de OCP",
+      "match": true,
+      "explanation": "Combinam. Toda vez que voce adiciona um novo case ao switch, esta modificando codigo existente. Esse e o sinal classico de OCP violado. A solucao tipica e substituir o switch por polimorfismo: cada variacao vira uma classe, e o codigo que chamava o switch nunca mais muda."
+    },
+    {
+      "kind": "info",
+      "position": 10,
+      "front": "Como confirmar que OCP foi bem aplicado em uma feature?",
+      "back": "Teste pratico: ao adicionar uma feature, quantos arquivos existentes voce editou?\n\nRuim (sem OCP):\n- Adicionar PayPal: editar PaymentService\n- Editar validacao em PaymentController\n- Atualizar testes de PaymentService\n\nBom (com OCP):\n- Criar PayPalStrategy.ts\n- Registrar no container de injecao\n- Fim.\n\nQuanto menos arquivos existentes voce toca, mais fechado o codigo esta. Em um sistema maduro, uma feature nova significa um arquivo novo."
+    },
+    {
+      "kind": "pair",
+      "position": 11,
+      "conceptA": "Adicionar feature criando novo arquivo, sem editar os existentes",
+      "conceptB": "Sistema seguindo OCP",
+      "match": true,
+      "explanation": "Combinam. Em um sistema bem projetado com OCP, adicionar uma feature significa criar, nao modificar. Voce escreve codigo novo (extensao) sem tocar no que ja funciona (fechado). Quanto mais features voce adiciona sem precisar abrir arquivos antigos, melhor esta o design."
+    }
+  ]
+}

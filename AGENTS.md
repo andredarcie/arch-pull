@@ -127,7 +127,7 @@ Cada arquivo JSON representa um tema do dia e segue a interface `DailyThemeInput
 - O campo `explanation` é **obrigatório** em todos os pares de temas diários. É exibido ao usuário quando ele erra, e é o principal momento de aprendizado do app. Nunca omitir.
 - O campo `back` dos cards `info` suporta blocos de código com a sintaxe ` ```typescript\n...\n``` ` (renderizados pelo componente `RichText` com syntax highlighting).
 - O campo `position` deve ser sequencial a partir de 0.
-- O campo `context.origin` e `context.motivation` existem no JSON mas **nao sao exibidos** — apenas `context.relevance` ("Por que preciso saber") é mostrado ao usuario antes de comecar. Preencher apenas `relevance` é suficiente.
+- O campo `context` tem apenas `relevance` ("Por que preciso saber"), exibido ao usuário antes de começar. Os campos `origin` e `motivation` foram removidos.
 
 **Ordem de corte ao reduzir um tema para 6 pares:**
 

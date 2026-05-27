@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { StartScreen } from "./components/StartScreen";
 import { CalendarScreen } from "./components/CalendarScreen";
@@ -40,10 +40,6 @@ function App() {
   const [themeTitle, setThemeTitle] = useState("");
   const [gameStartedAt, setGameStartedAt] = useState<number | null>(null);
   const [activeDays, setActiveDays] = useState<string[]>(loadActivity);
-
-  useEffect(() => {
-    setActiveDays(loadActivity());
-  }, []);
 
   const goToCalendar = useCallback(() => setScreen("calendar"), []);
 

@@ -1,10 +1,24 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import type { Card } from "../data/pairs";
-import type { LocalDailyTheme } from "../data/dailyThemeFallback";
 import { CalendarDays, Play, Flame } from "lucide-react";
 
-type DailyTheme = LocalDailyTheme & { description: string | null };
+interface ThemeCard {
+  kind: "pair" | "info";
+  conceptA: string | null;
+  conceptB: string | null;
+  match: boolean | null;
+  explanation: string | null;
+  front: string | null;
+  back: string | null;
+}
+
+interface DailyTheme {
+  title: string;
+  description: string | null;
+  context?: { relevance: string };
+  cards: ThemeCard[];
+}
 
 interface CalendarScreenProps {
   activeDays: string[];
@@ -30,8 +44,6 @@ function mapToCards(theme: LocalDailyTheme): Card[] {
   if (theme.context) {
     result.push({
       kind: "context",
-      origin: theme.context.origin,
-      motivation: theme.context.motivation,
       relevance: theme.context.relevance,
     });
   }

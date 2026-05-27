@@ -15,8 +15,6 @@ export interface InfoCard {
 
 export interface ContextCard {
   kind: "context";
-  origin: string;
-  motivation: string;
   relevance: string;
 }
 

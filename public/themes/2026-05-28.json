@@ -1,0 +1,94 @@
+{
+  "date": "2026-05-28",
+  "title": "Specification-Driven Development",
+  "description": "Escrever especificações precisas antes do código, a base para trabalhar bem com agentes de IA.",
+  "context": {
+    "relevance": "Com agentes de IA cada vez mais presentes no fluxo de desenvolvimento, saber especificar bem virou habilidade técnica tão importante quanto saber implementar. Engenheiros que escrevem especificações precisas extraem muito mais valor dos agentes e produzem sistemas muito mais previsíveis."
+  },
+  "cards": [
+    {
+      "kind": "info",
+      "position": 0,
+      "front": "O que define o Specification-Driven Development?",
+      "back": "SDD inverte a ordem: a especificação precede o código, não o contrário.\n\nRuim (code-first):\n```typescript\n// implementa agora, documenta depois\nfunction processOrder(o: any) {\n  // ...\n}\n```\n\nBom (spec-first):\n```typescript\n/**\n * Pre-condicao: order.status === 'confirmed'\n * Pos-condicao: order.status === 'processing'\n * Lanca: OrderAlreadyProcessedError\n *   se status != 'confirmed'\n */\nfunction processOrder(\n  order: Order\n): ProcessedOrder { ... }\n```\n\nA especificação define comportamento, pré-condições e erros antes de uma linha de lógica ser escrita."
+    },
+    {
+      "kind": "pair",
+      "position": 1,
+      "conceptA": "Especificação antes da implementação",
+      "conceptB": "Redução de retrabalho",
+      "match": true,
+      "explanation": "Combinam. Quando o comportamento é definido antes do código, erros de interpretação aparecem na especificação, não na implementação. Refatorar uma especificação de 20 linhas é incomparavelmente mais barato do que reescrever uma implementação de 200. O custo do erro cai quanto mais cedo ele é encontrado."
+    },
+    {
+      "kind": "info",
+      "position": 2,
+      "front": "Por que instruções vagas geram outputs ruins em agentes de IA?",
+      "back": "Agentes preenchem lacunas com suposições, e suposições são difíceis de prever.\n\nVago:\n\"Crie uma função de login\"\n\nO agente decide sozinho: qual algoritmo de hash? retornar token ou sessão? validar formato do email? expirar quando?\n\nEspecífico:\n\"Implemente login(email, password):\n- verifica se email existe no banco\n- compara password com bcrypt.compare\n- retorna { token: string, expiresAt: Date }\n- lança AuthError se credenciais inválidas\"\n\nO agente implementa exatamente isso, sem suposições."
+    },
+    {
+      "kind": "pair",
+      "position": 3,
+      "conceptA": "Instruções vagas para agente de IA",
+      "conceptB": "Output determinístico",
+      "match": false,
+      "explanation": "Não combinam. Instruções vagas levam o agente a preencher lacunas com suposições próprias, tornando o output imprevisível. Quanto mais ambígua a entrada, mais o agente inventa detalhes de implementação. Output determinístico exige especificações precisas: comportamento esperado, restrições e casos de borda explícitos."
+    },
+    {
+      "kind": "info",
+      "position": 4,
+      "front": "Como interfaces TypeScript funcionam como especificações para agentes de IA?",
+      "back": "Interfaces são contratos compiláveis: definem forma e restrições sem implementação.\n\n```typescript\ninterface PaymentGateway {\n  /**\n   * amount: em centavos, deve ser positivo\n   */\n  charge(\n    amount: number,\n    card: CreditCard\n  ): Promise<Receipt>;\n\n  refund(\n    receiptId: string\n  ): Promise<void>;\n}\n```\n\nInstrução para o agente: \"Implemente PaymentGateway para Stripe.\"\n\nO agente sabe exatamente o contrato a satisfazer. O compilador verifica se cumpriu."
+    },
+    {
+      "kind": "pair",
+      "position": 5,
+      "conceptA": "Interface TypeScript bem definida",
+      "conceptB": "Contrato que guia a implementação do agente",
+      "match": true,
+      "explanation": "Combinam. Uma interface define o que o código deve fazer sem dizer como. Para um agente de IA, isso é ideal: ele recebe um contrato preciso, verificável pelo compilador, e tem liberdade para escolher a melhor implementação. O tipo é a especificação; o agente é o implementador."
+    },
+    {
+      "kind": "info",
+      "position": 6,
+      "front": "Como testes escritos antes do código guiam um agente de IA?",
+      "back": "Testes são especificações executáveis: descrevem comportamento sem dizer como implementar.\n\n```typescript\ndescribe('calculateDiscount', () => {\n  it('aplica 20% para estudante', () => {\n    expect(\n      calculateDiscount('student', 100)\n    ).toBe(80);\n  });\n\n  it('sem desconto para usuario padrao', () => {\n    expect(\n      calculateDiscount('default', 100)\n    ).toBe(100);\n  });\n});\n```\n\nInstrução: \"Implemente calculateDiscount para que todos os testes passem.\"\n\nO agente não tem margem para suposições: o comportamento está totalmente especificado."
+    },
+    {
+      "kind": "pair",
+      "position": 7,
+      "conceptA": "Suite de testes como especificação",
+      "conceptB": "Implementação guiada por agente de IA",
+      "match": true,
+      "explanation": "Combinam. Testes escritos antes da implementação são especificações executáveis. Ao entregar esses testes para um agente com a instrução de implementar até passar, você elimina ambiguidade: o comportamento correto está definido, verificável e sem espaço para interpretação. É SDD com feedback automático."
+    },
+    {
+      "kind": "info",
+      "position": 8,
+      "front": "O que um system prompt bem escrito tem em comum com uma boa especificação?",
+      "back": "Ambos definem comportamento, restrições e exemplos antes da execução.\n\nFraco:\n\"Você é um assistente de código.\"\n\nForte (system prompt como spec):\n\"Você é engenheiro TypeScript sênior.\nRegras:\n- Nunca use 'any'\n- Trate todos os erros explicitamente\n- Prefira imutabilidade\n- Comentários só quando o porquê\n  não é óbvio no código\n\nAo receber um requisito: confirme\no que vai ser feito, depois implemente.\"\n\nSystem prompts são especificações de comportamento para agentes."
+    },
+    {
+      "kind": "pair",
+      "position": 9,
+      "conceptA": "System prompt com restrições explícitas",
+      "conceptB": "Comportamento de agente previsível",
+      "match": true,
+      "explanation": "Combinam. Um system prompt é, tecnicamente, uma especificação de comportamento. Quanto mais completo (restrições, exemplos, casos de borda), mais determinístico o agente se torna. A diferença entre um agente útil e um imprevisível está quase sempre na qualidade da especificação que o define."
+    },
+    {
+      "kind": "info",
+      "position": 10,
+      "front": "Especificar o como em vez do que prejudica agentes de IA?",
+      "back": "Sim. Prescrever a implementação remove a principal vantagem do agente.\n\nRuim (especifica o como):\n\"Use um for loop, declare uma variável\ncount, incremente dentro do loop...\"\n\nBom (especifica o que):\n\"Retorne o número de pedidos com\nstatus 'paid' no array recebido.\"\n\nA segunda versão permite ao agente escolher filter, reduce, um loop, ou qualquer abordagem eficiente.\n\nEspecificações devem definir comportamento observável, não passos de implementação."
+    },
+    {
+      "kind": "pair",
+      "position": 11,
+      "conceptA": "Especificação que descreve a implementação passo a passo",
+      "conceptB": "Boa prática com agentes de IA",
+      "match": false,
+      "explanation": "Não combinam. Especificar o como em vez do que é a forma mais rápida de perder as vantagens de um agente. O agente é bom em encontrar implementações corretas dado um comportamento desejado. Quando você prescreve cada passo, transforma o agente em um transcritor, não um implementador. Especifique o contrato; deixe o agente escolher o caminho."
+    }
+  ]
+}

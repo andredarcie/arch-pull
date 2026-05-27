@@ -122,7 +122,7 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
         setTimeout(() => setPendingAdvance({ score: newScore, wrong: newWrong }), 220);
       }
     },
-    [currentCard, feedback, score, wrongPairs, advance, combo, lives, onFinish]
+    [currentCard, feedback, score, wrongPairs, advance, combo, lives, onFinish, maxCombo]
   );
 
   const handleLearnedIt = useCallback(() => {
