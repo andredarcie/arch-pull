@@ -38,7 +38,7 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-function mapToCards(theme: LocalDailyTheme): Card[] {
+function mapToCards(theme: DailyTheme): Card[] {
   const result: Card[] = [];
 
   if (theme.context) {
@@ -48,8 +48,8 @@ function mapToCards(theme: LocalDailyTheme): Card[] {
     });
   }
 
-  const groups: LocalDailyTheme["cards"][] = [];
-  let current: LocalDailyTheme["cards"] = [];
+  const groups: ThemeCard[][] = [];
+  let current: ThemeCard[] = [];
 
   for (const c of theme.cards) {
     if (c.kind === "info" && current.length > 0) {

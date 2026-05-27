@@ -16,7 +16,7 @@ const ACTIVITY_KEY = "archpull-activity";
 function loadActivity(): string[] {
   try {
     const saved = localStorage.getItem(ACTIVITY_KEY);
-    return saved ? JSON.parse(saved) : [];
+    return saved ? (JSON.parse(saved) as string[]) : [];
   } catch {
     return [];
   }

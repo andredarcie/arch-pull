@@ -145,7 +145,7 @@ Cada arquivo JSON representa um tema do dia e segue a interface `DailyThemeInput
 
 ## Finishing a task
 
-Always run `npx tsc --noEmit` before reporting a task as done. Fix every error before finishing.
+Always run `npm run check` before reporting a task as done. Fix every error before finishing. This runs `tsc -p tsconfig.app.json --noEmit && eslint src/` in sequence. Do **not** use `tsc --noEmit` sozinho — o tsconfig raiz tem `"files": []` com project references e pode usar cache incremental sem re-checar arquivos modificados.
 
 ## What agents should NOT do
 

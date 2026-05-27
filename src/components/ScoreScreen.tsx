@@ -166,7 +166,7 @@ export function ScoreScreen({
       >
         <motion.button
           className="btn-score btn-score--primary"
-          onClick={handleShare}
+          onClick={() => void handleShare()}
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
         >
