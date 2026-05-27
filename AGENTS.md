@@ -113,7 +113,7 @@ Cada arquivo JSON representa um tema do dia e segue a interface `DailyThemeInput
     { "kind": "info", "position": 0, "front": "Pergunta", "back": "Resposta longa..." },
 
     // Par de conceitos (swipe sim/não)
-    { "kind": "pair", "position": 1, "conceptA": "Conceito A", "conceptB": "Conceito B", "match": true }
+    { "kind": "pair", "position": 1, "conceptA": "Conceito A", "conceptB": "Conceito B", "match": true, "explanation": "Por que combinam ou não combinam — exibido ao usuario quando erra." }
   ]
 }
 ```
@@ -124,6 +124,7 @@ Cada arquivo JSON representa um tema do dia e segue a interface `DailyThemeInput
 - Cada tema deve ter exatamente **6 pares** (12 cards no total). Esse valor foi validado pelo usuario: resulta em ~5 minutos de sessão, alinhado com o padrao de micro-aprendizado.
 - O card de intro genérico (explicando o tema em si) deve ser omitido — a `description` do tema já cumpre esse papel na tela do calendário.
 - Alternar pares `match: true` e `match: false` para evitar que o usuário entre em piloto automático.
+- O campo `explanation` é **obrigatório** em todos os pares de temas diários. É exibido ao usuário quando ele erra, e é o principal momento de aprendizado do app. Nunca omitir.
 - O campo `back` dos cards `info` suporta blocos de código com a sintaxe ` ```typescript\n...\n``` ` (renderizados pelo componente `RichText` com syntax highlighting).
 - O campo `position` deve ser sequencial a partir de 0.
 - O campo `context.origin` e `context.motivation` existem no JSON mas **nao sao exibidos** — apenas `context.relevance` ("Por que preciso saber") é mostrado ao usuario antes de comecar. Preencher apenas `relevance` é suficiente.
