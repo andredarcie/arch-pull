@@ -18,6 +18,7 @@ export function CodeBlock({ code, language = "typescript" }: CodeBlockProps) {
     <SyntaxHighlighter
       language={language}
       style={vscDarkPlus}
+      wrapLongLines
       customStyle={{
         margin: "8px 0",
         borderRadius: "8px",
@@ -25,7 +26,9 @@ export function CodeBlock({ code, language = "typescript" }: CodeBlockProps) {
         lineHeight: "1.6",
         padding: "12px 14px",
         background: "#1e1e1e",
-        overflowX: "auto",
+        overflowX: "hidden",
+        whiteSpace: "pre-wrap",
+        wordBreak: "break-word",
         flexShrink: 0,
       }}
       codeTagProps={{

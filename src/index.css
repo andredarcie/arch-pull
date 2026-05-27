@@ -449,7 +449,7 @@ body {
 
 .action-buttons {
   display: flex;
-  gap: 16px;
+  gap: 40px;
   padding-bottom: 24px;
   width: 100%;
   max-width: 320px;
@@ -814,6 +814,78 @@ body {
 /*     FLASHCARD        */
 /* ==================== */
 
+.info-card {
+  width: 100%;
+  max-width: 350px;
+  height: clamp(340px, calc(100dvh - 185px), 540px);
+  background: var(--bg-card);
+  border: 1.5px solid rgba(108, 99, 255, 0.25);
+  border-radius: var(--radius);
+  padding: 24px 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.info-card-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.info-card-icon {
+  color: var(--accent);
+  opacity: 0.7;
+}
+
+.info-card-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0.7;
+}
+
+.info-card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.35;
+  margin: 0 0 14px;
+}
+
+.info-card-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.07);
+  margin-bottom: 14px;
+}
+
+.info-card-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 20px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(108, 99, 255, 0.35) rgba(255, 255, 255, 0.04);
+}
+
+.info-card-body::-webkit-scrollbar { width: 4px; }
+.info-card-body::-webkit-scrollbar-track { background: rgba(255,255,255,0.04); border-radius: 999px; }
+.info-card-body::-webkit-scrollbar-thumb { background: rgba(108,99,255,0.45); border-radius: 999px; }
+
+.info-card-btn {
+  width: 100%;
+  justify-content: center;
+}
+
 .flashcard-scene {
   width: 100%;
   max-width: 350px;
@@ -938,9 +1010,8 @@ body {
 
 .flashcard-front-footer {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
   width: 100%;
 }
 
@@ -949,24 +1020,6 @@ body {
   color: var(--text-secondary);
   opacity: 0.6;
   text-align: center;
-}
-
-.flashcard-reveal-btn {
-  width: 100%;
-  justify-content: center;
-  background: transparent !important;
-  box-shadow: none !important;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: var(--text-secondary) !important;
-  font-size: 0.85rem !important;
-  padding: 10px 20px !important;
-  font-weight: 500 !important;
-}
-
-.flashcard-reveal-btn:hover {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border-color: rgba(255, 255, 255, 0.28);
-  color: var(--text) !important;
 }
 
 .flashcard-btn {

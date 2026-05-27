@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Pair } from "../data/pairs";
-import { CheckCircle2, XCircle, RotateCcw, Share2, ClipboardCheck, Link2, Unlink2 } from "lucide-react";
+import { CheckCircle2, XCircle, RotateCcw, Share2, ClipboardCheck, Check, X } from "lucide-react";
 
 interface ScoreScreenProps {
   score: number;
@@ -148,8 +148,8 @@ export function ScoreScreen({
                 </div>
                 <span className="pair-badge pair-badge--answer">
                   {pair.match
-                    ? <><Link2 size={11} strokeWidth={2.5} /> Combinam</>
-                    : <><Unlink2 size={11} strokeWidth={2.5} /> Não combinam</>
+                    ? <><Check size={11} strokeWidth={2.5} /> Combinam</>
+                    : <><X size={11} strokeWidth={2.5} /> Não combinam</>
                   }
                 </span>
               </motion.div>
