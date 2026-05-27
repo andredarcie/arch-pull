@@ -10,6 +10,7 @@ interface ScoreScreenProps {
   onRestart: () => void;
   nodeTitle?: string;
   passed?: boolean;
+  maxCombo?: number;
 }
 
 function getMessage(percentage: number): string {
@@ -27,6 +28,7 @@ export function ScoreScreen({
   onRestart,
   nodeTitle,
   passed,
+  maxCombo = 0,
 }: ScoreScreenProps) {
   const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
   const message =
@@ -46,7 +48,8 @@ export function ScoreScreen({
       percentage >= 80   ? "Consegui sem ajuda de IA." :
       percentage >= 60   ? "Quase tudo na memoria, sem IA." :
                            "Sem ChatGPT, sem cola.";
-    const text = `Completei "${nodeTitle ?? "Dev Match"}" no Dev Match!\nAcertei ${score}/${total} (${percentage}%)\n${aiLine}`;
+    const comboLine = maxCombo >= 2 ? `\nCombo maximo: ${maxCombo}x` : "";
+    const text = `Completei "${nodeTitle ?? "Arch Pull"}" no Arch Pull!\nAcertei ${score}/${total} (${percentage}%)${comboLine}\n${aiLine}\n\nTe desafio tambem: https://andredarcie.github.io/arch-pull/`;
     if (navigator.share) {
       await navigator.share({ text }).catch(() => {});
     } else {

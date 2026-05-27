@@ -35,6 +35,7 @@ function App() {
   const [cards, setCards] = useState<Card[]>([]);
   const [wrongPairs, setWrongPairs] = useState<Pair[]>([]);
   const [finalScore, setFinalScore] = useState(0);
+  const [finalMaxCombo, setFinalMaxCombo] = useState(0);
   const [themeTitle, setThemeTitle] = useState("");
   const [activeDays, setActiveDays] = useState<string[]>(loadActivity);
 
@@ -51,9 +52,10 @@ function App() {
   }, []);
 
   const finishGame = useCallback(
-    (score: number, wrong: Pair[]) => {
+    (score: number, wrong: Pair[], maxCombo: number) => {
       setFinalScore(score);
       setWrongPairs(wrong);
+      setFinalMaxCombo(maxCombo);
       setActiveDays((prev) => recordToday(prev));
       setScreen("score");
     },
@@ -88,6 +90,7 @@ function App() {
             onRestart={goToCalendar}
             nodeTitle={themeTitle}
             passed={passed}
+            maxCombo={finalMaxCombo}
           />
         )}
       </AnimatePresence>

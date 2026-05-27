@@ -8,7 +8,7 @@ import { RichText } from "./RichText";
 
 interface SwipeCardProps {
   cards: Card[];
-  onFinish: (score: number, wrongPairs: Pair[]) => void;
+  onFinish: (score: number, wrongPairs: Pair[], maxCombo: number) => void;
 }
 
 type Feedback = "correct" | "wrong" | null;
@@ -40,6 +40,7 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [pendingAdvance, setPendingAdvance] = useState<{ score: number; wrong: Pair[] } | null>(null);
   const [combo, setCombo] = useState(0);
+  const [maxCombo, setMaxCombo] = useState(0);
   const [lives, setLives] = useState(3);
   const [barPulse, setBarPulse] = useState(false);
   const [milestone, setMilestone] = useState<{ text: string; key: number } | null>(null);
@@ -67,7 +68,7 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
 
       setTimeout(() => {
         if (nextIndex >= cards.length) {
-          onFinish(nextScore, nextWrong);
+          onFinish(nextScore, nextWrong, maxCombo);
         } else {
           setCurrentIndex((i) => i + 1);
           setFeedback(null);
@@ -76,7 +77,7 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
         }
       }, 80);
     },
-    [currentIndex, cards.length, onFinish]
+    [currentIndex, cards.length, onFinish, maxCombo]
   );
 
   const handleAnswer = useCallback(
@@ -91,6 +92,7 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
       setFeedback(isCorrect ? "correct" : "wrong");
       setExitDirection(userSaysMatch ? 1 : -1);
       setCombo(newCombo);
+      setMaxCombo((prev) => Math.max(prev, newCombo));
       setLives(newLives);
 
       if (isCorrect) {
@@ -115,7 +117,7 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
       }
 
       if (newLives === 0) {
-        setTimeout(() => onFinish(newScore, newWrong), 900);
+        setTimeout(() => onFinish(newScore, newWrong, Math.max(maxCombo, newCombo)), 900);
       } else if (isCorrect || !currentCard.explanation) {
         setTimeout(() => advance(newScore, newWrong), 220);
       } else {
