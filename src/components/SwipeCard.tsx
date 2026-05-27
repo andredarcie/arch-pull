@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSwipe } from "../hooks/useSwipe";
 import type { Card, Pair } from "../data/pairs";
 import { isPair, isContext } from "../data/pairs";
-import { X, Check, Eye, ArrowRight, Layers, Box, BookOpen, Target, GraduationCap, Link2, Unlink2, Brain, Zap, Heart } from "lucide-react";
+import { X, Check, Eye, ArrowRight, Layers, Box, GraduationCap, Link2, Unlink2, Brain, Zap, Heart } from "lucide-react";
 import { RichText } from "./RichText";
 
 interface SwipeCardProps {
@@ -317,22 +317,6 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
               >
                 <div className="context-card-accent" />
                 <div className="context-card-body">
-                  <div className="context-section">
-                    <div className="context-section-label">
-                      <BookOpen size={14} strokeWidth={2} />
-                      Como surgiu
-                    </div>
-                    <p className="context-section-text">{currentCard.origin}</p>
-                  </div>
-                  <div className="context-divider" />
-                  <div className="context-section">
-                    <div className="context-section-label">
-                      <Target size={14} strokeWidth={2} />
-                      Por que foi criado
-                    </div>
-                    <p className="context-section-text">{currentCard.motivation}</p>
-                  </div>
-                  <div className="context-divider" />
                   <div className="context-section">
                     <div className="context-section-label">
                       <GraduationCap size={14} strokeWidth={2} />

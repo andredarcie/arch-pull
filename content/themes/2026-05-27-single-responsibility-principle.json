@@ -41,27 +41,12 @@
     {
       "kind": "info",
       "position": 4,
-      "front": "Como corrigir uma violação de SRP?",
-      "back": "A solução é separar a classe em classes menores, uma por ator.\n\nBom (uma classe por ator):\n```typescript\nclass AuthService {\n  // responsável: time de segurança\n  login(email: string, password: string): User {\n    // valida credenciais, cria sessão\n  }\n}\n\nclass WelcomeMailer {\n  // responsável: time de marketing\n  send(user: User): void {\n    // envia e-mail de boas-vindas\n  }\n}\n\nclass ActivityReporter {\n  // responsável: time de gestão\n  generate(): Report {\n    // consolida dados de uso\n  }\n}\n```\n\nBenefícios imediatos:\n1. Mudança em marketing não afeta segurança.\n2. Cada classe pode ser testada de forma completamente isolada.\n3. É possível reutilizar WelcomeMailer em outros fluxos sem arrastar AuthService junto."
-    },
-    {
-      "kind": "pair",
-      "position": 5,
-      "conceptA": "Separar responsabilidades em classes dedicadas por ator",
-      "conceptB": "SRP aplicado",
-      "match": true,
-      "explanation": "Combinam. SRP aplicado é exatamente isso: uma classe por ator. Ao separar AuthService, WelcomeMailer e ActivityReporter, você garante que mudanças em marketing nunca impactam o código de segurança. São partes independentes que crescem e mudam em ritmos diferentes."
-    },
-
-    {
-      "kind": "info",
-      "position": 6,
       "front": "SRP se aplica a funções, não apenas a classes",
       "back": "Uma função viola SRP quando mistura duas responsabilidades distintas.\n\nRuim:\n```typescript\nasync function validateAndSaveUser(data: unknown): Promise<User> {\n  // responsabilidade 1: validar entrada\n  if (!data || typeof data !== 'object') throw new Error('Dados inválidos');\n  const { name, email } = data as any;\n  if (!email.includes('@')) throw new Error('Email inválido');\n\n  // responsabilidade 2: persistir\n  return db.users.create({ name, email });\n}\n```\n\nBom:\n```typescript\nfunction validateUserInput(data: unknown): { name: string; email: string } {\n  if (!data || typeof data !== 'object') throw new Error('Dados inválidos');\n  const { name, email } = data as any;\n  if (!email.includes('@')) throw new Error('Email inválido');\n  return { name, email };\n}\n\nasync function saveUser(input: { name: string; email: string }): Promise<User> {\n  return db.users.create(input);\n}\n```\n\nValidação muda quando as regras de negócio evoluem. Persistência muda quando o banco ou o ORM muda. Duas razões: funções separadas."
     },
     {
       "kind": "pair",
-      "position": 7,
+      "position": 5,
       "conceptA": "Função que valida entrada e persiste no banco",
       "conceptB": "Responsabilidade única",
       "match": false,
@@ -70,13 +55,13 @@
 
     {
       "kind": "info",
-      "position": 8,
+      "position": 6,
       "front": "SRP não significa 'uma classe, um método'",
       "back": "Um erro comum é achar que SRP exige que cada classe tenha apenas um método. Não é isso.\n\nUma classe pode ter vários métodos e ainda seguir SRP, desde que todos eles mudem pela mesma razão.\n\n```typescript\n// Classe com 5 métodos, SRP respeitado:\nclass PaymentProcessor {\n  charge(amount: number): Receipt { ... }\n  refund(receiptId: string): void { ... }\n  getStatus(receiptId: string): PaymentStatus { ... }\n  validateCard(card: Card): boolean { ... }\n  calculateFees(amount: number): number { ... }\n}\n```\n\nTodos esses métodos seriam solicitados pelo mesmo ator: o time financeiro. Se esse time precisar de uma mudança, os métodos acima podem ser afetados, mas nenhum outro stakeholder entraria nessa classe.\n\nDividir PaymentProcessor em 5 classes de um método seria over-engineering sem benefício real."
     },
     {
       "kind": "pair",
-      "position": 9,
+      "position": 7,
       "conceptA": "Classe com vários métodos sobre o mesmo domínio",
       "conceptB": "Viola SRP",
       "match": false,
@@ -85,28 +70,13 @@
 
     {
       "kind": "info",
-      "position": 10,
-      "front": "God Class: o antipadrão oposto ao SRP",
-      "back": "Uma God Class é uma classe que sabe e faz tudo no sistema. É o oposto direto do SRP.\n\n```typescript\nclass ApplicationManager {\n  // autenticação\n  login(email: string, password: string): void { ... }\n  logout(): void { ... }\n\n  // banco de dados\n  queryDatabase(sql: string): any[] { ... }\n  migrateSchema(): void { ... }\n\n  // interface\n  renderDashboard(): string { ... }\n  showNotification(msg: string): void { ... }\n\n  // relatórios\n  generateSalesReport(): Report { ... }\n  exportToCSV(): string { ... }\n}\n```\n\nSintomas de God Class:\n- Mais de 200 linhas (quase sempre)\n- Nome genérico: Manager, Handler, Processor, Helper, Utils\n- Importa 10 ou mais dependências externas\n- Impossível testar sem mockar metade do sistema"
-    },
-    {
-      "kind": "pair",
-      "position": 11,
-      "conceptA": "God Class",
-      "conceptB": "Alta coesão",
-      "match": false,
-      "explanation": "Não combinam. God Class é o oposto de alta coesão: ela acumula responsabilidades de atores completamente diferentes. Alta coesão significa que tudo na classe existe para o mesmo propósito. God Class é o sintoma mais visível de SRP sistematicamente ignorado em um projeto."
-    },
-
-    {
-      "kind": "info",
-      "position": 12,
+      "position": 8,
       "front": "Por que SRP facilita testes unitários?",
       "back": "Classes que seguem SRP são dramaticamente mais fáceis de testar.\n\nRuim (muitas dependências acopladas):\n```typescript\nclass UserService {\n  constructor(\n    private db: Database,\n    private mailer: EmailService,\n    private logger: Logger,\n    private cache: CacheService\n  ) {}\n\n  register(data: UserDTO): User { ... }\n}\n// Para testar register(), você precisa mockar 4 dependências.\n```\n\nBom (responsabilidade única):\n```typescript\nclass UserRegistrar {\n  constructor(private db: Database) {}\n\n  register(data: UserDTO): User { ... }\n}\n// Para testar register(), você precisa mockar apenas 1 dependência.\n```\n\nCada dependência extra é um eixo de variação que aumenta a complexidade do setup do teste. SRP reduz esse número ao mínimo necessário."
     },
     {
       "kind": "pair",
-      "position": 13,
+      "position": 9,
       "conceptA": "Classe com responsabilidade única",
       "conceptB": "Teste unitário mais simples",
       "match": true,
@@ -115,28 +85,13 @@
 
     {
       "kind": "info",
-      "position": 14,
-      "front": "SRP se aplica em todos os níveis de abstração",
-      "back": "SRP não é uma regra apenas para classes. Ele se aplica em todos os níveis:\n\n- Função: faz uma única transformação ou operação\n- Classe: serve um único ator\n- Módulo/pacote: agrupa conceitos de um único domínio\n- Serviço (microsserviço): tem um único bounded context\n\nExemplo no nível de módulo:\n```\nsrc/\n  auth/       -> responsabilidade: autenticação e autorização\n  payments/   -> responsabilidade: processamento de pagamentos\n  reports/    -> responsabilidade: geração de relatórios\n  users/      -> responsabilidade: dados e perfil de usuários\n```\n\nSe o módulo payments precisar importar lógica de auth E de reports para funcionar, é um sinal de que os limites estão errados e SRP está sendo violado no nível de módulo."
-    },
-    {
-      "kind": "pair",
-      "position": 15,
-      "conceptA": "SRP se aplica apenas a classes e métodos",
-      "conceptB": "Afirmação verdadeira",
-      "match": false,
-      "explanation": "Não combinam. SRP é um princípio de design que vale em todos os níveis de abstração: funções, classes, módulos e até serviços. Em cada nível, a pergunta é a mesma: este componente tem uma única razão para mudar? Se a resposta for não, o princípio está sendo violado."
-    },
-
-    {
-      "kind": "info",
-      "position": 16,
+      "position": 10,
       "front": "Violação de SRP causa conflitos de merge",
       "back": "Quando SRP é violado, mudanças de times diferentes colidem no mesmo arquivo.\n\nCenário: UserService com login, sendEmail e generateReport.\n\nSemana 1: o time de segurança muda o algoritmo de hash em UserService.\nSemana 1 (simultâneo): o time de marketing muda o template de e-mail em UserService.\n\nResultado: conflito de merge.\n\nPior ainda: ao resolver o conflito, alguém acidentalmente reverte parte da mudança de segurança. O teste de login passa, mas o hash voltou a ser fraco.\n\nSRP resolve na raiz: cada time edita apenas sua própria classe, nunca interferindo na classe do outro."
     },
     {
       "kind": "pair",
-      "position": 17,
+      "position": 11,
       "conceptA": "Classe compartilhada por múltiplos atores",
       "conceptB": "Risco de conflito de merge",
       "match": true,

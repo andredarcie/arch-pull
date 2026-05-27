@@ -11,6 +11,7 @@ interface ScoreScreenProps {
   nodeTitle?: string;
   passed?: boolean;
   maxCombo?: number;
+  elapsedSeconds?: number;
 }
 
 function getMessage(percentage: number): string {
@@ -21,6 +22,13 @@ function getMessage(percentage: number): string {
   return "Hora de revisar os fundamentos!";
 }
 
+function formatElapsed(seconds: number): string {
+  if (seconds < 60) return `${seconds}s`;
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return s === 0 ? `${m}min` : `${m}min ${s}s`;
+}
+
 export function ScoreScreen({
   score,
   total,
@@ -29,6 +37,7 @@ export function ScoreScreen({
   nodeTitle,
   passed,
   maxCombo = 0,
+  elapsedSeconds = 0,
 }: ScoreScreenProps) {
   const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
   const message =
@@ -49,7 +58,8 @@ export function ScoreScreen({
       percentage >= 60   ? "Quase tudo na memoria, sem IA." :
                            "Sem ChatGPT, sem cola.";
     const comboLine = maxCombo >= 2 ? `\nCombo maximo: ${maxCombo}x` : "";
-    const text = `Completei "${nodeTitle ?? "Arch Pull"}" no Arch Pull!\nAcertei ${score}/${total} (${percentage}%)${comboLine}\n${aiLine}\n\nTe desafio tambem: https://andredarcie.github.io/arch-pull/`;
+    const timeLine = elapsedSeconds > 0 ? `\nTempo: ${formatElapsed(elapsedSeconds)}` : "";
+    const text = `Completei "${nodeTitle ?? "Arch Pull"}" no Arch Pull!\nAcertei ${score}/${total} (${percentage}%)${comboLine}${timeLine}\n${aiLine}\n\nTe desafio tambem: https://andredarcie.github.io/arch-pull/`;
     if (navigator.share) {
       await navigator.share({ text }).catch(() => {});
     } else {

@@ -121,11 +121,18 @@ Cada arquivo JSON representa um tema do dia e segue a interface `DailyThemeInput
 **Regras de composição de um tema:**
 
 - Cada regra/conceito deve ter exatamente **1 card `info`** seguido de **1 card `pair`** — não mais.
-- Manter entre **6 e 10 regras** por tema para sessões de 4–6 minutos.
+- Cada tema deve ter exatamente **6 pares** (12 cards no total). Esse valor foi validado pelo usuario: resulta em ~5 minutos de sessão, alinhado com o padrao de micro-aprendizado.
 - O card de intro genérico (explicando o tema em si) deve ser omitido — a `description` do tema já cumpre esse papel na tela do calendário.
 - Alternar pares `match: true` e `match: false` para evitar que o usuário entre em piloto automático.
 - O campo `back` dos cards `info` suporta blocos de código com a sintaxe ` ```typescript\n...\n``` ` (renderizados pelo componente `RichText` com syntax highlighting).
 - O campo `position` deve ser sequencial a partir de 0.
+- O campo `context.origin` e `context.motivation` existem no JSON mas **nao sao exibidos** — apenas `context.relevance` ("Por que preciso saber") é mostrado ao usuario antes de comecar. Preencher apenas `relevance` é suficiente.
+
+**Ordem de corte ao reduzir um tema para 6 pares:**
+
+1. Cards que repetem o mesmo exemplo já visto em outro card.
+2. Cards de aplicacao avancada fora do escopo do tema principal.
+3. Antipadroes cujo conceito já está implícito em outro card.
 
 ## UI e legibilidade
 

@@ -36,7 +36,9 @@ function App() {
   const [wrongPairs, setWrongPairs] = useState<Pair[]>([]);
   const [finalScore, setFinalScore] = useState(0);
   const [finalMaxCombo, setFinalMaxCombo] = useState(0);
+  const [finalElapsed, setFinalElapsed] = useState(0);
   const [themeTitle, setThemeTitle] = useState("");
+  const [gameStartedAt, setGameStartedAt] = useState<number | null>(null);
   const [activeDays, setActiveDays] = useState<string[]>(loadActivity);
 
   useEffect(() => {
@@ -48,6 +50,7 @@ function App() {
   const startTheme = useCallback((themeCards: Card[], title: string) => {
     setCards(themeCards);
     setThemeTitle(title);
+    setGameStartedAt(Date.now());
     setScreen("game");
   }, []);
 
@@ -56,10 +59,11 @@ function App() {
       setFinalScore(score);
       setWrongPairs(wrong);
       setFinalMaxCombo(maxCombo);
+      setFinalElapsed(gameStartedAt ? Math.round((Date.now() - gameStartedAt) / 1000) : 0);
       setActiveDays((prev) => recordToday(prev));
       setScreen("score");
     },
-    []
+    [gameStartedAt]
   );
 
   const pairCount = cards.filter(isPair).length;
@@ -91,6 +95,7 @@ function App() {
             nodeTitle={themeTitle}
             passed={passed}
             maxCombo={finalMaxCombo}
+            elapsedSeconds={finalElapsed}
           />
         )}
       </AnimatePresence>
