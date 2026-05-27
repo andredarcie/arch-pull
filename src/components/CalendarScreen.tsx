@@ -100,8 +100,9 @@ export function CalendarScreen({ activeDays, onStart }: CalendarScreenProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/theme", { cache: "no-store" })
-      .then((r) => r.json())
+    const today = new Date().toISOString().slice(0, 10);
+    fetch(`${import.meta.env.BASE_URL}themes/${today}.json`, { cache: "no-store" })
+      .then((r) => r.ok ? r.json() : null)
       .then((data) => setTheme((data as DailyTheme | null)))
       .catch(() => setTheme(null))
       .finally(() => setLoading(false));
