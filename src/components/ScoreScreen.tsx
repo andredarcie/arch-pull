@@ -41,7 +41,12 @@ export function ScoreScreen({
   }, [wrongPairs.length]);
 
   const handleShare = async () => {
-    const text = `Completei "${nodeTitle ?? "ArchPull"}" no ArchPull!\nAcertei ${score}/${total} (${percentage}%) -- sem Stack Overflow.`;
+    const aiLine =
+      percentage === 100 ? "Gabarito perfeito. Zero ajuda de IA." :
+      percentage >= 80   ? "Consegui sem ajuda de IA." :
+      percentage >= 60   ? "Quase tudo na memoria, sem IA." :
+                           "Sem ChatGPT, sem cola.";
+    const text = `Completei "${nodeTitle ?? "Dev Match"}" no Dev Match!\nAcertei ${score}/${total} (${percentage}%)\n${aiLine}`;
     if (navigator.share) {
       await navigator.share({ text }).catch(() => {});
     } else {

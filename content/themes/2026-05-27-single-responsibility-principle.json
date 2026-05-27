@@ -1,0 +1,146 @@
+{
+  "date": "2026-05-27",
+  "title": "Single Responsibility Principle",
+  "description": "O S do SOLID: cada módulo deve ter apenas uma razão para mudar.",
+  "context": {
+    "origin": "Robert C. Martin (Uncle Bob) formalizou o SRP no livro \"Agile Software Development\" em 2003, mas a ideia vem de conceitos de coesão descritos por Tom DeMarco nos anos 1970. Martin refinou a definição com a frase precisa: \"Uma classe deve ter apenas uma razão para mudar\", destacando que o critério é o ator (stakeholder), não a contagem de comportamentos.",
+    "motivation": "Em sistemas que crescem, classes que acumulam responsabilidades viram focos de conflito: uma mudança pedida pelo time de marketing pode quebrar a lógica financeira que nem foi tocada. O SRP força que cada parte do sistema mude por uma e apenas uma razão.",
+    "relevance": "SRP é o princípio mais cobrado em entrevistas sobre SOLID. Saber a definição precisa (razão para mudar, não apenas \"fazer uma coisa\") separa candidatos que decoraram a frase de quem entende o princípio de verdade. No dia a dia, classes que seguem SRP são triviais de testar, fáceis de reutilizar e raramente causam regressões inesperadas."
+  },
+  "cards": [
+    {
+      "kind": "info",
+      "position": 0,
+      "front": "O que significa exatamente \"uma razão para mudar\"?",
+      "back": "A definição popular diz que SRP significa \"fazer uma coisa só\", mas essa versão é imprecisa. A definição de Uncle Bob é: uma classe deve ter apenas uma razão para mudar, ou seja, deve responder a apenas um ator (stakeholder).\n\nRuim:\n```typescript\nclass Invoice {\n  calculate(): number {\n    // time financeiro pede mudanças aqui\n    return this.items.reduce((sum, item) => sum + item.price, 0);\n  }\n\n  printToPDF(): string {\n    // time de design pede mudanças aqui\n    return `<html>...</html>`;\n  }\n}\n// Se o time financeiro mudar a regra de desconto, Invoice muda.\n// Se o time de design alterar o layout, Invoice também muda.\n// Duas razões: SRP violado.\n```\n\nBom:\n```typescript\nclass Invoice {\n  calculate(): number {\n    return this.items.reduce((sum, item) => sum + item.price, 0);\n  }\n}\n\nclass InvoicePrinter {\n  printToPDF(invoice: Invoice): string {\n    return `<html>...</html>`;\n  }\n}\n```\n\nAgora cada classe muda por uma única razão."
+    },
+    {
+      "kind": "pair",
+      "position": 1,
+      "conceptA": "Uma razão para mudar",
+      "conceptB": "Definição precisa do SRP",
+      "match": true,
+      "explanation": "Combinam. A frase exata de Uncle Bob é: 'A module should be responsible to one, and only one, actor.' A razão para mudar é determinada pelo ator que solicita a mudança. Entender isso evita confundir SRP com 'fazer uma coisa', que não diz quando parar de dividir."
+    },
+
+    {
+      "kind": "info",
+      "position": 2,
+      "front": "Como identificar uma violação de SRP na prática?",
+      "back": "Para cada método da classe, pergunte: quem pediria a mudança nesse método?\n\nRuim (três atores na mesma classe):\n```typescript\nclass UserService {\n  login(email: string, password: string): User {\n    // quem pede mudança aqui? time de segurança\n  }\n\n  sendWelcomeEmail(user: User): void {\n    // quem pede mudança aqui? time de marketing\n  }\n\n  generateActivityReport(): Report {\n    // quem pede mudança aqui? time de gestão\n  }\n}\n```\n\nTrês atores distintos respondem às perguntas acima: SRP violado três vezes na mesma classe.\n\nSe todos os métodos fossem respondidos pelo mesmo time, a classe seria coesa mesmo com muitos métodos."
+    },
+    {
+      "kind": "pair",
+      "position": 3,
+      "conceptA": "Métodos com atores diferentes na mesma classe",
+      "conceptB": "Violação de SRP",
+      "match": true,
+      "explanation": "Combinam. O teste prático do SRP é exatamente esse: se métodos diferentes seriam alterados por stakeholders diferentes, a classe acumulou responsabilidades demais. Cada ator deveria ter sua própria classe."
+    },
+
+    {
+      "kind": "info",
+      "position": 4,
+      "front": "Como corrigir uma violação de SRP?",
+      "back": "A solução é separar a classe em classes menores, uma por ator.\n\nBom (uma classe por ator):\n```typescript\nclass AuthService {\n  // responsável: time de segurança\n  login(email: string, password: string): User {\n    // valida credenciais, cria sessão\n  }\n}\n\nclass WelcomeMailer {\n  // responsável: time de marketing\n  send(user: User): void {\n    // envia e-mail de boas-vindas\n  }\n}\n\nclass ActivityReporter {\n  // responsável: time de gestão\n  generate(): Report {\n    // consolida dados de uso\n  }\n}\n```\n\nBenefícios imediatos:\n1. Mudança em marketing não afeta segurança.\n2. Cada classe pode ser testada de forma completamente isolada.\n3. É possível reutilizar WelcomeMailer em outros fluxos sem arrastar AuthService junto."
+    },
+    {
+      "kind": "pair",
+      "position": 5,
+      "conceptA": "Separar responsabilidades em classes dedicadas por ator",
+      "conceptB": "SRP aplicado",
+      "match": true,
+      "explanation": "Combinam. SRP aplicado é exatamente isso: uma classe por ator. Ao separar AuthService, WelcomeMailer e ActivityReporter, você garante que mudanças em marketing nunca impactam o código de segurança. São partes independentes que crescem e mudam em ritmos diferentes."
+    },
+
+    {
+      "kind": "info",
+      "position": 6,
+      "front": "SRP se aplica a funções, não apenas a classes",
+      "back": "Uma função viola SRP quando mistura duas responsabilidades distintas.\n\nRuim:\n```typescript\nasync function validateAndSaveUser(data: unknown): Promise<User> {\n  // responsabilidade 1: validar entrada\n  if (!data || typeof data !== 'object') throw new Error('Dados inválidos');\n  const { name, email } = data as any;\n  if (!email.includes('@')) throw new Error('Email inválido');\n\n  // responsabilidade 2: persistir\n  return db.users.create({ name, email });\n}\n```\n\nBom:\n```typescript\nfunction validateUserInput(data: unknown): { name: string; email: string } {\n  if (!data || typeof data !== 'object') throw new Error('Dados inválidos');\n  const { name, email } = data as any;\n  if (!email.includes('@')) throw new Error('Email inválido');\n  return { name, email };\n}\n\nasync function saveUser(input: { name: string; email: string }): Promise<User> {\n  return db.users.create(input);\n}\n```\n\nValidação muda quando as regras de negócio evoluem. Persistência muda quando o banco ou o ORM muda. Duas razões: funções separadas."
+    },
+    {
+      "kind": "pair",
+      "position": 7,
+      "conceptA": "Função que valida entrada e persiste no banco",
+      "conceptB": "Responsabilidade única",
+      "match": false,
+      "explanation": "Não combinam. Validar e persistir são razões de mudança diferentes: validação muda quando as regras de negócio evoluem, persistência muda quando o banco ou o ORM muda. Colocar as duas na mesma função é SRP violado no nível de função."
+    },
+
+    {
+      "kind": "info",
+      "position": 8,
+      "front": "SRP não significa 'uma classe, um método'",
+      "back": "Um erro comum é achar que SRP exige que cada classe tenha apenas um método. Não é isso.\n\nUma classe pode ter vários métodos e ainda seguir SRP, desde que todos eles mudem pela mesma razão.\n\n```typescript\n// Classe com 5 métodos, SRP respeitado:\nclass PaymentProcessor {\n  charge(amount: number): Receipt { ... }\n  refund(receiptId: string): void { ... }\n  getStatus(receiptId: string): PaymentStatus { ... }\n  validateCard(card: Card): boolean { ... }\n  calculateFees(amount: number): number { ... }\n}\n```\n\nTodos esses métodos seriam solicitados pelo mesmo ator: o time financeiro. Se esse time precisar de uma mudança, os métodos acima podem ser afetados, mas nenhum outro stakeholder entraria nessa classe.\n\nDividir PaymentProcessor em 5 classes de um método seria over-engineering sem benefício real."
+    },
+    {
+      "kind": "pair",
+      "position": 9,
+      "conceptA": "Classe com vários métodos sobre o mesmo domínio",
+      "conceptB": "Viola SRP",
+      "match": false,
+      "explanation": "Não combinam. SRP não limita o número de métodos por classe. O critério é o ator: se todos os métodos respondem ao mesmo stakeholder, a classe tem uma única razão para mudar. Coesão alta e muitos métodos relacionados são perfeitamente compatíveis com SRP."
+    },
+
+    {
+      "kind": "info",
+      "position": 10,
+      "front": "God Class: o antipadrão oposto ao SRP",
+      "back": "Uma God Class é uma classe que sabe e faz tudo no sistema. É o oposto direto do SRP.\n\n```typescript\nclass ApplicationManager {\n  // autenticação\n  login(email: string, password: string): void { ... }\n  logout(): void { ... }\n\n  // banco de dados\n  queryDatabase(sql: string): any[] { ... }\n  migrateSchema(): void { ... }\n\n  // interface\n  renderDashboard(): string { ... }\n  showNotification(msg: string): void { ... }\n\n  // relatórios\n  generateSalesReport(): Report { ... }\n  exportToCSV(): string { ... }\n}\n```\n\nSintomas de God Class:\n- Mais de 200 linhas (quase sempre)\n- Nome genérico: Manager, Handler, Processor, Helper, Utils\n- Importa 10 ou mais dependências externas\n- Impossível testar sem mockar metade do sistema"
+    },
+    {
+      "kind": "pair",
+      "position": 11,
+      "conceptA": "God Class",
+      "conceptB": "Alta coesão",
+      "match": false,
+      "explanation": "Não combinam. God Class é o oposto de alta coesão: ela acumula responsabilidades de atores completamente diferentes. Alta coesão significa que tudo na classe existe para o mesmo propósito. God Class é o sintoma mais visível de SRP sistematicamente ignorado em um projeto."
+    },
+
+    {
+      "kind": "info",
+      "position": 12,
+      "front": "Por que SRP facilita testes unitários?",
+      "back": "Classes que seguem SRP são dramaticamente mais fáceis de testar.\n\nRuim (muitas dependências acopladas):\n```typescript\nclass UserService {\n  constructor(\n    private db: Database,\n    private mailer: EmailService,\n    private logger: Logger,\n    private cache: CacheService\n  ) {}\n\n  register(data: UserDTO): User { ... }\n}\n// Para testar register(), você precisa mockar 4 dependências.\n```\n\nBom (responsabilidade única):\n```typescript\nclass UserRegistrar {\n  constructor(private db: Database) {}\n\n  register(data: UserDTO): User { ... }\n}\n// Para testar register(), você precisa mockar apenas 1 dependência.\n```\n\nCada dependência extra é um eixo de variação que aumenta a complexidade do setup do teste. SRP reduz esse número ao mínimo necessário."
+    },
+    {
+      "kind": "pair",
+      "position": 13,
+      "conceptA": "Classe com responsabilidade única",
+      "conceptB": "Teste unitário mais simples",
+      "match": true,
+      "explanation": "Combinam. Uma classe com responsabilidade única naturalmente tem poucas dependências: ela só precisa das ferramentas do seu domínio específico. Poucas dependências significam menos mocks e um teste mais direto. SRP e testabilidade se reforçam mutuamente."
+    },
+
+    {
+      "kind": "info",
+      "position": 14,
+      "front": "SRP se aplica em todos os níveis de abstração",
+      "back": "SRP não é uma regra apenas para classes. Ele se aplica em todos os níveis:\n\n- Função: faz uma única transformação ou operação\n- Classe: serve um único ator\n- Módulo/pacote: agrupa conceitos de um único domínio\n- Serviço (microsserviço): tem um único bounded context\n\nExemplo no nível de módulo:\n```\nsrc/\n  auth/       -> responsabilidade: autenticação e autorização\n  payments/   -> responsabilidade: processamento de pagamentos\n  reports/    -> responsabilidade: geração de relatórios\n  users/      -> responsabilidade: dados e perfil de usuários\n```\n\nSe o módulo payments precisar importar lógica de auth E de reports para funcionar, é um sinal de que os limites estão errados e SRP está sendo violado no nível de módulo."
+    },
+    {
+      "kind": "pair",
+      "position": 15,
+      "conceptA": "SRP se aplica apenas a classes e métodos",
+      "conceptB": "Afirmação verdadeira",
+      "match": false,
+      "explanation": "Não combinam. SRP é um princípio de design que vale em todos os níveis de abstração: funções, classes, módulos e até serviços. Em cada nível, a pergunta é a mesma: este componente tem uma única razão para mudar? Se a resposta for não, o princípio está sendo violado."
+    },
+
+    {
+      "kind": "info",
+      "position": 16,
+      "front": "Violação de SRP causa conflitos de merge",
+      "back": "Quando SRP é violado, mudanças de times diferentes colidem no mesmo arquivo.\n\nCenário: UserService com login, sendEmail e generateReport.\n\nSemana 1: o time de segurança muda o algoritmo de hash em UserService.\nSemana 1 (simultâneo): o time de marketing muda o template de e-mail em UserService.\n\nResultado: conflito de merge.\n\nPior ainda: ao resolver o conflito, alguém acidentalmente reverte parte da mudança de segurança. O teste de login passa, mas o hash voltou a ser fraco.\n\nSRP resolve na raiz: cada time edita apenas sua própria classe, nunca interferindo na classe do outro."
+    },
+    {
+      "kind": "pair",
+      "position": 17,
+      "conceptA": "Classe compartilhada por múltiplos atores",
+      "conceptB": "Risco de conflito de merge",
+      "match": true,
+      "explanation": "Combinam. Quando vários times editam a mesma classe, conflitos de merge são inevitáveis. E quando um time resolve o conflito sem entender o código do outro, regressões aparecem. SRP não é apenas sobre design elegante: é sobre redução de risco operacional real em times que trabalham em paralelo."
+    }
+  ]
+}
