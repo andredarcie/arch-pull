@@ -143,6 +143,10 @@ Cada arquivo JSON representa um tema do dia e segue a interface `DailyThemeInput
 - **Calendário**: exibe apenas os **3 últimos meses** (mês atual + 2 anteriores), não o ano inteiro.
 - **Flashcard — face de resposta**: layout em três zonas fixas — label no topo, área de texto com scroll (`flashcard-answer-wrap`), botão "Continuar" preso no rodapé. Altura via `clamp(340px, calc(100dvh - 185px), 560px)`.
 
+## Finishing a task
+
+Always run `npx tsc --noEmit` before reporting a task as done. Fix every error before finishing.
+
 ## What agents should NOT do
 
 - Do not bypass the `isPair` filter when computing scores — info cards must be excluded.
