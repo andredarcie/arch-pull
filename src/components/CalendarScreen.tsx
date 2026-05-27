@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import type { Card } from "../data/pairs";
 import type { LocalDailyTheme } from "../data/dailyThemeFallback";
-import { todayTheme } from "../data/dailyThemeFallback";
 import { CalendarDays, Play, Flame } from "lucide-react";
 
 type DailyTheme = LocalDailyTheme & { description: string | null };
@@ -103,8 +102,8 @@ export function CalendarScreen({ activeDays, onStart }: CalendarScreenProps) {
   useEffect(() => {
     fetch("/api/theme", { cache: "no-store" })
       .then((r) => r.json())
-      .then((data) => setTheme((data as DailyTheme | null) ?? todayTheme))
-      .catch(() => setTheme(todayTheme))
+      .then((data) => setTheme((data as DailyTheme | null)))
+      .catch(() => setTheme(null))
       .finally(() => setLoading(false));
   }, []);
 
