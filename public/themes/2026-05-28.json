@@ -3,92 +3,92 @@
   "title": "Specification-Driven Development",
   "description": "Como escrever e refinar especificações que agentes de IA conseguem implementar com precisão.",
   "context": {
-    "relevance": "Agentes de IA são tao bons quanto as especificacoes que recebem. SDD e a pratica de refinar e estruturar essas especificacoes antes de pedir a implementacao, transformando intencao vaga em contrato preciso."
+    "relevance": "Agentes de IA são tão bons quanto as especificações que recebem. SDD é a prática de refinar e estruturar essas especificações antes de pedir a implementação, transformando intenção vaga em contrato preciso."
   },
   "cards": [
     {
       "kind": "info",
       "position": 0,
-      "front": "Qual e o fluxo central do SDD com agentes de IA?",
-      "back": "SDD segue um ciclo em quatro etapas:\n\n1. Requisito (o que o negocio quer)\n2. Especificacao (comportamento preciso)\n3. Revisao (refinamento antes do codigo)\n4. Implementacao (agente executa)\n\nRuim:\n\"Cria um sistema de carrinho\"\n-> Agente implementa, voce corrige\n-> Agente reimplementa, voce corrige...\n\nBom:\n\"Cart.addItem(product, qty):\n- lanca DuplicateItemError se ja existe\n- lanca OutOfStockError se qty > estoque\n- retorna Cart atualizado\"\n-> Agente implementa uma vez, correto."
+      "front": "Qual é o fluxo central do SDD com agentes de IA?",
+      "back": "SDD segue um ciclo em quatro etapas:\n\n1. Requisito (o que o negócio quer)\n2. Especificação (comportamento preciso)\n3. Revisão (refinamento antes do código)\n4. Implementação (agente executa)\n\nRuim:\n\"Cria um sistema de carrinho\"\n-> Agente implementa, você corrige\n-> Agente reimplementa, você corrige...\n\nBom:\n\"Cart.addItem(product, qty):\n- lança DuplicateItemError se já existe\n- lança OutOfStockError se qty > estoque\n- retorna Cart atualizado\"\n-> Agente implementa uma vez, correto."
     },
     {
       "kind": "pair",
       "position": 1,
-      "conceptA": "Especificacao revisada antes de implementar",
-      "conceptB": "Menos ciclos de correcao com o agente",
+      "conceptA": "Especificação revisada antes de implementar",
+      "conceptB": "Menos ciclos de correção com o agente",
       "match": true,
-      "explanation": "Combinam. O custo de corrigir uma especificacao e uma fracao do custo de reescrever codigo. Cada lacuna na spec se transforma em uma suposicao do agente. Suposicoes erradas viram bugs. Revisar a spec antes de implementar elimina esses bugs antes de existirem."
+      "explanation": "Combinam. O custo de corrigir uma especificação é uma fração do custo de reescrever código. Cada lacuna na spec se transforma em uma suposição do agente. Suposições erradas viram bugs. Revisar a spec antes de implementar elimina esses bugs antes de existirem."
     },
     {
       "kind": "info",
       "position": 2,
-      "front": "Como transformar um requisito vago em especificacao para o agente?",
-      "back": "Requisitos descrevem intencao. Especificacoes descrevem comportamento.\n\nRequisito (vago):\n\"Usuario precisa fazer login\"\n\nEspecificacao (precisa):\n\"login(email, password):\n- entrada: email valido, password nao vazio\n- sucesso: retorna { token, expiresAt }\n- email nao encontrado: lanca UserNotFoundError\n- senha incorreta: lanca InvalidPasswordError\n- nao diferencia os dois erros para o cliente\"\n\nO agente implementa a spec, nao o requisito. A qualidade do output depende da qualidade da spec."
+      "front": "Como transformar um requisito vago em especificação para o agente?",
+      "back": "Requisitos descrevem intenção. Especificações descrevem comportamento.\n\nRequisito (vago):\n\"Usuário precisa fazer login\"\n\nEspecificação (precisa):\n\"login(email, password):\n- entrada: email válido, password não vazio\n- sucesso: retorna { token, expiresAt }\n- email não encontrado: lança UserNotFoundError\n- senha incorreta: lança InvalidPasswordError\n- não diferencia os dois erros para o cliente\"\n\nO agente implementa a spec, não o requisito. A qualidade do output depende da qualidade da spec."
     },
     {
       "kind": "pair",
       "position": 3,
-      "conceptA": "Requisito de negocio",
-      "conceptB": "Instrucao suficiente para o agente implementar",
+      "conceptA": "Requisito de negócio",
+      "conceptB": "Instrução suficiente para o agente implementar",
       "match": false,
-      "explanation": "Nao combinam. Requisitos descrevem o que o negocio quer, mas omitem comportamento em casos de borda, restricoes e contratos de erro. Um agente precisa de especificacao, nao de requisito. A transformacao de um em outro e justamente o trabalho central do SDD."
+      "explanation": "Não combinam. Requisitos descrevem o que o negócio quer, mas omitem comportamento em casos de borda, restrições e contratos de erro. Um agente precisa de especificação, não de requisito. A transformação de um em outro é justamente o trabalho central do SDD."
     },
     {
       "kind": "info",
       "position": 4,
-      "front": "Por que criterios de aceite na spec reduzem ambiguidade para o agente?",
-      "back": "Criterios de aceite definem o que 'pronto' significa antes de qualquer linha de codigo.\n\nSem criterio:\n\"Implemente validacao de formulario\"\n-> O agente decide o que validar e como reportar erros.\n\nCom criterio:\n\"Validar ao submeter:\n- email: formato valido ou erro 'Email invalido'\n- senha: minimo 8 caracteres ou erro 'Senha curta'\n- campos obrigatorios: erro 'Campo obrigatorio'\n- erros: exibir abaixo do campo, nao em alerta\"\n\nO agente nao tem escolha a fazer: o comportamento esta especificado."
+      "front": "Por que critérios de aceite na spec reduzem ambiguidade para o agente?",
+      "back": "Critérios de aceite definem o que 'pronto' significa antes de qualquer linha de código.\n\nSem critério:\n\"Implemente validação de formulário\"\n-> O agente decide o que validar e como reportar erros.\n\nCom critério:\n\"Validar ao submeter:\n- email: formato válido ou erro 'Email inválido'\n- senha: mínimo 8 caracteres ou erro 'Senha curta'\n- campos obrigatórios: erro 'Campo obrigatório'\n- erros: exibir abaixo do campo, não em alerta\"\n\nO agente não tem escolha a fazer: o comportamento está especificado."
     },
     {
       "kind": "pair",
       "position": 5,
-      "conceptA": "Criterio de aceite na especificacao",
-      "conceptB": "Comportamento verificavel pelo agente",
+      "conceptA": "Critério de aceite na especificação",
+      "conceptB": "Comportamento verificável pelo agente",
       "match": true,
-      "explanation": "Combinam. Criterios de aceite transformam intencao em comportamento testavel. Para o agente, eles sao a linha de chegada: a implementacao esta pronta quando satisfaz todos os criterios. Sem eles, o agente nao sabe quando parar, e voce nao sabe quando aceitar."
+      "explanation": "Combinam. Critérios de aceite transformam intenção em comportamento testável. Para o agente, eles são a linha de chegada: a implementação está pronta quando satisfaz todos os critérios. Sem eles, o agente não sabe quando parar, e você não sabe quando aceitar."
     },
     {
       "kind": "info",
       "position": 6,
       "front": "Como decompor uma spec grande em tarefas para o agente?",
-      "back": "Features grandes demandam specs decompostas em tarefas independentes.\n\nSpec de feature:\n\"Sistema de pedidos com checkout\"\n\nDecomposicao em tarefas:\n1. Cart: add, remove, calcular total\n2. Checkout: validar endereco, calcular frete\n3. Payment: integrar gateway, tratar erros\n4. Order: criar registro, enviar confirmacao\n\nCada tarefa tem sua propria mini-spec:\nentradas, saidas, erros esperados.\n\nO agente trabalha uma tarefa por vez, com contexto focado."
+      "back": "Features grandes demandam specs decompostas em tarefas independentes.\n\nSpec de feature:\n\"Sistema de pedidos com checkout\"\n\nDecomposição em tarefas:\n1. Cart: add, remove, calcular total\n2. Checkout: validar endereço, calcular frete\n3. Payment: integrar gateway, tratar erros\n4. Order: criar registro, enviar confirmação\n\nCada tarefa tem sua própria mini-spec:\nentradas, saídas, erros esperados.\n\nO agente trabalha uma tarefa por vez, com contexto focado."
     },
     {
       "kind": "pair",
       "position": 7,
-      "conceptA": "Feature entregue ao agente sem decomposicao",
-      "conceptB": "Implementacao focada e previsivel",
+      "conceptA": "Feature entregue ao agente sem decomposição",
+      "conceptB": "Implementação focada e previsível",
       "match": false,
-      "explanation": "Nao combinam. Quanto maior o escopo entregue de uma vez, mais o agente precisa tomar decisoes de arquitetura sozinho. Essas decisoes raramente alinham com as expectativas. Decompor a spec em tarefas menores mantem o contexto do agente focado e a implementacao alinhada com a intencao."
+      "explanation": "Não combinam. Quanto maior o escopo entregue de uma vez, mais o agente precisa tomar decisões de arquitetura sozinho. Essas decisões raramente alinham com as expectativas. Decompor a spec em tarefas menores mantém o contexto do agente focado e a implementação alinhada com a intenção."
     },
     {
       "kind": "info",
       "position": 8,
-      "front": "A spec precisa ser atualizada quando a implementacao diverge?",
-      "back": "Sim. A spec e a fonte de verdade: o codigo deve refletir a spec, nao o contrario.\n\nCenario comum:\nAgente implementa algo diferente da spec.\n\nErrado:\nAceitar o codigo e ignorar a divergencia.\n\nCerto:\nDecida qual esta correto:\n- Spec estava errada? Atualize a spec,\n  documente por que mudou.\n- Codigo esta errado? Corrija o codigo.\n\nSDD so funciona se a spec permanecer\na fonte de verdade.\nSpec desatualizada: caos silencioso."
+      "front": "A spec precisa ser atualizada quando a implementação diverge?",
+      "back": "Sim. A spec é a fonte de verdade: o código deve refletir a spec, não o contrário.\n\nCenário comum:\nAgente implementa algo diferente da spec.\n\nErrado:\nAceitar o código e ignorar a divergência.\n\nCerto:\nDecida qual está correto:\n- Spec estava errada? Atualize a spec,\n  documente por que mudou.\n- Código está errado? Corrija o código.\n\nSDD só funciona se a spec permanecer\na fonte de verdade.\nSpec desatualizada: caos silencioso."
     },
     {
       "kind": "pair",
       "position": 9,
-      "conceptA": "Implementacao diverge da especificacao",
-      "conceptB": "Atualizar a especificacao ou corrigir o codigo",
+      "conceptA": "Implementação diverge da especificação",
+      "conceptB": "Atualizar a especificação ou corrigir o código",
       "match": true,
-      "explanation": "Combinam. Em SDD, divergencias entre spec e codigo sao sinal de que algo precisa ser resolvido. Ou a spec estava errada (e deve ser corrigida para refletir a decisao) ou o codigo esta errado (e o agente deve reimplementar). Ignorar a divergencia destroi a utilidade da spec como fonte de verdade."
+      "explanation": "Combinam. Em SDD, divergências entre spec e código são sinal de que algo precisa ser resolvido. Ou a spec estava errada (e deve ser corrigida para refletir a decisão) ou o código está errado (e o agente deve reimplementar). Ignorar a divergência destrói a utilidade da spec como fonte de verdade."
     },
     {
       "kind": "info",
       "position": 10,
-      "front": "Pedir ao agente para revisar a spec antes de implementar e desperdicio?",
-      "back": "Nao. E o investimento com maior retorno no SDD.\n\nDialogo de refinamento:\nVoce: 'Antes de implementar, me diga o\nque entendeu da spec e o que esta ambiguo.'\n\nAgente: 'Entendi que deleteUser remove o\nregistro. Mas o que acontece com os pedidos\nassociados? A spec nao especifica.'\n\nVoce: 'Bom ponto. Adicione na spec:\npedidos sao mantidos com userId nulo.'\n\nEsse ciclo de 5 minutos evita uma\nreimplementacao de 30 minutos.\nO agente age como revisor da spec\nantes de executa-la."
+      "front": "Pedir ao agente para revisar a spec antes de implementar é desperdício?",
+      "back": "Não. É o investimento com maior retorno no SDD.\n\nDiálogo de refinamento:\nVocê: 'Antes de implementar, me diga o\nque entendeu da spec e o que está ambíguo.'\n\nAgente: 'Entendi que deleteUser remove o\nregistro. Mas o que acontece com os pedidos\nassociados? A spec não especifica.'\n\nVocê: 'Bom ponto. Adicione na spec:\npedidos são mantidos com userId nulo.'\n\nEsse ciclo de 5 minutos evita uma\nreimplementação de 30 minutos.\nO agente age como revisor da spec\nantes de executá-la."
     },
     {
       "kind": "pair",
       "position": 11,
       "conceptA": "Pedir ao agente para revisar a spec antes de implementar",
-      "conceptB": "Atraso desnecessario no desenvolvimento",
+      "conceptB": "Atraso desnecessário no desenvolvimento",
       "match": false,
-      "explanation": "Nao combinam. Pedir ao agente para revisar a spec antes de implementar e uma das praticas mais eficientes do SDD. O agente identifica ambiguidades que o autor nao viu, porque le a spec do ponto de vista de quem vai executar. Essa revisao de minutos previne retrabalho de horas."
+      "explanation": "Não combinam. Pedir ao agente para revisar a spec antes de implementar é uma das práticas mais eficientes do SDD. O agente identifica ambiguidades que o autor não viu, porque lê a spec do ponto de vista de quem vai executar. Essa revisão de minutos previne retrabalho de horas."
     }
   ]
 }
