@@ -18,7 +18,7 @@
       "conceptA": "Especificação revisada antes de implementar",
       "conceptB": "Menos ciclos de correção com o agente",
       "match": true,
-      "explanation": "Combinam. O custo de corrigir uma especificação é uma fração do custo de reescrever código. Cada lacuna na spec se transforma em uma suposição do agente. Suposições erradas viram bugs. Revisar a spec antes de implementar elimina esses bugs antes de existirem."
+      "explanation": "Combinam. O custo de corrigir uma especificação costuma ser uma fração do custo de reescrever código. Cada lacuna na spec se transforma em uma suposição do agente. Suposições erradas viram bugs. Revisar a spec antes de implementar elimina esses bugs antes de existirem."
     },
     {
       "kind": "info",
@@ -38,7 +38,7 @@
       "kind": "info",
       "position": 4,
       "front": "Por que critérios de aceite na spec reduzem ambiguidade para o agente?",
-      "back": "Critérios de aceite definem o que 'pronto' significa antes de qualquer linha de código.\n\nSem critério:\n\"Implemente validação de formulário\"\n-> O agente decide o que validar e como reportar erros.\n\nCom critério:\n\"Validar ao submeter:\n- email: formato válido ou erro 'Email inválido'\n- senha: mínimo 8 caracteres ou erro 'Senha curta'\n- campos obrigatórios: erro 'Campo obrigatório'\n- erros: exibir abaixo do campo, não em alerta\"\n\nO agente não tem escolha a fazer: o comportamento está especificado."
+      "back": "Critérios de aceite definem o que 'pronto' significa antes de qualquer linha de código.\n\nSem critério:\n\"Implemente validação de formulário\"\n-> O agente decide o que validar e como reportar erros.\n\nCom critério:\n\"Validar ao submeter:\n- email: formato válido ou erro 'Email inválido'\n- senha: mínimo 8 caracteres ou erro 'Senha curta'\n- campos obrigatórios: erro 'Campo obrigatório'\n- erros: exibir abaixo do campo, não em alerta\"\n\nO agente tem menos decisões abertas: o comportamento está especificado."
     },
     {
       "kind": "pair",
@@ -66,7 +66,7 @@
       "kind": "info",
       "position": 8,
       "front": "A spec precisa ser atualizada quando a implementação diverge?",
-      "back": "Sim. A spec é a fonte de verdade: o código deve refletir a spec, não o contrário.\n\nCenário comum:\nAgente implementa algo diferente da spec.\n\nErrado:\nAceitar o código e ignorar a divergência.\n\nCerto:\nDecida qual está correto:\n- Spec estava errada? Atualize a spec,\n  documente por que mudou.\n- Código está errado? Corrija o código.\n\nSDD só funciona se a spec permanecer\na fonte de verdade.\nSpec desatualizada: caos silencioso."
+      "back": "Sim. A spec deve ser mantida como fonte de verdade: se o código divergir, corrija o código ou atualize a spec conscientemente.\n\nCenário comum:\nAgente implementa algo diferente da spec.\n\nErrado:\nAceitar o código e ignorar a divergência.\n\nCerto:\nDecida qual está correto:\n- Spec estava errada? Atualize a spec,\n  documente por que mudou.\n- Código está errado? Corrija o código.\n\nSDD só funciona se a spec permanecer\na fonte de verdade.\nSpec desatualizada: caos silencioso."
     },
     {
       "kind": "pair",
@@ -80,7 +80,7 @@
       "kind": "info",
       "position": 10,
       "front": "Pedir ao agente para revisar a spec antes de implementar é desperdício?",
-      "back": "Não. É o investimento com maior retorno no SDD.\n\nDiálogo de refinamento:\nVocê: 'Antes de implementar, me diga o\nque entendeu da spec e o que está ambíguo.'\n\nAgente: 'Entendi que deleteUser remove o\nregistro. Mas o que acontece com os pedidos\nassociados? A spec não especifica.'\n\nVocê: 'Bom ponto. Adicione na spec:\npedidos são mantidos com userId nulo.'\n\nEsse ciclo de 5 minutos evita uma\nreimplementação de 30 minutos.\nO agente age como revisor da spec\nantes de executá-la."
+      "back": "Não. É o investimento com maior retorno no SDD.\n\nDiálogo de refinamento:\nVocê: 'Antes de implementar, me diga o\nque entendeu da spec e o que está ambíguo.'\n\nAgente: 'Entendi que deleteUser remove o\nregistro. Mas o que acontece com os pedidos\nassociados? A spec não especifica.'\n\nVocê: 'Bom ponto. Adicione na spec:\npedidos são mantidos com userId nulo.'\n\nEsse ciclo de 5 minutos pode evitar uma\nreimplementação de 30 minutos.\nO agente age como revisor da spec\nantes de executá-la."
     },
     {
       "kind": "pair",
