@@ -59,7 +59,20 @@ Cada pair card tem:
 - `match`: true se os conceitos se complementam ou têm relação natural, false se não combinam ou são incompatíveis.
 - `explanation`: 2-4 frases explicando **por que** combinam ou não. Começa com "Combinam." ou "Não combinam."
 
-Os pares devem testar julgamento, não memorização. Evite pares óbvios demais (ex: "Bug" / "Erro" é fácil demais). Prefira pares que exijam raciocínio sobre o tema.
+**Os pares devem testar raciocínio, não recall.** O maior erro é criar um par que repete o que o info card acabou de dizer: o usuário leu a resposta há 2 segundos e acerta sem pensar.
+
+Regra de ouro: se o usuário consegue responder o par apenas lembrando o que o info card disse, o par está fraco. O par precisa exigir que ele aplique o princípio num contexto novo ou avalie uma situação que o card não cobriu explicitamente.
+
+**Exemplos do que evitar (fácil demais):**
+- Info card diz "spec evita retrabalho" → par: `"Spec revisada"` / `"Menos retrabalho"` — trivial.
+- Info card diz "requisito não é spec" → par: `"Requisito de negócio"` / `"Instrução suficiente para o agente"` — o card acabou de dizer que não é.
+
+**Exemplos do que fazer (exige raciocínio):**
+- `"Requisito aprovado pelo product owner"` / `"Spec pronta para implementar"` — soa plausível, mas aprovação de negócio não é completude técnica.
+- `"Agente implementa spec ambígua sem questionar"` / `"Implementação alinhada com a intenção"` — agente silencioso não é sinal de boa spec.
+- `"Código funciona em produção mas diverge da spec"` / `"Spec deve ser atualizada"` — requer entender que código correto que diverge invalida a spec, não o contrário.
+
+Bons pares combinam conceitos de ângulos diferentes do tema, testam consequências não óbvias ou exploram casos em que a intuição erra.
 
 ### Língua e estilo
 

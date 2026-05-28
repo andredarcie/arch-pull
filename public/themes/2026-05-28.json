@@ -15,10 +15,10 @@
     {
       "kind": "pair",
       "position": 1,
-      "conceptA": "Especificação revisada antes de implementar",
-      "conceptB": "Menos ciclos de correção com o agente",
+      "conceptA": "Agente pede esclarecimentos durante a implementação",
+      "conceptB": "Spec incompleta",
       "match": true,
-      "explanation": "Combinam. O custo de corrigir uma especificação costuma ser uma fração do custo de reescrever código. Cada lacuna na spec se transforma em uma suposição do agente. Suposições erradas viram bugs. Revisar a spec antes de implementar elimina esses bugs antes de existirem."
+      "explanation": "Combinam. Quando o agente precisa interromper para perguntar, é sinal de que a spec deixou lacunas que ele preencheria com suposições. Uma spec bem escrita antecipa essas perguntas: comportamento em casos de borda, erros esperados e o que está fora do escopo. O agente que não pergunta nada não é necessariamente bom sinal, mas o que precisa perguntar é sinal certo de spec incompleta."
     },
     {
       "kind": "info",
@@ -29,10 +29,10 @@
     {
       "kind": "pair",
       "position": 3,
-      "conceptA": "Requisito de negócio",
-      "conceptB": "Instrução suficiente para o agente implementar",
+      "conceptA": "Requisito aprovado pelo product owner",
+      "conceptB": "Spec pronta para implementar",
       "match": false,
-      "explanation": "Não combinam. Requisitos descrevem o que o negócio quer, mas omitem comportamento em casos de borda, restrições e contratos de erro. Um agente precisa de especificação, não de requisito. A transformação de um em outro é justamente o trabalho central do SDD."
+      "explanation": "Não combinam. Aprovação de negócio valida a intenção, não a completude técnica. Um requisito pode estar aprovado e ainda omitir casos de borda, comportamento em erros e restrições de implementação. A spec começa onde o requisito termina: ela transforma intenção aprovada em comportamento preciso o suficiente para um agente executar."
     },
     {
       "kind": "info",
@@ -43,10 +43,10 @@
     {
       "kind": "pair",
       "position": 5,
-      "conceptA": "Critério de aceite na especificação",
+      "conceptA": "Critério de aceite: 'o formulário deve funcionar corretamente'",
       "conceptB": "Comportamento verificável pelo agente",
-      "match": true,
-      "explanation": "Combinam. Critérios de aceite transformam intenção em comportamento testável. Para o agente, eles são a linha de chegada: a implementação está pronta quando satisfaz todos os critérios. Sem eles, o agente não sabe quando parar, e você não sabe quando aceitar."
+      "match": false,
+      "explanation": "Não combinam. 'Funcionar corretamente' não é verificável: não diz o que validar, quando falhar nem como reportar o erro. Um critério verificável especifica entrada, saída e estado esperado de forma que não reste interpretação. Critérios vagos são tão problemáticos quanto a ausência deles: o agente os satisfaz facilmente sem implementar o que você queria."
     },
     {
       "kind": "info",
@@ -57,10 +57,10 @@
     {
       "kind": "pair",
       "position": 7,
-      "conceptA": "Feature entregue ao agente sem decomposição",
-      "conceptB": "Implementação focada e previsível",
+      "conceptA": "Tarefa da spec com dois fluxos de saída distintos",
+      "conceptB": "Tarefa bem decomposta",
       "match": false,
-      "explanation": "Não combinam. Quanto maior o escopo entregue de uma vez, mais o agente precisa tomar decisões de arquitetura sozinho. Essas decisões raramente alinham com as expectativas. Decompor a spec em tarefas menores mantém o contexto do agente focado e a implementação alinhada com a intenção."
+      "explanation": "Não combinam. Uma tarefa bem decomposta tem uma saída clara e um caminho principal. Quando a spec de uma tarefa prevê dois fluxos distintos, é sinal de que ela deveria ser duas tarefas. O agente com escopo menor comete menos suposições de arquitetura e produz código mais fácil de revisar."
     },
     {
       "kind": "info",
@@ -71,10 +71,10 @@
     {
       "kind": "pair",
       "position": 9,
-      "conceptA": "Implementação diverge da especificação",
-      "conceptB": "Atualizar a especificação ou corrigir o código",
+      "conceptA": "Código funciona em produção mas diverge da spec",
+      "conceptB": "Spec deve ser atualizada",
       "match": true,
-      "explanation": "Combinam. Em SDD, divergências entre spec e código são sinal de que algo precisa ser resolvido. Ou a spec estava errada (e deve ser corrigida para refletir a decisão) ou o código está errado (e o agente deve reimplementar). Ignorar a divergência destrói a utilidade da spec como fonte de verdade."
+      "explanation": "Combinam. Quando o código funciona corretamente mas difere da spec, a spec é que está errada, não o código. A decisão de implementação foi tomada conscientemente e a spec precisa refletir isso. Manter uma spec desatualizada é pior do que não ter spec: ela passa informação falsa para o próximo agente que a ler."
     },
     {
       "kind": "info",
@@ -85,10 +85,10 @@
     {
       "kind": "pair",
       "position": 11,
-      "conceptA": "Pedir ao agente para revisar a spec antes de implementar",
-      "conceptB": "Atraso desnecessário no desenvolvimento",
+      "conceptA": "Agente implementa spec ambígua sem questionar",
+      "conceptB": "Implementação alinhada com a intenção",
       "match": false,
-      "explanation": "Não combinam. Pedir ao agente para revisar a spec antes de implementar é uma das práticas mais eficientes do SDD. O agente identifica ambiguidades que o autor não viu, porque lê a spec do ponto de vista de quem vai executar. Essa revisão de minutos previne retrabalho de horas."
+      "explanation": "Não combinam. Um agente que não questiona uma spec ambígua não é eficiente: é perigoso. Ele preencheu as lacunas com suposições próprias e entregou código que compila e parece funcionar, mas implementa uma interpretação diferente da sua. A revisão da spec antes da implementação existe justamente para que essas ambiguidades sejam resolvidas em texto, não em código."
     }
   ]
 }
