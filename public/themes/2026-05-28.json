@@ -10,7 +10,7 @@
       "kind": "info",
       "position": 0,
       "front": "O que é uma spec e qual é o fluxo do SDD com agentes de IA?",
-      "back": "A spec é um arquivo Markdown no repositório.\nO SDD segue quatro etapas:\n\n1. Requisito (o que o negócio quer)\n2. Spec (arquivo .md com comportamento preciso)\n3. Revisão (refinar antes de implementar)\n4. Implementação (agente executa a spec)\n\n```markdown\n# Cart.addItem\n## Comportamento\n- Produto já existe: lança DuplicateItemError\n- qty > estoque: lança OutOfStockError\n- Retorna Cart atualizado\n## Critérios de aceite\n- [ ] Item novo: Cart com length + 1\n- [ ] Item duplicado: DuplicateItemError\n```\n\nVocê escreve esse arquivo antes de chamar\no agente. Ele fica no repositório."
+      "back": "A spec é um arquivo Markdown no repositório.\nO SDD segue quatro etapas:\n\n1. Requisito (o que o negócio quer)\n2. Spec (arquivo .md com comportamento preciso)\n3. Revisão (refinar antes de implementar)\n4. Implementação (agente executa a spec)\n\n```markdown\n# Cadastro de usuário\n## Comportamento\n- Email já cadastrado: lança EmailInUseError\n- Senha menor que 8 chars: lança WeakPasswordError\n- Sucesso: retorna { id, email, createdAt }\n## Critérios de aceite\n- [ ] Email novo: usuário criado no banco\n- [ ] Email duplicado: EmailInUseError\n```\n\nVocê escreve esse arquivo antes de chamar\no agente. Ele fica no repositório."
     },
     {
       "kind": "pair",
