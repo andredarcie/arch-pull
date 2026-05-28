@@ -29,6 +29,10 @@ const WEEK_DAYS = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "
 const MONTHS = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 const MONTH_LABELS = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
 
+function localDateISO(date = new Date()): string {
+  return new Intl.DateTimeFormat('sv', { timeZone: 'America/Sao_Paulo' }).format(date);
+}
+
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -112,7 +116,7 @@ export function CalendarScreen({ activeDays, onStart }: CalendarScreenProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const today = new Date().toISOString().slice(0, 10);
+    const today = localDateISO();
     fetch(`${import.meta.env.BASE_URL}themes/${today}.json`, { cache: "no-store" })
       .then((r) => r.ok ? r.json() : null)
       .then((data) => setTheme((data as DailyTheme | null)))
@@ -121,7 +125,7 @@ export function CalendarScreen({ activeDays, onStart }: CalendarScreenProps) {
   }, []);
 
   const today = new Date();
-  const todayIso = today.toISOString().slice(0, 10);
+  const todayIso = localDateISO(today);
   const dayName = WEEK_DAYS[today.getDay()];
   const monthName = MONTHS[today.getMonth()];
   const year = today.getFullYear();
