@@ -52,7 +52,7 @@
       "kind": "info",
       "position": 6,
       "front": "Como decompor uma spec grande em tarefas para o agente?",
-      "back": "Features grandes demandam specs decompostas em tarefas independentes.\n\nSpec de feature:\n\"Sistema de pedidos com checkout\"\n\nDecomposição em tarefas:\n1. Cart: add, remove, calcular total\n2. Checkout: validar endereço, calcular frete\n3. Payment: integrar gateway, tratar erros\n4. Order: criar registro, enviar confirmação\n\nCada tarefa tem sua própria mini-spec:\nentradas, saídas, erros esperados.\n\nO agente trabalha uma tarefa por vez, com contexto focado."
+      "back": "Features grandes demandam specs decompostas em tarefas independentes.\n\nSpec de feature:\n\"Sistema de cadastro e autenticação\"\n\nDecomposição em tarefas:\n1. Cadastro: validar email, criar usuário\n2. Login: verificar credenciais, gerar token\n3. Perfil: editar nome, trocar senha\n4. Sessão: expirar token, revogar acesso\n\nCada tarefa tem sua própria mini-spec:\nentradas, saídas, erros esperados.\n\nO agente trabalha uma tarefa por vez, com contexto focado."
     },
     {
       "kind": "pair",
