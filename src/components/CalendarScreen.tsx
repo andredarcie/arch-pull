@@ -17,6 +17,7 @@ interface DailyTheme {
   title: string;
   description: string | null;
   context?: { relevance: string };
+  sources?: { title: string; url: string }[];
   cards: ThemeCard[];
 }
 
@@ -49,6 +50,7 @@ function mapToCards(theme: DailyTheme): Card[] {
     result.push({
       kind: "context",
       relevance: theme.context.relevance,
+      sources: theme.sources,
     });
   }
 

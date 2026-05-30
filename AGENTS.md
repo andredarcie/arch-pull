@@ -108,6 +108,10 @@ Cada arquivo JSON representa um tema do dia e segue a interface `DailyThemeInput
   "date": "YYYY-MM-DD",
   "title": "Nome do tema",
   "description": "Subtítulo exibido na tela do calendário.",
+  "context": { "relevance": "Por que esse tema importa agora, para um engenheiro de software." },
+  "sources": [
+    { "title": "Título do artigo ou livro (Autor/Publicação, Ano)", "url": "https://..." }
+  ],
   "cards": [
     // Flashcard informativo (leitura + virar)
     { "kind": "info", "position": 0, "front": "Pergunta", "back": "Resposta longa..." },
@@ -128,6 +132,7 @@ Cada arquivo JSON representa um tema do dia e segue a interface `DailyThemeInput
 - O campo `back` dos cards `info` suporta blocos de código com a sintaxe ` ```typescript\n...\n``` ` (renderizados pelo componente `RichText` com syntax highlighting).
 - O campo `position` deve ser sequencial a partir de 0.
 - O campo `context` tem apenas `relevance` ("Por que preciso saber"), exibido ao usuário antes de começar. Os campos `origin` e `motivation` foram removidos.
+- O campo `sources` é **obrigatório**. Lista as fontes reais consultadas para criar o tema. Exibido ao usuário como "Embasamento científico" agrupado por categoria. O campo `category` é opcional mas recomendado: `"paper"` (peer-reviewed / arXiv), `"docs"` (documentação oficial), `"article"` (post técnico de referência). Nunca inventar URLs.
 
 **Ordem de corte ao reduzir um tema para 6 pares:**
 

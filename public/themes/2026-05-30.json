@@ -5,6 +5,38 @@
   "context": {
     "relevance": "A maioria dos problemas com agentes de IA não é de prompt ruim: é de contexto mal projetado. Context engineering é a prática de selecionar, estruturar e priorizar o que o agente recebe, não apenas o que ele é instruído a fazer. Quem domina isso reduz ciclos de correção e consegue agentes que se comportam de forma previsível em projetos reais."
   },
+  "sources": [
+    {
+      "title": "Lost in the Middle: How Language Models Use Long Contexts (Liu et al., TACL 2024)",
+      "url": "https://aclanthology.org/2024.tacl-1.9/",
+      "category": "paper"
+    },
+    {
+      "title": "ACON: Optimizing Context Compression for Long-horizon LLM Agents (arXiv, 2025)",
+      "url": "https://arxiv.org/abs/2510.00615",
+      "category": "paper"
+    },
+    {
+      "title": "Learning vs Retrieval: The Role of In-Context Examples in LLMs (arXiv, 2024)",
+      "url": "https://arxiv.org/abs/2409.04318",
+      "category": "paper"
+    },
+    {
+      "title": "Effective Context Engineering for AI Agents (Anthropic Engineering, 2025)",
+      "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+      "category": "docs"
+    },
+    {
+      "title": "Context Engineering vs. Prompt Engineering (Firecrawl, 2025)",
+      "url": "https://www.firecrawl.dev/blog/context-engineering",
+      "category": "article"
+    },
+    {
+      "title": "Context Rot: How Increasing Input Tokens Impacts LLM Performance (Chroma, 2025)",
+      "url": "https://research.trychroma.com/context-rot",
+      "category": "article"
+    }
+  ],
   "cards": [
     {
       "kind": "info",

@@ -54,9 +54,21 @@ Correto: `"aberto para extensão, fechado para modificação"`
   "context": {
     "relevance": "Por que esse tema importa agora, para um engenheiro de software."
   },
+  "sources": [
+    { "title": "Título (Autor/Publicação, Ano)", "url": "https://...", "category": "paper" },
+    { "title": "Título (Publicação, Ano)", "url": "https://...", "category": "docs" },
+    { "title": "Título (Publicação, Ano)", "url": "https://...", "category": "article" }
+  ],
   "cards": [ ...exatamente 12 cards... ]
 }
 ```
+
+O campo `sources` é **obrigatório**. Liste apenas fontes reais consultadas. O campo `category` é opcional mas recomendado — controla o agrupamento visual no modal:
+- `"paper"` — artigo peer-reviewed ou preprint (arXiv, TACL, NeurIPS...)
+- `"docs"` — documentação oficial (Anthropic, MDN, especificações)
+- `"article"` — post técnico de referência (blogs de engenharia, pesquisa publicada por empresas)
+
+Nunca invente URLs.
 
 O título segue a convenção do projeto em inglês: "Single Responsibility Principle", "Context Engineering".
 
@@ -144,3 +156,4 @@ Execute estes passos nesta ordem após terminar todos os cards:
 - [ ] **Pares não triviais**: para cada par, pergunte: "o usuário consegue acertar isso apenas lembrando o card anterior?" Se sim, reescreva o par.
 - [ ] **Sem repetição**: nenhum conceito central aparece em dois cards diferentes do mesmo tema.
 - [ ] **Precisão técnica**: pesquise o tema antes de escrever para garantir que as afirmações são corretas.
+- [ ] **Fontes**: o campo `sources` está preenchido com as URLs reais consultadas durante a pesquisa. Mínimo 3 fontes.

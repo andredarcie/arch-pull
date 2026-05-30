@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSwipe } from "../hooks/useSwipe";
-import type { Card, Pair } from "../data/pairs";
+import type { Card, Pair, SourceCategory } from "../data/pairs";
 import { isPair, isContext } from "../data/pairs";
-import { X, Check, ArrowRight, Layers, Box, GraduationCap, Brain, Zap, Heart, BookOpen } from "lucide-react";
+import { X, Check, ArrowRight, Layers, Box, GraduationCap, Brain, Zap, Heart, BookOpen, ExternalLink } from "lucide-react";
 import { RichText } from "./RichText";
 
 interface SwipeCardProps {
@@ -14,6 +14,13 @@ interface SwipeCardProps {
 type Feedback = "correct" | "wrong" | null;
 
 const PARTICLE_COLORS = ["#6c63ff", "#a78bfa", "#c4b5fd", "#22c55e", "#eaeaf0", "#f43f5e"];
+
+const SOURCE_CATEGORY_ORDER: Array<SourceCategory | undefined> = ["paper", "docs", "article", undefined];
+const SOURCE_CATEGORY_LABELS: Record<SourceCategory, string> = {
+  paper: "Pesquisa científica",
+  docs: "Documentação oficial",
+  article: "Artigo de referência",
+};
 
 const MOTIV_MESSAGES = [
   "Merge aprovado!",
@@ -46,6 +53,7 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
   const [motiv, setMotiv] = useState<{ text: string; key: number } | null>(null);
   const [comboSplash, setComboSplash] = useState<{ count: number; key: number } | null>(null);
   const [particles, setParticles] = useState<{ id: number; angle: number; distance: number; color: string; size: number }[]>([]);
+  const [showSources, setShowSources] = useState(false);
 
   const currentCard = cards[currentIndex];
 
@@ -134,6 +142,7 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
   }, [pendingAdvance, advance]);
 
   const handleInfoContinue = useCallback(() => {
+    setShowSources(false);
     advance(score, wrongPairs);
   }, [score, wrongPairs, advance]);
 
@@ -320,6 +329,12 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
                     <p className="context-section-text">{currentCard.relevance}</p>
                   </div>
                 </div>
+                {currentCard.sources && currentCard.sources.length > 0 && (
+                  <button className="btn-sources" onClick={() => setShowSources(true)}>
+                    <BookOpen size={13} strokeWidth={2} />
+                    Embasamento científico
+                  </button>
+                )}
                 <motion.button
                   className="btn-play context-card-btn"
                   onClick={handleInfoContinue}
@@ -329,6 +344,57 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
                   Começar
                   <ArrowRight size={16} strokeWidth={2.5} />
                 </motion.button>
+
+                <AnimatePresence>
+                  {showSources && currentCard.sources && (
+                    <motion.div
+                      className="sources-overlay"
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 16 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                    >
+                      <div className="sources-modal-header">
+                        <BookOpen size={13} strokeWidth={2} />
+                        <span className="sources-modal-title">Embasamento científico</span>
+                        <button className="sources-modal-close" onClick={() => setShowSources(false)}>
+                          <X size={16} strokeWidth={2} />
+                        </button>
+                      </div>
+                      <div className="sources-list">
+                        {SOURCE_CATEGORY_ORDER
+                          .map(cat => ({
+                            category: cat,
+                            items: currentCard.sources!.filter(s => s.category === cat),
+                          }))
+                          .filter(g => g.items.length > 0)
+                          .map(({ category, items }) => (
+                            <div key={category ?? "other"} className="sources-group">
+                              {category && (
+                                <span className="sources-category-label">
+                                  {SOURCE_CATEGORY_LABELS[category]}
+                                </span>
+                              )}
+                              <ul className="sources-group-list">
+                                {items.map((source) => (
+                                  <li key={source.url} className="source-item">
+                                    <a href={source.url} target="_blank" rel="noopener noreferrer">
+                                      <ExternalLink size={12} className="source-item-icon" strokeWidth={2} />
+                                      {source.title}
+                                    </a>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))
+                        }
+                      </div>
+                      <button className="sources-back-btn" onClick={() => setShowSources(false)}>
+                        Voltar
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             ) : isPair(currentCard) ? (
               <motion.div

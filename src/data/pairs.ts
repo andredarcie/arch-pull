@@ -13,9 +13,18 @@ export interface InfoCard {
   back: string;
 }
 
+export type SourceCategory = "paper" | "docs" | "article";
+
+export interface Source {
+  title: string;
+  url: string;
+  category?: SourceCategory;
+}
+
 export interface ContextCard {
   kind: "context";
   relevance: string;
+  sources?: Source[];
 }
 
 export type Card = Pair | InfoCard | ContextCard;
