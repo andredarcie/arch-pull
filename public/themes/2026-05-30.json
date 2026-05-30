@@ -1,0 +1,94 @@
+{
+  "date": "2026-05-30",
+  "title": "Context Engineering",
+  "description": "Como projetar o ambiente de informação de um agente de IA para obter respostas precisas e consistentes.",
+  "context": {
+    "relevance": "A maioria dos problemas com agentes de IA não é de prompt ruim: é de contexto mal projetado. Context engineering é a prática de selecionar, estruturar e priorizar o que o agente recebe, não apenas o que ele é instruído a fazer. Quem domina isso reduz ciclos de correção e consegue agentes que se comportam de forma previsível em projetos reais."
+  },
+  "cards": [
+    {
+      "kind": "info",
+      "position": 0,
+      "front": "O que é context engineering e no que difere de prompt engineering?",
+      "back": "Context engineering é a prática de projetar todo o ambiente de informação do agente: arquivos relevantes, histórico, instruções do sistema, resultados de ferramentas e, principalmente, o que excluir.\n\nPrompt engineering foca na instrução isolada. Context engineering pensa no conjunto.\n\n```\n# Sem context engineering\n\"Implemente uma função de login\"\n\n# Com context engineering\n- AGENTS.md com padrões do projeto\n- Arquivo de autenticação existente no contexto\n- Exemplos de como erros são tratados\n- Decisões de arquitetura relevantes\n```\n\nUm bom contexto torna a resposta correta óbvia para o agente, sem precisar descrevê-la completamente no prompt."
+    },
+    {
+      "kind": "pair",
+      "position": 1,
+      "conceptA": "Prompt detalhado sem arquivos do projeto",
+      "conceptB": "Agente que respeita convenções do código",
+      "match": false,
+      "explanation": "Não combinam. Instruções descrevem o que fazer, mas convenções de código (nomenclatura, estrutura de módulos, tratamento de erros) são transmitidas com muito mais fidelidade por exemplos reais do repositório do que por descrição em prosa. Pesquisas em in-context learning mostram que exemplos e instruções se complementam: sem os exemplos, a instrução costuma não ser suficiente para alinhar estilo e padrão."
+    },
+    {
+      "kind": "info",
+      "position": 2,
+      "front": "Como identificar que o contexto de um agente está mal projetado?",
+      "back": "Sinais de contexto insuficiente ou mal estruturado:\n\n- Agente gera código correto mas fora do padrão do repositório\n- Agente pergunta algo que já foi respondido na sessão\n- Agente usa bibliotecas diferentes das já adotadas no projeto\n- Agente ignora restrições que não estão explicitadas no contexto\n\nRegra prática: quando você corrige o agente por inconsistência (não por erro lógico), o problema costuma ser de contexto, não de prompt. O agente otimizou para parecer correto de forma geral, não para ser correto neste projeto específico."
+    },
+    {
+      "kind": "pair",
+      "position": 3,
+      "conceptA": "Ausência de AGENTS.md no repositório",
+      "conceptB": "Comportamento do agente difere entre desenvolvedores",
+      "match": true,
+      "explanation": "Combinam. Sem um arquivo de contexto compartilhado, cada desenvolvedor fornece instruções diferentes ao agente nas suas sessões. O resultado é comportamento inconsistente: o agente segue estilos, ferramentas e decisões diferentes dependendo de quem o invoca, tornando o projeto difícil de manter."
+    },
+    {
+      "kind": "info",
+      "position": 4,
+      "front": "Como estruturar o contexto de um agente de forma prática?",
+      "back": "Camadas de contexto em ordem de prioridade:\n\n```markdown\n1. System prompt / AGENTS.md\n   - Restrições do projeto, convenções, o que evitar\n\n2. Arquivos de memória (persistentes)\n   - Decisões de arquitetura, preferências do usuário\n\n3. Arquivos relevantes para a tarefa atual\n   - Código que o agente vai modificar ou que serve de exemplo\n\n4. Histórico recente da sessão\n   - Decisões tomadas nesta conversa\n```\n\nContexto bem estruturado prioriza o que muda a decisão do agente para esta tarefa, não o que é apenas interessante de forma geral."
+    },
+    {
+      "kind": "pair",
+      "position": 5,
+      "conceptA": "Adicionar todo o histórico de conversas ao contexto",
+      "conceptB": "Contexto mais rico e preciso para a tarefa",
+      "match": false,
+      "explanation": "Não combinam. Histórico completo costuma incluir trocas irrelevantes, tentativas descartadas e contexto de tarefas anteriores. Isso dilui o sinal relevante e pode desviar o agente da tarefa atual. Contexto rico vem de seleção, não de acumulação."
+    },
+    {
+      "kind": "info",
+      "position": 6,
+      "front": "Qual é a armadilha mais comum ao projetar contexto para agentes?",
+      "back": "A armadilha do contexto exaustivo: incluir tudo que possa ser relevante, sem filtrar.\n\nConsequências:\n- Contexto relevante compete com ruído\n- O agente tende a dar mais peso ao que aparece no início e no final do contexto (curva U de atenção)\n- Sessões longas perdem coerência à medida que o contexto cresce\n\nRegra prática: se um trecho do contexto não muda a decisão do agente para esta tarefa específica, ele provavelmente atrapalha mais do que ajuda.\n\nCompactar o contexto antes de tarefas longas (como `/compact` no Claude Code) é uma técnica válida de manutenção, não um sinal de falha."
+    },
+    {
+      "kind": "pair",
+      "position": 7,
+      "conceptA": "Arquivos de memória com decisões de arquitetura",
+      "conceptB": "Consistência do agente entre sessões diferentes",
+      "match": true,
+      "explanation": "Combinam. Agentes não têm memória nativa entre sessões. Arquivos de memória persistentes com decisões de arquitetura, preferências e convenções são o mecanismo que garante comportamento consistente ao longo do tempo, sem depender do histórico de conversas que se perde a cada nova sessão."
+    },
+    {
+      "kind": "info",
+      "position": 8,
+      "front": "Qual é o impacto de context engineering no ciclo de desenvolvimento com agentes?",
+      "back": "Com contexto bem projetado:\n- O agente produz código mais alinhado com o projeto, reduzindo iterações de correção\n- Menos ciclos de correção e retrabalho\n- Sessões longas mantêm coerência\n\nSem ele:\n- Você passa mais tempo corrigindo o agente do que avaliando o que ele produziu\n- Cada nova sessão recomeça do zero sem memória das decisões anteriores\n- O custo de supervisão domina o tempo de desenvolvimento\n\nContext engineering reduz o custo de supervisão do agente. Em projetos com agentes autônomos, essa é a variável que mais afeta produtividade real."
+    },
+    {
+      "kind": "pair",
+      "position": 9,
+      "conceptA": "Instrução crítica no meio de um contexto longo",
+      "conceptB": "Agente que aplica a instrução de forma consistente",
+      "match": false,
+      "explanation": "Não combinam. Modelos de linguagem exibem um padrão de atenção em curva U: início e fim do contexto recebem mais peso, enquanto o meio é subestimado (fenômeno lost-in-the-middle, Liu et al., TACL 2024, preprint 2023, com quedas de até 30% de precisão em benchmarks). Instruções críticas devem estar no início ou no final do contexto, nunca enterradas no meio."
+    },
+    {
+      "kind": "info",
+      "position": 10,
+      "front": "Como a limitação da janela de contexto afeta o design de contexto para agentes?",
+      "back": "A janela de contexto é finita. Incluir tudo eventualmente degrada o desempenho ou excede o limite disponível.\n\nEstratégias práticas:\n\n```markdown\n# Hierarquia de persistência\nAGENTS.md       → regras permanentes do projeto\nmemory/*.md     → decisões de arquitetura e preferências\nsessão atual    → arquivos da tarefa em andamento\n```\n\n- Compactação seletiva: resumir trocas antigas mantendo decisões relevantes\n- Contexto dinâmico: incluir arquivos por tarefa, não sempre\n- Prioridade por posição: informação crítica deve estar no início ou no final do contexto, nunca no meio\n\nO agente mais eficiente não é o que tem mais contexto: é o que tem o contexto certo."
+    },
+    {
+      "kind": "pair",
+      "position": 11,
+      "conceptA": "Compactar o contexto antes de tarefa complexa",
+      "conceptB": "Melhor desempenho em sessões longas",
+      "match": true,
+      "explanation": "Combinam. Sessões longas acumulam contexto irrelevante que compete com informação atual. Compactar, removendo trocas antigas e mantendo decisões importantes, reduz ruído e melhora a atenção do modelo na tarefa em curso. É uma técnica de manutenção de contexto, não um reset."
+    }
+  ]
+}

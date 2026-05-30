@@ -9,15 +9,48 @@ Se nenhum argumento for passado, pergunte a data e o tópico antes de continuar.
 
 ---
 
-## Regras obrigatórias
+## REGRAS CRÍTICAS (leia antes de escrever qualquer conteúdo)
 
-### Estrutura do arquivo
+Estas regras são verificadas primeiro e último. Violá-las invalida o tema.
+
+### 1. Acentuação obrigatória
+
+Todo o conteúdo em português deve ter acentuação correta.
+
+Errado:
+```
+"nao combinam. o agente nao tem memoria entre sessoes"
+```
+
+Correto:
+```
+"Não combinam. O agente não tem memória entre sessões."
+```
+
+Isso inclui: description, context, front, back, conceptA, conceptB, explanation. Sem exceção.
+
+### 2. Sem em dash (—)
+
+O caractere — é proibido em qualquer parte do arquivo. Substitua por vírgula, dois-pontos ou parênteses conforme o contexto.
+
+Errado: `"aberto para extensão — fechado para modificação"`
+Correto: `"aberto para extensão, fechado para modificação"`
+
+### 3. Contagem exata de cards
+
+- Exatamente 12 cards: 6 info + 6 pair, alternados
+- Posições: 0=info, 1=pair, 2=info, 3=pair ... 10=info, 11=pair
+- Exatamente 3 pares com `match: true` e 3 com `match: false`
+
+---
+
+## Estrutura do arquivo
 
 ```json
 {
   "date": "YYYY-MM-DD",
-  "title": "Título do tema",
-  "description": "Uma linha: o que o usuário vai aprender.",
+  "title": "Título do tema em inglês",
+  "description": "Uma linha em português: o que o usuário vai aprender.",
   "context": {
     "relevance": "Por que esse tema importa agora, para um engenheiro de software."
   },
@@ -25,79 +58,61 @@ Se nenhum argumento for passado, pergunte a data e o tópico antes de continuar.
 }
 ```
 
-### Cards: sempre 6 pares, nunca mais
+O título segue a convenção do projeto em inglês: "Single Responsibility Principle", "Context Engineering".
 
-- O arquivo tem **exatamente 12 cards**: 6 info + 6 pair, alternados.
-- Cada info card é seguido por 1 pair card. Nunca dois info cards seguidos, nunca dois pairs seguidos.
-- Os pares devem ser **balanceados**: 3 com `match: true` e 3 com `match: false`.
-- Positions: 0=info, 1=pair, 2=info, 3=pair, ... 10=info, 11=pair.
+---
 
-### Ordem dos grupos
+## Info cards
 
-O primeiro grupo (position 0 e 1) é sempre mostrado primeiro ao usuário e os outros são embaralhados. Por isso:
-- **Position 0**: info card que define o conceito central e mostra como ele se parece na prática (exemplo concreto).
-- **Positions 2-11**: aprofundamentos, casos de borda, armadilhas comuns.
-
-### Conteúdo dos info cards
-
-Cada info card tem:
-- `front`: uma pergunta direta e específica sobre o tema.
-- `back`: resposta com exemplo de código quando relevante. Use blocos de código com a linguagem correta (typescript, markdown, etc.).
+Cada info card tem `front` (pergunta direta) e `back` (resposta).
 
 Regras para o `back`:
-- Mostre **ruim vs. bom** quando for sobre uma prática ou princípio.
-- Exemplos de código devem ser concisos (máximo ~10 linhas por bloco).
-- Comentários dentro de código em inglês.
-- Evite afirmações absolutas: use "costuma", "pode", "em geral" quando apropriado.
-- Não use em dash (—). Substitua por vírgula, dois-pontos ou parênteses.
+- Mostre **ruim vs. bom** quando for sobre uma prática ou princípio
+- Exemplos de código concisos (máximo ~10 linhas por bloco), com a linguagem correta (`typescript`, `markdown`, etc.)
+- Comentários dentro de código em inglês
+- Use "costuma", "pode", "em geral" para evitar afirmações absolutas desnecessárias
 
-### Conteúdo dos pair cards
+**Position 0** é sempre o primeiro exibido ao usuário. Deve definir o conceito central com um exemplo concreto de como ele se parece na prática.
+
+**Positions 2 a 10** aprofundam, exploram casos de borda e armadilhas comuns.
+
+---
+
+## Pair cards
 
 Cada pair card tem:
-- `conceptA`: primeiro conceito (5-7 palavras).
-- `conceptB`: segundo conceito (5-7 palavras).
-- `match`: true se os conceitos se complementam ou têm relação natural, false se não combinam ou são incompatíveis.
-- `explanation`: 2-4 frases explicando **por que** combinam ou não. Começa com "Combinam." ou "Não combinam."
+- `conceptA` e `conceptB`: 5 a 7 palavras cada
+- `match`: true se complementam ou têm relação natural, false se não combinam
+- `explanation`: 2 a 4 frases. Começa obrigatoriamente com "Combinam." ou "Não combinam."
 
-**Os pares devem testar raciocínio, não recall.** O maior erro é criar um par que repete o que o info card acabou de dizer: o usuário leu a resposta há 2 segundos e acerta sem pensar.
+### Pares devem testar raciocínio, não recall
 
-Regra de ouro: se o usuário consegue responder o par apenas lembrando o que o info card disse, o par está fraco. O par precisa exigir que ele aplique o princípio num contexto novo ou avalie uma situação que o card não cobriu explicitamente.
+O maior erro é criar um par que repete o que o info card acabou de dizer. Se o usuário consegue acertar apenas lembrando o card anterior, o par está fraco.
 
-**Exemplos do que evitar (fácil demais):**
-- Info card diz "spec evita retrabalho" → par: `"Spec revisada"` / `"Menos retrabalho"` — trivial.
-- Info card diz "requisito não é spec" → par: `"Requisito de negócio"` / `"Instrução suficiente para o agente"` — o card acabou de dizer que não é.
+**Fraco (evitar):**
+- Info card diz "spec evita retrabalho" → par: `"Spec revisada"` / `"Menos retrabalho"` — o usuário leu isso há 2 segundos.
 
-**Exemplos do que fazer (exige raciocínio):**
-- `"Requisito aprovado pelo product owner"` / `"Spec pronta para implementar"` — soa plausível, mas aprovação de negócio não é completude técnica.
-- `"Agente implementa spec ambígua sem questionar"` / `"Implementação alinhada com a intenção"` — agente silencioso não é sinal de boa spec.
-- `"Código funciona em produção mas diverge da spec"` / `"Spec deve ser atualizada"` — requer entender que código correto que diverge invalida a spec, não o contrário.
+**Forte (fazer):**
+- `"Agente implementa spec ambígua sem questionar"` / `"Implementação alinhada com a intenção"` — agente silencioso não é sinal de boa spec. Requer raciocínio sobre um caso não coberto explicitamente.
 
-Bons pares combinam conceitos de ângulos diferentes do tema, testam consequências não óbvias ou exploram casos em que a intuição erra.
-
-### Língua e estilo
-
-- Todo o conteúdo em português com acentuação correta.
-- Título em inglês (convenção do projeto: "Single Responsibility Principle", "Specification-Driven Development").
-- Description e context em português.
-- Tom direto, sem rodeios. Sem introduções como "Neste card veremos...".
-- Evite repetir o mesmo conceito em cards diferentes do mesmo tema.
+Bons pares testam consequências não óbvias, casos em que a intuição erra, ou aplicam o princípio a um contexto diferente do que o info card usou.
 
 ---
 
 ## Cobertura dos 6 pares
 
-Distribua os 6 pares de forma que cada um cubra um ângulo diferente do tema:
+Cada par deve cobrir um ângulo diferente do tema:
 
-1. **Definição central**: o que é o conceito e sua característica mais importante.
-2. **Identificação**: como reconhecer o conceito (ou sua violação) no código real.
-3. **Mecanismo**: como funciona ou como aplicar na prática.
-4. **Armadilha comum**: um equívoco frequente ou uso incorreto do conceito.
-5. **Consequência**: o que acontece quando é aplicado bem (ou mal).
-6. **Nuance**: um caso de borda, exceção ou detalhe que separa quem entende de quem decorou.
+1. **Definição central**: o que é o conceito e sua característica mais importante
+2. **Identificação**: como reconhecer o conceito (ou sua violação) na prática
+3. **Mecanismo**: como funciona ou como aplicar
+4. **Armadilha comum**: um equívoco frequente ou uso incorreto
+5. **Consequência**: o que acontece quando é aplicado bem (ou mal)
+6. **Nuance**: caso de borda ou detalhe que separa quem entende de quem decorou
 
 ---
 
-## Exemplo de estrutura de um par bem construído
+## Exemplo de par bem construído
 
 ```json
 {
@@ -112,16 +127,20 @@ Distribua os 6 pares de forma que cada um cubra um ângulo diferente do tema:
   "conceptA": "Função que valida e persiste no banco",
   "conceptB": "Responsabilidade única",
   "match": false,
-  "explanation": "Não combinam. Validar e persistir são razões de mudança diferentes: validação muda quando as regras de negócio evoluem, persistência muda quando o banco ou ORM muda. Colocar as duas na mesma função é SRP violado no nível de função."
+  "explanation": "Não combinam. Validar e persistir são razões de mudança diferentes: validação muda quando as regras de negócio evoluem, persistência muda quando o banco ou ORM muda. Colocar as duas na mesma função viola SRP no nível de função."
 }
 ```
 
 ---
 
-## Antes de escrever
+## CHECKLIST FINAL (verifique antes de salvar)
 
-1. Pesquise o tema para garantir precisão técnica. Priorize fontes como MDN, documentação oficial, artigos de referência e livros clássicos da área.
-2. Identifique os 6 ângulos distintos que cobrem o tema sem repetição.
-3. Para cada ângulo, escreva o info card antes do pair card.
-4. Revise: nenhum par é óbvio demais, nenhuma afirmação é absoluta sem necessidade, acentuação está correta, nenhum em dash foi usado.
-5. Confirme: exatamente 6 info cards, 6 pairs, 3 true e 3 false.
+Execute estes passos nesta ordem após terminar todos os cards:
+
+- [ ] **Acentuação**: abra cada campo de texto e confirme que palavras como "não", "é", "são", "também", "histórico", "código" estão acentuadas. Leia em voz alta mentalmente.
+- [ ] **Sem em dash**: busque o caractere — no arquivo. Se encontrar, substitua.
+- [ ] **Contagem**: exatamente 6 info cards (positions 0,2,4,6,8,10) e 6 pair cards (positions 1,3,5,7,9,11).
+- [ ] **Balance**: conte os `match: true`. Deve ser exatamente 3.
+- [ ] **Pares não triviais**: para cada par, pergunte: "o usuário consegue acertar isso apenas lembrando o card anterior?" Se sim, reescreva o par.
+- [ ] **Sem repetição**: nenhum conceito central aparece em dois cards diferentes do mesmo tema.
+- [ ] **Precisão técnica**: pesquise o tema antes de escrever para garantir que as afirmações são corretas.
