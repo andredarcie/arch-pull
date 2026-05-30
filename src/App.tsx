@@ -8,6 +8,7 @@ import { ScoreScreen } from "./components/ScoreScreen";
 import type { Card, Pair } from "./data/pairs";
 import { isPair } from "./data/pairs";
 import { config } from "./config";
+import { recordWrongPairs, hasWeaknesses, buildWeaknessSession, WEAKNESS_SESSION_TITLE } from "./lib/weaknesses";
 
 type Screen = "start" | "calendar" | "archive" | "game" | "score";
 
@@ -39,15 +40,28 @@ function App() {
   const [finalMaxCombo, setFinalMaxCombo] = useState(0);
   const [finalElapsed, setFinalElapsed] = useState(0);
   const [themeTitle, setThemeTitle] = useState("");
+  const [isWeaknessSession, setIsWeaknessSession] = useState(false);
   const [gameStartedAt, setGameStartedAt] = useState<number | null>(null);
   const [activeDays, setActiveDays] = useState<string[]>(loadActivity);
+  const [weaknessExists, setWeaknessExists] = useState(() => hasWeaknesses());
 
   const goToCalendar = useCallback(() => setScreen("calendar"), []);
   const goToArchive = useCallback(() => setScreen("archive"), []);
 
+  const startWeaknessReview = useCallback(() => {
+    const cards = buildWeaknessSession();
+    if (cards.length === 0) return;
+    setCards(cards);
+    setThemeTitle(WEAKNESS_SESSION_TITLE);
+    setIsWeaknessSession(true);
+    setGameStartedAt(Date.now());
+    setScreen("game");
+  }, []);
+
   const startTheme = useCallback((themeCards: Card[], title: string) => {
     setCards(themeCards);
     setThemeTitle(title);
+    setIsWeaknessSession(false);
     setGameStartedAt(Date.now());
     setScreen("game");
   }, []);
@@ -58,10 +72,14 @@ function App() {
       setWrongPairs(wrong);
       setFinalMaxCombo(maxCombo);
       setFinalElapsed(gameStartedAt ? Math.round((Date.now() - gameStartedAt) / 1000) : 0);
-      setActiveDays((prev) => recordToday(prev));
+      if (!isWeaknessSession) {
+        setActiveDays((prev) => recordToday(prev));
+        recordWrongPairs(wrong, themeTitle);
+        if (wrong.length > 0) setWeaknessExists(true);
+      }
       setScreen("score");
     },
-    [gameStartedAt]
+    [gameStartedAt, isWeaknessSession, themeTitle]
   );
 
   const pairCount = cards.filter(isPair).length;
@@ -79,6 +97,8 @@ function App() {
             activeDays={activeDays}
             onStart={startTheme}
             onArchive={goToArchive}
+            onReviewWeaknesses={startWeaknessReview}
+            hasWeaknesses={weaknessExists}
           />
         )}
         {screen === "archive" && (

@@ -1,0 +1,248 @@
+:root {
+  color-scheme: dark;
+  --bg: #101114;
+  --panel: #1a1d24;
+  --panel-2: #222731;
+  --text: #f4f1e8;
+  --muted: #b7bdc8;
+  --line: rgba(255, 255, 255, 0.1);
+  --accent: #f3b63f;
+  --accent-2: #51b8c7;
+  --accent-3: #e45b5b;
+  --green: #81c784;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background:
+    linear-gradient(120deg, rgba(243, 182, 63, 0.12), transparent 35%),
+    radial-gradient(circle at 90% 0%, rgba(81, 184, 199, 0.14), transparent 30%),
+    var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.hero {
+  min-height: 92vh;
+  padding: 28px clamp(20px, 5vw, 72px) 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.brand {
+  color: var(--muted);
+  font-size: 0.94rem;
+  letter-spacing: 0;
+}
+
+.topbar a {
+  border: 1px solid rgba(243, 182, 63, 0.45);
+  border-radius: 8px;
+  padding: 9px 14px;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.6fr);
+  align-items: end;
+  gap: clamp(24px, 6vw, 92px);
+}
+
+.eyebrow,
+.section-title p,
+.panel-label {
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0 0 8px;
+}
+
+h1,
+h2 {
+  letter-spacing: 0;
+  line-height: 1.05;
+  margin: 0;
+}
+
+h1 {
+  max-width: 980px;
+  font-size: clamp(3rem, 7vw, 7.8rem);
+}
+
+h2 {
+  font-size: clamp(1.45rem, 2.4vw, 2.35rem);
+}
+
+.lede {
+  max-width: 760px;
+  color: var(--muted);
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  margin: 28px 0 0;
+}
+
+.hero-panel,
+.analysis-card,
+.chart-card,
+.table-section,
+.kpis article {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015));
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.hero-panel {
+  padding: 24px;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.hero-panel strong {
+  font-size: clamp(2.1rem, 4vw, 4rem);
+  line-height: 1;
+}
+
+.hero-panel span:last-child {
+  color: var(--muted);
+  margin-top: 12px;
+}
+
+main {
+  padding: 34px clamp(20px, 5vw, 72px) 70px;
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.kpis article {
+  padding: 20px;
+}
+
+.kpis span {
+  color: var(--muted);
+  display: block;
+  font-size: 0.92rem;
+}
+
+.kpis strong {
+  display: block;
+  font-size: clamp(1.8rem, 3vw, 3rem);
+  line-height: 1.1;
+  margin-top: 8px;
+}
+
+.section-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.55fr);
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.section-grid:nth-of-type(3) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.chart-card,
+.analysis-card,
+.table-section {
+  padding: clamp(18px, 2.5vw, 28px);
+}
+
+.analysis-card p {
+  color: var(--muted);
+}
+
+.analysis-card ol {
+  margin: 18px 0 0;
+  padding-left: 22px;
+}
+
+.analysis-card li {
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+canvas {
+  width: 100%;
+  margin-top: 18px;
+}
+
+.table-section {
+  margin-top: 18px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  margin-top: 18px;
+}
+
+table {
+  width: 100%;
+  min-width: 780px;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 12px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+th {
+  color: var(--accent);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+td {
+  color: var(--muted);
+}
+
+.source {
+  color: var(--muted);
+  margin-top: 26px;
+  font-size: 0.92rem;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    min-height: auto;
+    gap: 62px;
+  }
+
+  .hero-grid,
+  .section-grid,
+  .section-grid:nth-of-type(3),
+  .kpis {
+    grid-template-columns: 1fr;
+  }
+}

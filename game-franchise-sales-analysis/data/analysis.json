@@ -1,0 +1,1519 @@
+{
+  "source": {
+    "title": "Wikipedia - List of best-selling video game franchises",
+    "url": "https://en.wikipedia.org/wiki/List_of_best-selling_video_game_franchises",
+    "retrieved_at": "2026-05-30T16:20:33+00:00"
+  },
+  "summary": {
+    "franchise_count": 51,
+    "total_sales_millions": 8282.9,
+    "median_sales_millions": 100.0,
+    "p75_sales_millions": 186.5,
+    "top_5_share": 0.3499,
+    "top_10_share": 0.5091,
+    "top_20_share": 0.703,
+    "largest_franchise": "Mario",
+    "largest_sales_millions": 893.5
+  },
+  "topFranchises": [
+    {
+      "rank": 1,
+      "franchise": "Mario",
+      "sales_millions": 893.5,
+      "genres": "Platformer; Various",
+      "debut_year": 1983,
+      "publishers": "Nintendo",
+      "primary_genre": "Platformer",
+      "decade": "1980s",
+      "age_years": 44,
+      "sales_per_year_millions": 20.31
+    },
+    {
+      "rank": 2,
+      "franchise": "Tetris",
+      "sales_millions": 520.0,
+      "genres": "Puzzle",
+      "debut_year": 1988,
+      "publishers": "Various",
+      "primary_genre": "Puzzle",
+      "decade": "1980s",
+      "age_years": 39,
+      "sales_per_year_millions": 13.33
+    },
+    {
+      "rank": 3,
+      "franchise": "Pokémon",
+      "sales_millions": 515.0,
+      "genres": "Creature collector; role-playing",
+      "debut_year": 1996,
+      "publishers": "Nintendo; The Pokémon Company",
+      "primary_genre": "Role-playing",
+      "decade": "1990s",
+      "age_years": 31,
+      "sales_per_year_millions": 16.61
+    },
+    {
+      "rank": 4,
+      "franchise": "Call of Duty",
+      "sales_millions": 500.0,
+      "genres": "First-person shooter",
+      "debut_year": 2003,
+      "publishers": "Activision",
+      "primary_genre": "Shooter",
+      "decade": "2000s",
+      "age_years": 24,
+      "sales_per_year_millions": 20.83
+    },
+    {
+      "rank": 5,
+      "franchise": "Grand Theft Auto",
+      "sales_millions": 470.0,
+      "genres": "Action-adventure",
+      "debut_year": 1997,
+      "publishers": "Rockstar Games",
+      "primary_genre": "Action-adventure",
+      "decade": "1990s",
+      "age_years": 30,
+      "sales_per_year_millions": 15.67
+    },
+    {
+      "rank": 6,
+      "franchise": "Minecraft",
+      "sales_millions": 350.0,
+      "genres": "Sandbox; survival",
+      "debut_year": 2011,
+      "publishers": "Mojang Studios",
+      "primary_genre": "Sandbox",
+      "decade": "2010s",
+      "age_years": 16,
+      "sales_per_year_millions": 21.88
+    },
+    {
+      "rank": 7,
+      "franchise": "FIFA",
+      "sales_millions": 325.0,
+      "genres": "Sports; football",
+      "debut_year": 1993,
+      "publishers": "Electronic Arts",
+      "primary_genre": "Sports",
+      "decade": "1990s",
+      "age_years": 34,
+      "sales_per_year_millions": 9.56
+    },
+    {
+      "rank": 8,
+      "franchise": "Assassin's Creed",
+      "sales_millions": 230.0,
+      "genres": "Action-adventure",
+      "debut_year": 2007,
+      "publishers": "Ubisoft",
+      "primary_genre": "Action-adventure",
+      "decade": "2000s",
+      "age_years": 20,
+      "sales_per_year_millions": 11.5
+    },
+    {
+      "rank": 9,
+      "franchise": "Final Fantasy",
+      "sales_millions": 209.0,
+      "genres": "Role-playing",
+      "debut_year": 1987,
+      "publishers": "Square Enix",
+      "primary_genre": "Role-playing",
+      "decade": "1980s",
+      "age_years": 40,
+      "sales_per_year_millions": 5.22
+    },
+    {
+      "rank": 10,
+      "franchise": "Wii",
+      "sales_millions": 204.0,
+      "genres": "Simulation",
+      "debut_year": 2006,
+      "publishers": "Nintendo",
+      "primary_genre": "Simulation",
+      "decade": "2000s",
+      "age_years": 21,
+      "sales_per_year_millions": 9.71
+    },
+    {
+      "rank": 11,
+      "franchise": "Resident Evil",
+      "sales_millions": 201.0,
+      "genres": "Action-adventure; survival horror",
+      "debut_year": 1996,
+      "publishers": "Capcom",
+      "primary_genre": "Action-adventure",
+      "decade": "1990s",
+      "age_years": 31,
+      "sales_per_year_millions": 6.48
+    },
+    {
+      "rank": 12,
+      "franchise": "Lego",
+      "sales_millions": 200.0,
+      "genres": "Various",
+      "debut_year": 1995,
+      "publishers": "Warner Bros. Games",
+      "primary_genre": "Various",
+      "decade": "1990s",
+      "age_years": 32,
+      "sales_per_year_millions": 6.25
+    },
+    {
+      "rank": 13,
+      "franchise": "The Sims",
+      "sales_millions": 200.0,
+      "genres": "Social simulation",
+      "debut_year": 2000,
+      "publishers": "Electronic Arts",
+      "primary_genre": "Social simulation",
+      "decade": "2000s",
+      "age_years": 27,
+      "sales_per_year_millions": 7.41
+    },
+    {
+      "rank": 14,
+      "franchise": "NBA 2K",
+      "sales_millions": 173.0,
+      "genres": "Sports; basketball",
+      "debut_year": 1999,
+      "publishers": "2K",
+      "primary_genre": "Sports",
+      "decade": "1990s",
+      "age_years": 28,
+      "sales_per_year_millions": 6.18
+    },
+    {
+      "rank": 15,
+      "franchise": "The Legend of Zelda",
+      "sales_millions": 150.0,
+      "genres": "Action-adventure",
+      "debut_year": 1986,
+      "publishers": "Nintendo",
+      "primary_genre": "Action-adventure",
+      "decade": "1980s",
+      "age_years": 41,
+      "sales_per_year_millions": 3.66
+    },
+    {
+      "rank": 16,
+      "franchise": "Madden NFL",
+      "sales_millions": 150.0,
+      "genres": "Sports; American football",
+      "debut_year": 1988,
+      "publishers": "Electronic Arts",
+      "primary_genre": "Sports",
+      "decade": "1980s",
+      "age_years": 39,
+      "sales_per_year_millions": 3.85
+    },
+    {
+      "rank": 17,
+      "franchise": "Need for Speed",
+      "sales_millions": 150.0,
+      "genres": "Racing",
+      "debut_year": 1994,
+      "publishers": "Electronic Arts",
+      "primary_genre": "Racing",
+      "decade": "1990s",
+      "age_years": 33,
+      "sales_per_year_millions": 4.55
+    },
+    {
+      "rank": 18,
+      "franchise": "Sonic the Hedgehog",
+      "sales_millions": 140.0,
+      "genres": "Platformer; kart racing",
+      "debut_year": 1991,
+      "publishers": "Sega",
+      "primary_genre": "Platformer",
+      "decade": "1990s",
+      "age_years": 36,
+      "sales_per_year_millions": 3.89
+    },
+    {
+      "rank": 19,
+      "franchise": "Monster Hunter",
+      "sales_millions": 127.0,
+      "genres": "Action role-playing",
+      "debut_year": 2004,
+      "publishers": "Capcom",
+      "primary_genre": "Role-playing",
+      "decade": "2000s",
+      "age_years": 23,
+      "sales_per_year_millions": 5.52
+    },
+    {
+      "rank": 20,
+      "franchise": "Red Dead",
+      "sales_millions": 115.0,
+      "genres": "Action-adventure",
+      "debut_year": 2004,
+      "publishers": "Rockstar Games",
+      "primary_genre": "Action-adventure",
+      "decade": "2000s",
+      "age_years": 23,
+      "sales_per_year_millions": 5.0
+    }
+  ],
+  "velocity": [
+    {
+      "rank": 6,
+      "franchise": "Minecraft",
+      "sales_millions": 350.0,
+      "genres": "Sandbox; survival",
+      "debut_year": 2011,
+      "publishers": "Mojang Studios",
+      "primary_genre": "Sandbox",
+      "decade": "2010s",
+      "age_years": 16,
+      "sales_per_year_millions": 21.88
+    },
+    {
+      "rank": 4,
+      "franchise": "Call of Duty",
+      "sales_millions": 500.0,
+      "genres": "First-person shooter",
+      "debut_year": 2003,
+      "publishers": "Activision",
+      "primary_genre": "Shooter",
+      "decade": "2000s",
+      "age_years": 24,
+      "sales_per_year_millions": 20.83
+    },
+    {
+      "rank": 1,
+      "franchise": "Mario",
+      "sales_millions": 893.5,
+      "genres": "Platformer; Various",
+      "debut_year": 1983,
+      "publishers": "Nintendo",
+      "primary_genre": "Platformer",
+      "decade": "1980s",
+      "age_years": 44,
+      "sales_per_year_millions": 20.31
+    },
+    {
+      "rank": 3,
+      "franchise": "Pokémon",
+      "sales_millions": 515.0,
+      "genres": "Creature collector; role-playing",
+      "debut_year": 1996,
+      "publishers": "Nintendo; The Pokémon Company",
+      "primary_genre": "Role-playing",
+      "decade": "1990s",
+      "age_years": 31,
+      "sales_per_year_millions": 16.61
+    },
+    {
+      "rank": 5,
+      "franchise": "Grand Theft Auto",
+      "sales_millions": 470.0,
+      "genres": "Action-adventure",
+      "debut_year": 1997,
+      "publishers": "Rockstar Games",
+      "primary_genre": "Action-adventure",
+      "decade": "1990s",
+      "age_years": 30,
+      "sales_per_year_millions": 15.67
+    },
+    {
+      "rank": 2,
+      "franchise": "Tetris",
+      "sales_millions": 520.0,
+      "genres": "Puzzle",
+      "debut_year": 1988,
+      "publishers": "Various",
+      "primary_genre": "Puzzle",
+      "decade": "1980s",
+      "age_years": 39,
+      "sales_per_year_millions": 13.33
+    },
+    {
+      "rank": 8,
+      "franchise": "Assassin's Creed",
+      "sales_millions": 230.0,
+      "genres": "Action-adventure",
+      "debut_year": 2007,
+      "publishers": "Ubisoft",
+      "primary_genre": "Action-adventure",
+      "decade": "2000s",
+      "age_years": 20,
+      "sales_per_year_millions": 11.5
+    },
+    {
+      "rank": 10,
+      "franchise": "Wii",
+      "sales_millions": 204.0,
+      "genres": "Simulation",
+      "debut_year": 2006,
+      "publishers": "Nintendo",
+      "primary_genre": "Simulation",
+      "decade": "2000s",
+      "age_years": 21,
+      "sales_per_year_millions": 9.71
+    },
+    {
+      "rank": 7,
+      "franchise": "FIFA",
+      "sales_millions": 325.0,
+      "genres": "Sports; football",
+      "debut_year": 1993,
+      "publishers": "Electronic Arts",
+      "primary_genre": "Sports",
+      "decade": "1990s",
+      "age_years": 34,
+      "sales_per_year_millions": 9.56
+    },
+    {
+      "rank": 13,
+      "franchise": "The Sims",
+      "sales_millions": 200.0,
+      "genres": "Social simulation",
+      "debut_year": 2000,
+      "publishers": "Electronic Arts",
+      "primary_genre": "Social simulation",
+      "decade": "2000s",
+      "age_years": 27,
+      "sales_per_year_millions": 7.41
+    },
+    {
+      "rank": 11,
+      "franchise": "Resident Evil",
+      "sales_millions": 201.0,
+      "genres": "Action-adventure; survival horror",
+      "debut_year": 1996,
+      "publishers": "Capcom",
+      "primary_genre": "Action-adventure",
+      "decade": "1990s",
+      "age_years": 31,
+      "sales_per_year_millions": 6.48
+    },
+    {
+      "rank": 12,
+      "franchise": "Lego",
+      "sales_millions": 200.0,
+      "genres": "Various",
+      "debut_year": 1995,
+      "publishers": "Warner Bros. Games",
+      "primary_genre": "Various",
+      "decade": "1990s",
+      "age_years": 32,
+      "sales_per_year_millions": 6.25
+    },
+    {
+      "rank": 14,
+      "franchise": "NBA 2K",
+      "sales_millions": 173.0,
+      "genres": "Sports; basketball",
+      "debut_year": 1999,
+      "publishers": "2K",
+      "primary_genre": "Sports",
+      "decade": "1990s",
+      "age_years": 28,
+      "sales_per_year_millions": 6.18
+    },
+    {
+      "rank": 27,
+      "franchise": "Borderlands",
+      "sales_millions": 100.0,
+      "genres": "First-person shooter",
+      "debut_year": 2009,
+      "publishers": "2K",
+      "primary_genre": "Shooter",
+      "decade": "2000s",
+      "age_years": 18,
+      "sales_per_year_millions": 5.56
+    },
+    {
+      "rank": 51,
+      "franchise": "Marvel's Spider-Man",
+      "sales_millions": 50.0,
+      "genres": "Action-adventure",
+      "debut_year": 2018,
+      "publishers": "Sony Interactive Entertainment",
+      "primary_genre": "Action-adventure",
+      "decade": "2010s",
+      "age_years": 9,
+      "sales_per_year_millions": 5.56
+    }
+  ],
+  "genres": [
+    {
+      "name": "Action-adventure",
+      "sales_millions": 1550.1,
+      "franchises": 10,
+      "average_sales_millions": 155.01
+    },
+    {
+      "name": "Platformer",
+      "sales_millions": 1237.5,
+      "franchises": 5,
+      "average_sales_millions": 247.5
+    },
+    {
+      "name": "Role-playing",
+      "sales_millions": 1033.0,
+      "franchises": 5,
+      "average_sales_millions": 206.6
+    },
+    {
+      "name": "Shooter",
+      "sales_millions": 1001.7,
+      "franchises": 8,
+      "average_sales_millions": 125.21
+    },
+    {
+      "name": "Sports",
+      "sales_millions": 858.5,
+      "franchises": 5,
+      "average_sales_millions": 171.7
+    },
+    {
+      "name": "Puzzle",
+      "sales_millions": 620.0,
+      "franchises": 2,
+      "average_sales_millions": 310.0
+    },
+    {
+      "name": "Sandbox",
+      "sales_millions": 350.0,
+      "franchises": 1,
+      "average_sales_millions": 350.0
+    },
+    {
+      "name": "Social simulation",
+      "sales_millions": 270.0,
+      "franchises": 2,
+      "average_sales_millions": 135.0
+    },
+    {
+      "name": "Racing",
+      "sales_millions": 250.0,
+      "franchises": 2,
+      "average_sales_millions": 125.0
+    },
+    {
+      "name": "Fighting",
+      "sales_millions": 220.0,
+      "franchises": 3,
+      "average_sales_millions": 73.33
+    },
+    {
+      "name": "Simulation",
+      "sales_millions": 204.0,
+      "franchises": 1,
+      "average_sales_millions": 204.0
+    },
+    {
+      "name": "Various",
+      "sales_millions": 200.0,
+      "franchises": 1,
+      "average_sales_millions": 200.0
+    },
+    {
+      "name": "Strategy",
+      "sales_millions": 145.0,
+      "franchises": 2,
+      "average_sales_millions": 72.5
+    },
+    {
+      "name": "Virtual pet",
+      "sales_millions": 98.1,
+      "franchises": 1,
+      "average_sales_millions": 98.1
+    },
+    {
+      "name": "Rhythm",
+      "sales_millions": 90.0,
+      "franchises": 1,
+      "average_sales_millions": 90.0
+    },
+    {
+      "name": "Adventure",
+      "sales_millions": 80.0,
+      "franchises": 1,
+      "average_sales_millions": 80.0
+    },
+    {
+      "name": "Turn-based tactics",
+      "sales_millions": 75.0,
+      "franchises": 1,
+      "average_sales_millions": 75.0
+    }
+  ],
+  "decades": [
+    {
+      "name": "1970s",
+      "sales_millions": 65.0,
+      "franchises": 1,
+      "average_sales_millions": 65.0
+    },
+    {
+      "name": "1980s",
+      "sales_millions": 2328.6,
+      "franchises": 10,
+      "average_sales_millions": 232.86
+    },
+    {
+      "name": "1990s",
+      "sales_millions": 3022.6,
+      "franchises": 18,
+      "average_sales_millions": 167.92
+    },
+    {
+      "name": "2000s",
+      "sales_millions": 2286.7,
+      "franchises": 17,
+      "average_sales_millions": 134.51
+    },
+    {
+      "name": "2010s",
+      "sales_millions": 580.0,
+      "franchises": 5,
+      "average_sales_millions": 116.0
+    }
+  ],
+  "publishers": [
+    {
+      "name": "Nintendo",
+      "allocated_sales_millions": 1779.0,
+      "franchises": 8
+    },
+    {
+      "name": "Electronic Arts",
+      "allocated_sales_millions": 1013.7,
+      "franchises": 6
+    },
+    {
+      "name": "Various",
+      "allocated_sales_millions": 722.0,
+      "franchises": 3
+    },
+    {
+      "name": "Rockstar Games",
+      "allocated_sales_millions": 585.0,
+      "franchises": 2
+    },
+    {
+      "name": "Activision",
+      "allocated_sales_millions": 500.0,
+      "franchises": 1
+    },
+    {
+      "name": "2K",
+      "allocated_sales_millions": 451.0,
+      "franchises": 4
+    },
+    {
+      "name": "Capcom",
+      "allocated_sales_millions": 387.0,
+      "franchises": 3
+    },
+    {
+      "name": "Ubisoft",
+      "allocated_sales_millions": 380.0,
+      "franchises": 3
+    },
+    {
+      "name": "Mojang Studios",
+      "allocated_sales_millions": 350.0,
+      "franchises": 1
+    },
+    {
+      "name": "Square Enix",
+      "allocated_sales_millions": 306.0,
+      "franchises": 2
+    },
+    {
+      "name": "Warner Bros. Games",
+      "allocated_sales_millions": 300.0,
+      "franchises": 2
+    },
+    {
+      "name": "The Pokémon Company",
+      "allocated_sales_millions": 257.5,
+      "franchises": 1
+    },
+    {
+      "name": "Sony Interactive Entertainment",
+      "allocated_sales_millions": 216.0,
+      "franchises": 3
+    },
+    {
+      "name": "Konami",
+      "allocated_sales_millions": 178.6,
+      "franchises": 2
+    },
+    {
+      "name": "Sega",
+      "allocated_sales_millions": 140.0,
+      "franchises": 1
+    }
+  ],
+  "oldest": [
+    {
+      "rank": 44,
+      "franchise": "The Oregon Trail",
+      "sales_millions": 65.0,
+      "genres": "Strategy",
+      "debut_year": 1971,
+      "publishers": "Gameloft",
+      "primary_genre": "Strategy",
+      "decade": "1970s",
+      "age_years": 56,
+      "sales_per_year_millions": 1.16
+    },
+    {
+      "rank": 34,
+      "franchise": "Donkey Kong",
+      "sales_millions": 82.0,
+      "genres": "Platformer",
+      "debut_year": 1981,
+      "publishers": "Nintendo",
+      "primary_genre": "Platformer",
+      "decade": "1980s",
+      "age_years": 46,
+      "sales_per_year_millions": 1.78
+    },
+    {
+      "rank": 22,
+      "franchise": "Star Wars",
+      "sales_millions": 102.0,
+      "genres": "Action-adventure; Various",
+      "debut_year": 1982,
+      "publishers": "Various",
+      "primary_genre": "Action-adventure",
+      "decade": "1980s",
+      "age_years": 45,
+      "sales_per_year_millions": 2.27
+    },
+    {
+      "rank": 1,
+      "franchise": "Mario",
+      "sales_millions": 893.5,
+      "genres": "Platformer; Various",
+      "debut_year": 1983,
+      "publishers": "Nintendo",
+      "primary_genre": "Platformer",
+      "decade": "1980s",
+      "age_years": 44,
+      "sales_per_year_millions": 20.31
+    },
+    {
+      "rank": 15,
+      "franchise": "The Legend of Zelda",
+      "sales_millions": 150.0,
+      "genres": "Action-adventure",
+      "debut_year": 1986,
+      "publishers": "Nintendo",
+      "primary_genre": "Action-adventure",
+      "decade": "1980s",
+      "age_years": 41,
+      "sales_per_year_millions": 3.66
+    },
+    {
+      "rank": 30,
+      "franchise": "Dragon Quest",
+      "sales_millions": 97.0,
+      "genres": "Role-playing",
+      "debut_year": 1986,
+      "publishers": "Square Enix",
+      "primary_genre": "Role-playing",
+      "decade": "1980s",
+      "age_years": 41,
+      "sales_per_year_millions": 2.37
+    },
+    {
+      "rank": 9,
+      "franchise": "Final Fantasy",
+      "sales_millions": 209.0,
+      "genres": "Role-playing",
+      "debut_year": 1987,
+      "publishers": "Square Enix",
+      "primary_genre": "Role-playing",
+      "decade": "1980s",
+      "age_years": 40,
+      "sales_per_year_millions": 5.22
+    },
+    {
+      "rank": 42,
+      "franchise": "Metal Gear",
+      "sales_millions": 66.1,
+      "genres": "Action-adventure; stealth",
+      "debut_year": 1987,
+      "publishers": "Konami",
+      "primary_genre": "Action-adventure",
+      "decade": "1980s",
+      "age_years": 40,
+      "sales_per_year_millions": 1.65
+    },
+    {
+      "rank": 47,
+      "franchise": "Street Fighter",
+      "sales_millions": 59.0,
+      "genres": "Fighting",
+      "debut_year": 1987,
+      "publishers": "Capcom",
+      "primary_genre": "Fighting",
+      "decade": "1980s",
+      "age_years": 40,
+      "sales_per_year_millions": 1.48
+    },
+    {
+      "rank": 2,
+      "franchise": "Tetris",
+      "sales_millions": 520.0,
+      "genres": "Puzzle",
+      "debut_year": 1988,
+      "publishers": "Various",
+      "primary_genre": "Puzzle",
+      "decade": "1980s",
+      "age_years": 39,
+      "sales_per_year_millions": 13.33
+    }
+  ],
+  "newest": [
+    {
+      "rank": 51,
+      "franchise": "Marvel's Spider-Man",
+      "sales_millions": 50.0,
+      "genres": "Action-adventure",
+      "debut_year": 2018,
+      "publishers": "Sony Interactive Entertainment",
+      "primary_genre": "Action-adventure",
+      "decade": "2010s",
+      "age_years": 9,
+      "sales_per_year_millions": 5.56
+    },
+    {
+      "rank": 50,
+      "franchise": "Overwatch",
+      "sales_millions": 50.0,
+      "genres": "First-person shooter",
+      "debut_year": 2016,
+      "publishers": "Blizzard Entertainment",
+      "primary_genre": "Shooter",
+      "decade": "2010s",
+      "age_years": 11,
+      "sales_per_year_millions": 4.55
+    },
+    {
+      "rank": 49,
+      "franchise": "Destiny",
+      "sales_millions": 50.0,
+      "genres": "First-person shooter",
+      "debut_year": 2014,
+      "publishers": "Bungie",
+      "primary_genre": "Shooter",
+      "decade": "2010s",
+      "age_years": 13,
+      "sales_per_year_millions": 3.85
+    },
+    {
+      "rank": 37,
+      "franchise": "The Walking Dead",
+      "sales_millions": 80.0,
+      "genres": "Adventure",
+      "debut_year": 2012,
+      "publishers": "Telltale Games; Skybound Games",
+      "primary_genre": "Adventure",
+      "decade": "2010s",
+      "age_years": 15,
+      "sales_per_year_millions": 5.33
+    },
+    {
+      "rank": 6,
+      "franchise": "Minecraft",
+      "sales_millions": 350.0,
+      "genres": "Sandbox; survival",
+      "debut_year": 2011,
+      "publishers": "Mojang Studios",
+      "primary_genre": "Sandbox",
+      "decade": "2010s",
+      "age_years": 16,
+      "sales_per_year_millions": 21.88
+    },
+    {
+      "rank": 27,
+      "franchise": "Borderlands",
+      "sales_millions": 100.0,
+      "genres": "First-person shooter",
+      "debut_year": 2009,
+      "publishers": "2K",
+      "primary_genre": "Shooter",
+      "decade": "2000s",
+      "age_years": 18,
+      "sales_per_year_millions": 5.56
+    },
+    {
+      "rank": 31,
+      "franchise": "Just Dance",
+      "sales_millions": 90.0,
+      "genres": "Rhythm; dance",
+      "debut_year": 2009,
+      "publishers": "Ubisoft",
+      "primary_genre": "Rhythm",
+      "decade": "2000s",
+      "age_years": 18,
+      "sales_per_year_millions": 5.0
+    },
+    {
+      "rank": 8,
+      "franchise": "Assassin's Creed",
+      "sales_millions": 230.0,
+      "genres": "Action-adventure",
+      "debut_year": 2007,
+      "publishers": "Ubisoft",
+      "primary_genre": "Action-adventure",
+      "decade": "2000s",
+      "age_years": 20,
+      "sales_per_year_millions": 11.5
+    },
+    {
+      "rank": 33,
+      "franchise": "The Witcher",
+      "sales_millions": 85.0,
+      "genres": "Action role-playing",
+      "debut_year": 2007,
+      "publishers": "CD Projekt",
+      "primary_genre": "Role-playing",
+      "decade": "2000s",
+      "age_years": 20,
+      "sales_per_year_millions": 4.25
+    },
+    {
+      "rank": 10,
+      "franchise": "Wii",
+      "sales_millions": 204.0,
+      "genres": "Simulation",
+      "debut_year": 2006,
+      "publishers": "Nintendo",
+      "primary_genre": "Simulation",
+      "decade": "2000s",
+      "age_years": 21,
+      "sales_per_year_millions": 9.71
+    }
+  ],
+  "allFranchises": [
+    {
+      "rank": 1,
+      "franchise": "Mario",
+      "sales_millions": 893.5,
+      "genres": "Platformer; Various",
+      "debut_year": 1983,
+      "publishers": "Nintendo",
+      "primary_genre": "Platformer",
+      "decade": "1980s",
+      "age_years": 44,
+      "sales_per_year_millions": 20.31
+    },
+    {
+      "rank": 2,
+      "franchise": "Tetris",
+      "sales_millions": 520.0,
+      "genres": "Puzzle",
+      "debut_year": 1988,
+      "publishers": "Various",
+      "primary_genre": "Puzzle",
+      "decade": "1980s",
+      "age_years": 39,
+      "sales_per_year_millions": 13.33
+    },
+    {
+      "rank": 3,
+      "franchise": "Pokémon",
+      "sales_millions": 515.0,
+      "genres": "Creature collector; role-playing",
+      "debut_year": 1996,
+      "publishers": "Nintendo; The Pokémon Company",
+      "primary_genre": "Role-playing",
+      "decade": "1990s",
+      "age_years": 31,
+      "sales_per_year_millions": 16.61
+    },
+    {
+      "rank": 4,
+      "franchise": "Call of Duty",
+      "sales_millions": 500.0,
+      "genres": "First-person shooter",
+      "debut_year": 2003,
+      "publishers": "Activision",
+      "primary_genre": "Shooter",
+      "decade": "2000s",
+      "age_years": 24,
+      "sales_per_year_millions": 20.83
+    },
+    {
+      "rank": 5,
+      "franchise": "Grand Theft Auto",
+      "sales_millions": 470.0,
+      "genres": "Action-adventure",
+      "debut_year": 1997,
+      "publishers": "Rockstar Games",
+      "primary_genre": "Action-adventure",
+      "decade": "1990s",
+      "age_years": 30,
+      "sales_per_year_millions": 15.67
+    },
+    {
+      "rank": 6,
+      "franchise": "Minecraft",
+      "sales_millions": 350.0,
+      "genres": "Sandbox; survival",
+      "debut_year": 2011,
+      "publishers": "Mojang Studios",
+      "primary_genre": "Sandbox",
+      "decade": "2010s",
+      "age_years": 16,
+      "sales_per_year_millions": 21.88
+    },
+    {
+      "rank": 7,
+      "franchise": "FIFA",
+      "sales_millions": 325.0,
+      "genres": "Sports; football",
+      "debut_year": 1993,
+      "publishers": "Electronic Arts",
+      "primary_genre": "Sports",
+      "decade": "1990s",
+      "age_years": 34,
+      "sales_per_year_millions": 9.56
+    },
+    {
+      "rank": 8,
+      "franchise": "Assassin's Creed",
+      "sales_millions": 230.0,
+      "genres": "Action-adventure",
+      "debut_year": 2007,
+      "publishers": "Ubisoft",
+      "primary_genre": "Action-adventure",
+      "decade": "2000s",
+      "age_years": 20,
+      "sales_per_year_millions": 11.5
+    },
+    {
+      "rank": 9,
+      "franchise": "Final Fantasy",
+      "sales_millions": 209.0,
+      "genres": "Role-playing",
+      "debut_year": 1987,
+      "publishers": "Square Enix",
+      "primary_genre": "Role-playing",
+      "decade": "1980s",
+      "age_years": 40,
+      "sales_per_year_millions": 5.22
+    },
+    {
+      "rank": 10,
+      "franchise": "Wii",
+      "sales_millions": 204.0,
+      "genres": "Simulation",
+      "debut_year": 2006,
+      "publishers": "Nintendo",
+      "primary_genre": "Simulation",
+      "decade": "2000s",
+      "age_years": 21,
+      "sales_per_year_millions": 9.71
+    },
+    {
+      "rank": 11,
+      "franchise": "Resident Evil",
+      "sales_millions": 201.0,
+      "genres": "Action-adventure; survival horror",
+      "debut_year": 1996,
+      "publishers": "Capcom",
+      "primary_genre": "Action-adventure",
+      "decade": "1990s",
+      "age_years": 31,
+      "sales_per_year_millions": 6.48
+    },
+    {
+      "rank": 12,
+      "franchise": "Lego",
+      "sales_millions": 200.0,
+      "genres": "Various",
+      "debut_year": 1995,
+      "publishers": "Warner Bros. Games",
+      "primary_genre": "Various",
+      "decade": "1990s",
+      "age_years": 32,
+      "sales_per_year_millions": 6.25
+    },
+    {
+      "rank": 13,
+      "franchise": "The Sims",
+      "sales_millions": 200.0,
+      "genres": "Social simulation",
+      "debut_year": 2000,
+      "publishers": "Electronic Arts",
+      "primary_genre": "Social simulation",
+      "decade": "2000s",
+      "age_years": 27,
+      "sales_per_year_millions": 7.41
+    },
+    {
+      "rank": 14,
+      "franchise": "NBA 2K",
+      "sales_millions": 173.0,
+      "genres": "Sports; basketball",
+      "debut_year": 1999,
+      "publishers": "2K",
+      "primary_genre": "Sports",
+      "decade": "1990s",
+      "age_years": 28,
+      "sales_per_year_millions": 6.18
+    },
+    {
+      "rank": 15,
+      "franchise": "The Legend of Zelda",
+      "sales_millions": 150.0,
+      "genres": "Action-adventure",
+      "debut_year": 1986,
+      "publishers": "Nintendo",
+      "primary_genre": "Action-adventure",
+      "decade": "1980s",
+      "age_years": 41,
+      "sales_per_year_millions": 3.66
+    },
+    {
+      "rank": 16,
+      "franchise": "Madden NFL",
+      "sales_millions": 150.0,
+      "genres": "Sports; American football",
+      "debut_year": 1988,
+      "publishers": "Electronic Arts",
+      "primary_genre": "Sports",
+      "decade": "1980s",
+      "age_years": 39,
+      "sales_per_year_millions": 3.85
+    },
+    {
+      "rank": 17,
+      "franchise": "Need for Speed",
+      "sales_millions": 150.0,
+      "genres": "Racing",
+      "debut_year": 1994,
+      "publishers": "Electronic Arts",
+      "primary_genre": "Racing",
+      "decade": "1990s",
+      "age_years": 33,
+      "sales_per_year_millions": 4.55
+    },
+    {
+      "rank": 18,
+      "franchise": "Sonic the Hedgehog",
+      "sales_millions": 140.0,
+      "genres": "Platformer; kart racing",
+      "debut_year": 1991,
+      "publishers": "Sega",
+      "primary_genre": "Platformer",
+      "decade": "1990s",
+      "age_years": 36,
+      "sales_per_year_millions": 3.89
+    },
+    {
+      "rank": 19,
+      "franchise": "Monster Hunter",
+      "sales_millions": 127.0,
+      "genres": "Action role-playing",
+      "debut_year": 2004,
+      "publishers": "Capcom",
+      "primary_genre": "Role-playing",
+      "decade": "2000s",
+      "age_years": 23,
+      "sales_per_year_millions": 5.52
+    },
+    {
+      "rank": 20,
+      "franchise": "Red Dead",
+      "sales_millions": 115.0,
+      "genres": "Action-adventure",
+      "debut_year": 2004,
+      "publishers": "Rockstar Games",
+      "primary_genre": "Action-adventure",
+      "decade": "2000s",
+      "age_years": 23,
+      "sales_per_year_millions": 5.0
+    },
+    {
+      "rank": 21,
+      "franchise": "Pro Evolution Soccer",
+      "sales_millions": 112.5,
+      "genres": "Sports; football",
+      "debut_year": 1995,
+      "publishers": "Konami",
+      "primary_genre": "Sports",
+      "decade": "1990s",
+      "age_years": 32,
+      "sales_per_year_millions": 3.52
+    },
+    {
+      "rank": 22,
+      "franchise": "Star Wars",
+      "sales_millions": 102.0,
+      "genres": "Action-adventure; Various",
+      "debut_year": 1982,
+      "publishers": "Various",
+      "primary_genre": "Action-adventure",
+      "decade": "1980s",
+      "age_years": 45,
+      "sales_per_year_millions": 2.27
+    },
+    {
+      "rank": 23,
+      "franchise": "Mortal Kombat",
+      "sales_millions": 100.0,
+      "genres": "Fighting",
+      "debut_year": 1992,
+      "publishers": "Warner Bros. Games",
+      "primary_genre": "Fighting",
+      "decade": "1990s",
+      "age_years": 35,
+      "sales_per_year_millions": 2.86
+    },
+    {
+      "rank": 24,
+      "franchise": "Tomb Raider",
+      "sales_millions": 100.0,
+      "genres": "Action-adventure",
+      "debut_year": 1996,
+      "publishers": "Various",
+      "primary_genre": "Action-adventure",
+      "decade": "1990s",
+      "age_years": 31,
+      "sales_per_year_millions": 3.23
+    },
+    {
+      "rank": 25,
+      "franchise": "Gran Turismo",
+      "sales_millions": 100.0,
+      "genres": "Racing",
+      "debut_year": 1997,
+      "publishers": "Sony Interactive Entertainment",
+      "primary_genre": "Racing",
+      "decade": "1990s",
+      "age_years": 30,
+      "sales_per_year_millions": 3.33
+    },
+    {
+      "rank": 26,
+      "franchise": "Bejeweled",
+      "sales_millions": 100.0,
+      "genres": "Puzzle; tile-matching",
+      "debut_year": 2000,
+      "publishers": "Electronic Arts",
+      "primary_genre": "Puzzle",
+      "decade": "2000s",
+      "age_years": 27,
+      "sales_per_year_millions": 3.7
+    },
+    {
+      "rank": 27,
+      "franchise": "Borderlands",
+      "sales_millions": 100.0,
+      "genres": "First-person shooter",
+      "debut_year": 2009,
+      "publishers": "2K",
+      "primary_genre": "Shooter",
+      "decade": "2000s",
+      "age_years": 18,
+      "sales_per_year_millions": 5.56
+    },
+    {
+      "rank": 28,
+      "franchise": "Tamagotchi",
+      "sales_millions": 98.1,
+      "genres": "Virtual pet",
+      "debut_year": 1996,
+      "publishers": "Bandai",
+      "primary_genre": "Virtual pet",
+      "decade": "1990s",
+      "age_years": 31,
+      "sales_per_year_millions": 3.16
+    },
+    {
+      "rank": 29,
+      "franchise": "WWE 2K",
+      "sales_millions": 98.0,
+      "genres": "Sports; professional wrestling",
+      "debut_year": 2000,
+      "publishers": "2K",
+      "primary_genre": "Sports",
+      "decade": "2000s",
+      "age_years": 27,
+      "sales_per_year_millions": 3.63
+    },
+    {
+      "rank": 30,
+      "franchise": "Dragon Quest",
+      "sales_millions": 97.0,
+      "genres": "Role-playing",
+      "debut_year": 1986,
+      "publishers": "Square Enix",
+      "primary_genre": "Role-playing",
+      "decade": "1980s",
+      "age_years": 41,
+      "sales_per_year_millions": 2.37
+    },
+    {
+      "rank": 31,
+      "franchise": "Just Dance",
+      "sales_millions": 90.0,
+      "genres": "Rhythm; dance",
+      "debut_year": 2009,
+      "publishers": "Ubisoft",
+      "primary_genre": "Rhythm",
+      "decade": "2000s",
+      "age_years": 18,
+      "sales_per_year_millions": 5.0
+    },
+    {
+      "rank": 32,
+      "franchise": "Battlefield",
+      "sales_millions": 88.7,
+      "genres": "First-person shooter",
+      "debut_year": 2002,
+      "publishers": "Electronic Arts",
+      "primary_genre": "Shooter",
+      "decade": "2000s",
+      "age_years": 25,
+      "sales_per_year_millions": 3.55
+    },
+    {
+      "rank": 33,
+      "franchise": "The Witcher",
+      "sales_millions": 85.0,
+      "genres": "Action role-playing",
+      "debut_year": 2007,
+      "publishers": "CD Projekt",
+      "primary_genre": "Role-playing",
+      "decade": "2000s",
+      "age_years": 20,
+      "sales_per_year_millions": 4.25
+    },
+    {
+      "rank": 34,
+      "franchise": "Donkey Kong",
+      "sales_millions": 82.0,
+      "genres": "Platformer",
+      "debut_year": 1981,
+      "publishers": "Nintendo",
+      "primary_genre": "Platformer",
+      "decade": "1980s",
+      "age_years": 46,
+      "sales_per_year_millions": 1.78
+    },
+    {
+      "rank": 35,
+      "franchise": "Halo",
+      "sales_millions": 81.0,
+      "genres": "First-person shooter",
+      "debut_year": 2001,
+      "publishers": "Xbox Game Studios",
+      "primary_genre": "Shooter",
+      "decade": "2000s",
+      "age_years": 26,
+      "sales_per_year_millions": 3.12
+    },
+    {
+      "rank": 36,
+      "franchise": "Civilization",
+      "sales_millions": 80.0,
+      "genres": "Strategy",
+      "debut_year": 1991,
+      "publishers": "2K",
+      "primary_genre": "Strategy",
+      "decade": "1990s",
+      "age_years": 36,
+      "sales_per_year_millions": 2.22
+    },
+    {
+      "rank": 37,
+      "franchise": "The Walking Dead",
+      "sales_millions": 80.0,
+      "genres": "Adventure",
+      "debut_year": 2012,
+      "publishers": "Telltale Games; Skybound Games",
+      "primary_genre": "Adventure",
+      "decade": "2010s",
+      "age_years": 15,
+      "sales_per_year_millions": 5.33
+    },
+    {
+      "rank": 38,
+      "franchise": "Worms",
+      "sales_millions": 75.0,
+      "genres": "Turn-based tactics; artillery",
+      "debut_year": 1995,
+      "publishers": "Team17",
+      "primary_genre": "Turn-based tactics",
+      "decade": "1990s",
+      "age_years": 32,
+      "sales_per_year_millions": 2.34
+    },
+    {
+      "rank": 39,
+      "franchise": "Super Smash Bros.",
+      "sales_millions": 72.0,
+      "genres": "Platform fighter",
+      "debut_year": 1999,
+      "publishers": "Nintendo",
+      "primary_genre": "Platformer",
+      "decade": "1990s",
+      "age_years": 28,
+      "sales_per_year_millions": 2.57
+    },
+    {
+      "rank": 40,
+      "franchise": "Counter-Strike",
+      "sales_millions": 72.0,
+      "genres": "First-person shooter",
+      "debut_year": 2000,
+      "publishers": "Valve",
+      "primary_genre": "Shooter",
+      "decade": "2000s",
+      "age_years": 27,
+      "sales_per_year_millions": 2.67
+    },
+    {
+      "rank": 41,
+      "franchise": "Animal Crossing",
+      "sales_millions": 70.0,
+      "genres": "Social simulation",
+      "debut_year": 2001,
+      "publishers": "Nintendo",
+      "primary_genre": "Social simulation",
+      "decade": "2000s",
+      "age_years": 26,
+      "sales_per_year_millions": 2.69
+    },
+    {
+      "rank": 42,
+      "franchise": "Metal Gear",
+      "sales_millions": 66.1,
+      "genres": "Action-adventure; stealth",
+      "debut_year": 1987,
+      "publishers": "Konami",
+      "primary_genre": "Action-adventure",
+      "decade": "1980s",
+      "age_years": 40,
+      "sales_per_year_millions": 1.65
+    },
+    {
+      "rank": 43,
+      "franchise": "God of War",
+      "sales_millions": 66.0,
+      "genres": "Action-adventure",
+      "debut_year": 2005,
+      "publishers": "Sony Interactive Entertainment",
+      "primary_genre": "Action-adventure",
+      "decade": "2000s",
+      "age_years": 22,
+      "sales_per_year_millions": 3.0
+    },
+    {
+      "rank": 44,
+      "franchise": "The Oregon Trail",
+      "sales_millions": 65.0,
+      "genres": "Strategy",
+      "debut_year": 1971,
+      "publishers": "Gameloft",
+      "primary_genre": "Strategy",
+      "decade": "1970s",
+      "age_years": 56,
+      "sales_per_year_millions": 1.16
+    },
+    {
+      "rank": 45,
+      "franchise": "Tekken",
+      "sales_millions": 61.0,
+      "genres": "Fighting",
+      "debut_year": 1994,
+      "publishers": "Bandai Namco Entertainment",
+      "primary_genre": "Fighting",
+      "decade": "1990s",
+      "age_years": 33,
+      "sales_per_year_millions": 1.85
+    },
+    {
+      "rank": 46,
+      "franchise": "Far Cry",
+      "sales_millions": 60.0,
+      "genres": "First-person shooter",
+      "debut_year": 2004,
+      "publishers": "Ubisoft",
+      "primary_genre": "Shooter",
+      "decade": "2000s",
+      "age_years": 23,
+      "sales_per_year_millions": 2.61
+    },
+    {
+      "rank": 47,
+      "franchise": "Street Fighter",
+      "sales_millions": 59.0,
+      "genres": "Fighting",
+      "debut_year": 1987,
+      "publishers": "Capcom",
+      "primary_genre": "Fighting",
+      "decade": "1980s",
+      "age_years": 40,
+      "sales_per_year_millions": 1.48
+    },
+    {
+      "rank": 48,
+      "franchise": "Kirby",
+      "sales_millions": 50.0,
+      "genres": "Platformer",
+      "debut_year": 1992,
+      "publishers": "Nintendo",
+      "primary_genre": "Platformer",
+      "decade": "1990s",
+      "age_years": 35,
+      "sales_per_year_millions": 1.43
+    },
+    {
+      "rank": 49,
+      "franchise": "Destiny",
+      "sales_millions": 50.0,
+      "genres": "First-person shooter",
+      "debut_year": 2014,
+      "publishers": "Bungie",
+      "primary_genre": "Shooter",
+      "decade": "2010s",
+      "age_years": 13,
+      "sales_per_year_millions": 3.85
+    },
+    {
+      "rank": 50,
+      "franchise": "Overwatch",
+      "sales_millions": 50.0,
+      "genres": "First-person shooter",
+      "debut_year": 2016,
+      "publishers": "Blizzard Entertainment",
+      "primary_genre": "Shooter",
+      "decade": "2010s",
+      "age_years": 11,
+      "sales_per_year_millions": 4.55
+    },
+    {
+      "rank": 51,
+      "franchise": "Marvel's Spider-Man",
+      "sales_millions": 50.0,
+      "genres": "Action-adventure",
+      "debut_year": 2018,
+      "publishers": "Sony Interactive Entertainment",
+      "primary_genre": "Action-adventure",
+      "decade": "2010s",
+      "age_years": 9,
+      "sales_per_year_millions": 5.56
+    }
+  ],
+  "insights": [
+    "The ranking is highly concentrated: the largest ten franchises account for a major share of all listed sales.",
+    "Enduring platform, role-playing, action-adventure, and shooter franchises dominate because they combine repeated sequels with strong character or world recognition.",
+    "Debut decade matters, but age alone does not explain performance. Sales velocity highlights newer franchises that reached scale faster than older catalogs.",
+    "Publisher concentration is visible, but multi-publisher franchises require allocated sales rather than full attribution to every publisher."
+  ]
+}

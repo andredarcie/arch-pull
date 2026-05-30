@@ -82,5 +82,11 @@
     "title": "Evals for AI Agents",
     "description": "Como projetar avaliações que detectam regressões reais em agentes de IA, além de medir comportamento de superfície.",
     "category": "ai-engineering"
+  },
+  {
+    "date": "2026-06-10",
+    "title": "Apache Kafka",
+    "description": "Como o Kafka funciona como um log de eventos distribuído e como ele difere fundamentalmente de uma fila de mensagens.",
+    "category": "distributed-systems"
   }
 ]

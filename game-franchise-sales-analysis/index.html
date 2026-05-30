@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Game Franchise Sales Analysis</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="hero">
+      <nav class="topbar">
+        <span class="brand">Game Franchise Sales Analysis</span>
+        <a href="data/franchises.csv" download>Download CSV</a>
+      </nav>
+      <section class="hero-grid">
+        <div>
+          <p class="eyebrow">Wikipedia dataset analysis</p>
+          <h1>The commercial gravity of game franchises</h1>
+          <p class="lede">
+            A data-driven look at the best-selling video game franchises: concentration,
+            genre dominance, publisher power, debut decade, and long-run sales velocity.
+          </p>
+        </div>
+        <div class="hero-panel">
+          <span class="panel-label">Top franchise</span>
+          <strong id="largest-franchise">Loading...</strong>
+          <span id="largest-sales"></span>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <section class="kpis" aria-label="Dataset summary">
+        <article>
+          <span>Listed franchises</span>
+          <strong id="kpi-count">-</strong>
+        </article>
+        <article>
+          <span>Total listed sales</span>
+          <strong id="kpi-sales">-</strong>
+        </article>
+        <article>
+          <span>Top 10 share</span>
+          <strong id="kpi-top10">-</strong>
+        </article>
+        <article>
+          <span>Median sales</span>
+          <strong id="kpi-median">-</strong>
+        </article>
+      </section>
+
+      <section class="section-grid">
+        <article class="chart-card wide">
+          <div class="section-title">
+            <p>Ranking</p>
+            <h2>Top franchises by reported unit sales</h2>
+          </div>
+          <canvas id="top-chart" height="360"></canvas>
+        </article>
+        <article class="analysis-card">
+          <div class="section-title">
+            <p>Finding 1</p>
+            <h2>Winner-take-most market shape</h2>
+          </div>
+          <p id="concentration-text"></p>
+          <p>
+            The top end is not just larger; it is structurally different. These franchises
+            have compounding advantages: decades of releases, recognizable IP, cross-media
+            presence, and platform holder support.
+          </p>
+        </article>
+      </section>
+
+      <section class="section-grid">
+        <article class="chart-card">
+          <div class="section-title">
+            <p>Genres</p>
+            <h2>Sales by primary genre</h2>
+          </div>
+          <canvas id="genre-chart" height="330"></canvas>
+        </article>
+        <article class="chart-card">
+          <div class="section-title">
+            <p>Decades</p>
+            <h2>Sales by debut decade</h2>
+          </div>
+          <canvas id="decade-chart" height="330"></canvas>
+        </article>
+      </section>
+
+      <section class="section-grid">
+        <article class="chart-card wide">
+          <div class="section-title">
+            <p>Sales velocity</p>
+            <h2>Who scaled fastest?</h2>
+          </div>
+          <canvas id="velocity-chart" height="360"></canvas>
+        </article>
+        <article class="analysis-card">
+          <div class="section-title">
+            <p>Finding 2</p>
+            <h2>Age helps, velocity reveals breakout power</h2>
+          </div>
+          <p>
+            Older franchises have had more release cycles, but sales per active year makes
+            newer breakout franchises comparable with long-running catalogs. This separates
+            accumulated legacy from unusually fast market adoption.
+          </p>
+          <ol id="velocity-list"></ol>
+        </article>
+      </section>
+
+      <section class="section-grid">
+        <article class="chart-card">
+          <div class="section-title">
+            <p>Publishers</p>
+            <h2>Allocated sales by publisher</h2>
+          </div>
+          <canvas id="publisher-chart" height="330"></canvas>
+        </article>
+        <article class="analysis-card">
+          <div class="section-title">
+            <p>Finding 3</p>
+            <h2>Platform owners and IP operators dominate</h2>
+          </div>
+          <p>
+            Publisher totals are allocated across listed publishers when a franchise has
+            multiple owners. This avoids double-counting and shows how recurring IP, owned
+            distribution, and family-friendly catalogs shape the upper tier.
+          </p>
+        </article>
+      </section>
+
+      <section class="table-section">
+        <div class="section-title">
+          <p>Raw data</p>
+          <h2>Cleaned CSV preview</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Franchise</th>
+                <th>Sales</th>
+                <th>Primary genre</th>
+                <th>Debut</th>
+                <th>Velocity</th>
+              </tr>
+            </thead>
+            <tbody id="data-table"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="source">
+        <p>
+          Source:
+          <a id="source-link" href="https://en.wikipedia.org/wiki/List_of_best-selling_video_game_franchises">
+            Wikipedia - List of best-selling video game franchises
+          </a>
+        </p>
+        <p id="retrieved-at"></p>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

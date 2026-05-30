@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import type { Card } from "../data/pairs";
-import { CalendarDays, Play, Flame, History, CheckCircle2 } from "lucide-react";
+import { CalendarDays, Play, Flame, History, CheckCircle2, Zap } from "lucide-react";
 import { buttonClass } from "../lib/buttonClass";
 import type { DailyTheme } from "../lib/theme";
 import { mapToCards } from "../lib/theme";
@@ -10,6 +10,8 @@ interface CalendarScreenProps {
   activeDays: string[];
   onStart: (cards: Card[], themeTitle: string) => void;
   onArchive: () => void;
+  onReviewWeaknesses: () => void;
+  hasWeaknesses: boolean;
 }
 
 const WEEK_DAYS = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
@@ -85,7 +87,7 @@ function getMonthPositions(weeks: { date: string }[][]): { label: string; col: n
   return positions;
 }
 
-export function CalendarScreen({ activeDays, onStart, onArchive }: CalendarScreenProps) {
+export function CalendarScreen({ activeDays, onStart, onArchive, onReviewWeaknesses, hasWeaknesses }: CalendarScreenProps) {
   const [theme, setTheme] = useState<DailyTheme | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -182,12 +184,13 @@ export function CalendarScreen({ activeDays, onStart, onArchive }: CalendarScree
         </div>
 
         <div className="cal-footer">
-          <Flame size={14} strokeWidth={2} className={totalActive > 0 ? "cal-flame-active" : "cal-flame-dim"} />
+          <Flame size={14} strokeWidth={2} className={streak >= 1 ? "cal-flame-active" : "cal-flame-dim"} />
           <p className="cal-subtitle">
             {totalActive === 0
               ? "Nenhum exercício feito ainda este ano."
               : `${totalActive} dia${totalActive > 1 ? "s" : ""} com exercício em ${today.getFullYear()}.`}
           </p>
+          {streak >= 2 && <p className="cal-streak">{streak} dias seguidos</p>}
         </div>
       </div>
 
@@ -209,6 +212,16 @@ export function CalendarScreen({ activeDays, onStart, onArchive }: CalendarScree
             {playedToday && theme ? `Jogar novamente` : `Iniciar ${theme?.title}`}
           </motion.button>
         </div>
+      )}
+
+      {hasWeaknesses && (
+        <button
+          className={buttonClass({ variant: "ghost", size: "sm", className: "cal-weakness-btn" })}
+          onClick={onReviewWeaknesses}
+        >
+          <Zap size={15} strokeWidth={2} />
+          Revisar fraquezas
+        </button>
       )}
 
       <button

@@ -1,0 +1,112 @@
+{
+  "date": "2026-06-10",
+  "title": "Apache Kafka",
+  "description": "Como o Kafka funciona como um log de eventos distribuído e como ele difere fundamentalmente de uma fila de mensagens.",
+  "category": "distributed-systems",
+  "context": {
+    "relevance": "Kafka aparece em praticamente toda entrevista sobre sistemas distribuídos e é central em arquiteturas de microsserviços, pipelines de dados e sistemas de streaming. Saber definir com precisão o que o diferencia de uma fila, como partições habilitam paralelismo e como garantias de ordenação e durabilidade funcionam separa quem conhece o nome de quem entende o mecanismo."
+  },
+  "sources": [
+    {
+      "title": "Apache Kafka Documentation (Apache Software Foundation, 2024)",
+      "url": "https://kafka.apache.org/documentation/",
+      "category": "docs"
+    },
+    {
+      "title": "The Log: What Every Software Engineer Should Know About Real-Time Data's Unifying Abstraction (Jay Kreps, LinkedIn Engineering, 2013)",
+      "url": "https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying",
+      "category": "article"
+    },
+    {
+      "title": "What is Apache Kafka? (Confluent, 2024)",
+      "url": "https://www.confluent.io/what-is-apache-kafka/",
+      "category": "docs"
+    }
+  ],
+  "cards": [
+    {
+      "kind": "info",
+      "position": 0,
+      "front": "O que é Apache Kafka e como ele difere de uma fila de mensagens?",
+      "back": "Kafka é uma plataforma de streaming de eventos baseada em um log distribuído, não uma fila. A diferença fundamental está na retenção:\n\nFila tradicional:\n```\nProdutor → [mensagem] → Consumidor\n// mensagem deletada após o ACK\n```\n\nKafka:\n```\nProdutor → [log imutável] → Consumer Group A (offset próprio)\n                          → Consumer Group B (offset próprio)\n// retida por tempo configurável (padrão: 7 dias)\n```\n\nNo Kafka, múltiplos consumer groups independentes leem o mesmo tópico, cada um com seu próprio offset. A mesma mensagem chega a todos sem que um group interfira no outro. Em uma fila, cada mensagem é consumida por exatamente um consumidor e depois é removida."
+    },
+    {
+      "kind": "pair",
+      "position": 1,
+      "conceptA": "Consumer Kafka com lag crescente por horas",
+      "conceptB": "Mensagens antigas descartadas pelo broker",
+      "match": false,
+      "explanation": "Não combinam. O Kafka não descarta mensagens por causa de lag de um consumer. O broker retém mensagens pelo período de retenção configurado (padrão 7 dias via retention.ms), independentemente do ritmo de consumo. Um consumer lento simplesmente acumula lag, que pode ser monitorado e alertado, mas as mensagens permanecem disponíveis. Em uma fila tradicional, mensagens não confirmadas dentro do prazo costumam ser movidas para dead-letter ou descartadas."
+    },
+    {
+      "kind": "info",
+      "position": 2,
+      "front": "Como tópicos, partições e offsets se organizam no Kafka?",
+      "back": "Um tópico é dividido em N partições. Cada partição é um log sequencial, imutável e ordenado. Cada mensagem recebe um offset único dentro da sua partição:\n\n```\nTópico 'pedidos' com 3 partições:\nP0: [0] [1] [2] [3] [4]  <- offset crescente\nP1: [0] [1] [2]\nP2: [0] [1] [2] [3]\n```\n\nO offset é controlado pelo consumer, não pelo broker. O consumer decide até onde leu e pode ir para qualquer posição:\n- `fromBeginning: true` para replay total\n- offset específico para reprocessamento parcial\n\nOrdenação é garantida dentro de cada partição. Entre partições, não há garantia de ordem global."
+    },
+    {
+      "kind": "pair",
+      "position": 3,
+      "conceptA": "Dois consumer groups distintos no mesmo tópico",
+      "conceptB": "Leitura independente sem interferência entre eles",
+      "match": true,
+      "explanation": "Combinam. Cada consumer group mantém seu próprio offset por partição no tópico interno __consumer_offsets. Um group atrasado não afeta o ritmo do outro: um pode estar re-lendo eventos de 3 dias atrás enquanto outro processa eventos em tempo real, no mesmo tópico. O broker não coordena entre groups: cada um gerencia seu progresso de leitura de forma completamente autônoma."
+    },
+    {
+      "kind": "info",
+      "position": 4,
+      "front": "Como consumer groups habilitam paralelismo sem duplicar mensagens?",
+      "back": "Dentro de um consumer group, cada partição é atribuída a exatamente um consumer. Isso garante que cada mensagem seja processada por apenas um membro do group, sem duplicação:\n\n```\nTópico com 3 partições, Group 'pagamentos':\nP0 → Consumer 1   // cada partição: exatamente um consumer\nP1 → Consumer 2\nP2 → Consumer 3\n\nAo adicionar um 4º consumer ao group:\nP0 → Consumer 1\nP1 → Consumer 2\nP2 → Consumer 3\nConsumer 4 → ocioso (sem partição disponível)\n```\n\nPartições são a unidade de paralelismo. O número de partições define o limite máximo de consumers ativos em um group. Consumers a mais ficam ociosos, aguardando um rebalance caso outro consumer saia."
+    },
+    {
+      "kind": "pair",
+      "position": 5,
+      "conceptA": "Adicionar partições ao tópico sem novos consumers",
+      "conceptB": "Throughput de consumo escala proporcionalmente",
+      "match": false,
+      "explanation": "Não combinam. Adicionar partições sem consumers correspondentes não escala o consumo: após o rebalance, as novas partições são redistribuídas entre os consumers existentes, aumentando a carga individual de cada um. O throughput de consumo só escala quando partições e consumers crescem juntos. Partições definem o teto máximo de paralelismo possível; consumers são os workers que exploram esse paralelismo."
+    },
+    {
+      "kind": "info",
+      "position": 6,
+      "front": "Como garantir que eventos relacionados cheguem em ordem no Kafka?",
+      "back": "O produtor define uma chave por mensagem. O Kafka usa `hash(key) % numPartitions` para determinar a partição de destino. Mesma chave, mesma partição, ordem garantida:\n\n```typescript\n// With key: 'order-123' always routes to the same partition\nawait producer.send({\n  topic: 'orders',\n  messages: [\n    { key: 'order-123', value: '{\"status\":\"created\"}' },\n    { key: 'order-123', value: '{\"status\":\"paid\"}' },\n    { key: 'order-123', value: '{\"status\":\"shipped\"}' },\n  ],\n});\n// created -> paid -> shipped: guaranteed order within the partition\n```\n\nSem chave, o Kafka usa sticky partitioning: acumula um batch em uma partição antes de trocar para a próxima, sem qualquer garantia de ordem entre eventos de domínios distintos. A chave deve representar a entidade que exige ordenação: order ID, user ID, device ID."
+    },
+    {
+      "kind": "pair",
+      "position": 7,
+      "conceptA": "Offset committado por partição no consumer group",
+      "conceptB": "Rebalance retoma do ponto exato sem reprocessar tudo",
+      "match": true,
+      "explanation": "Combinam. O Kafka armazena o offset por partição e por consumer group no tópico interno __consumer_offsets. Quando ocorre um rebalance, o group coordinator reatribui as partições e o novo consumer responsável retoma a partir do último offset committado daquela partição. Apenas mensagens após esse offset são processadas, evitando o reprocessamento em massa do histórico já confirmado."
+    },
+    {
+      "kind": "info",
+      "position": 8,
+      "front": "O que é retenção no Kafka e quando o replay é útil?",
+      "back": "O Kafka retém mensagens por tempo (`retention.ms`, padrão 7 dias) ou por tamanho (`retention.bytes`), independentemente de terem sido consumidas. O consumer controla seu próprio offset e pode revisitar qualquer posição dentro do período de retenção:\n\n```typescript\n// Replay from the beginning of a topic\nawait consumer.subscribe({ topic: 'orders', fromBeginning: true });\n\n// Seek to a specific point in time\nconst offsets = await admin.fetchOffsetsByTimestamp({\n  topic: 'orders',\n  timestamp: Date.now() - 3 * 24 * 60 * 60 * 1000, // 3 days ago\n});\n```\n\nCasos de uso:\n- Novo serviço reconstrói estado a partir do histórico de eventos\n- Bug corrigido: reprocessar eventos dos últimos N dias\n- Auditoria independente sem afetar o consumer principal\n\nEm uma fila, a mensagem é deletada após o ACK. Replay é estruturalmente impossível."
+    },
+    {
+      "kind": "pair",
+      "position": 9,
+      "conceptA": "Produtor sem chave no tópico Kafka",
+      "conceptB": "Distribuição uniforme de mensagens entre partições",
+      "match": true,
+      "explanation": "Combinam. Sem chave definida, o Kafka usa sticky partitioning: acumula um batch em uma partição antes de trocar para a próxima, distribuindo a carga uniformemente entre partições ao longo do tempo. É a configuração adequada para eventos sem relação causal entre si, como logs de acesso, métricas ou eventos de clique, onde maximizar o paralelismo importa mais do que preservar ordem entre eventos de domínios diferentes."
+    },
+    {
+      "kind": "info",
+      "position": 10,
+      "front": "Como replication factor e acks garantem durabilidade no Kafka?",
+      "back": "Cada partição tem um broker líder e `replication.factor - 1` réplicas. O `min.insync.replicas` define quantas réplicas precisam confirmar a escrita antes do ACK:\n\n```\nPartição 0, replication.factor=3:\n  Broker 1 (líder)   <- produtor escreve aqui\n  Broker 2 (réplica) <- sincroniza do líder\n  Broker 3 (réplica) <- sincroniza do líder\n\nacks=all + min.insync.replicas=2:\n  ACK somente quando líder + 1 réplica confirmam.\n  Tolera falha de 1 broker sem perder a mensagem.\n```\n\n`acks=0`: sem confirmação, máximo throughput, mínima durabilidade.\n`acks=1`: apenas o líder confirma; risco de perda se o líder falhar antes de replicar.\n`acks=all`: todas as ISRs (in-sync replicas) confirmam antes do ACK; máxima durabilidade."
+    },
+    {
+      "kind": "pair",
+      "position": 11,
+      "conceptA": "min.insync.replicas igual ao replication.factor do tópico",
+      "conceptB": "Falha de um broker sem bloquear escritas",
+      "match": false,
+      "explanation": "Não combinam. Se min.insync.replicas é igual ao replication.factor (por exemplo, ambos = 3), a falha de qualquer broker reduz as réplicas em sincronia abaixo do mínimo exigido e o produtor recebe NotEnoughReplicasException: todas as escritas ficam bloqueadas até o broker ser recuperado. A configuração recomendada para equilibrar durabilidade e disponibilidade é replication.factor=3 com min.insync.replicas=2, que tolera a falha de um broker sem interromper a escrita."
+    }
+  ]
+}

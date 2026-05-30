@@ -1,0 +1,52 @@
+rank,franchise,sales_millions,genres,debut_year,publishers,primary_genre,decade,age_years,sales_per_year_millions
+1,Mario,893.5,Platformer; Various,1983,Nintendo,Platformer,1980s,44,20.31
+2,Tetris,520.0,Puzzle,1988,Various,Puzzle,1980s,39,13.33
+3,Pokémon,515.0,Creature collector; role-playing,1996,Nintendo; The Pokémon Company,Role-playing,1990s,31,16.61
+4,Call of Duty,500.0,First-person shooter,2003,Activision,Shooter,2000s,24,20.83
+5,Grand Theft Auto,470.0,Action-adventure,1997,Rockstar Games,Action-adventure,1990s,30,15.67
+6,Minecraft,350.0,Sandbox; survival,2011,Mojang Studios,Sandbox,2010s,16,21.88
+7,FIFA,325.0,Sports; football,1993,Electronic Arts,Sports,1990s,34,9.56
+8,Assassin's Creed,230.0,Action-adventure,2007,Ubisoft,Action-adventure,2000s,20,11.5
+9,Final Fantasy,209.0,Role-playing,1987,Square Enix,Role-playing,1980s,40,5.22
+10,Wii,204.0,Simulation,2006,Nintendo,Simulation,2000s,21,9.71
+11,Resident Evil,201.0,Action-adventure; survival horror,1996,Capcom,Action-adventure,1990s,31,6.48
+12,Lego,200.0,Various,1995,Warner Bros. Games,Various,1990s,32,6.25
+13,The Sims,200.0,Social simulation,2000,Electronic Arts,Social simulation,2000s,27,7.41
+14,NBA 2K,173.0,Sports; basketball,1999,2K,Sports,1990s,28,6.18
+15,The Legend of Zelda,150.0,Action-adventure,1986,Nintendo,Action-adventure,1980s,41,3.66
+16,Madden NFL,150.0,Sports; American football,1988,Electronic Arts,Sports,1980s,39,3.85
+17,Need for Speed,150.0,Racing,1994,Electronic Arts,Racing,1990s,33,4.55
+18,Sonic the Hedgehog,140.0,Platformer; kart racing,1991,Sega,Platformer,1990s,36,3.89
+19,Monster Hunter,127.0,Action role-playing,2004,Capcom,Role-playing,2000s,23,5.52
+20,Red Dead,115.0,Action-adventure,2004,Rockstar Games,Action-adventure,2000s,23,5.0
+21,Pro Evolution Soccer,112.5,Sports; football,1995,Konami,Sports,1990s,32,3.52
+22,Star Wars,102.0,Action-adventure; Various,1982,Various,Action-adventure,1980s,45,2.27
+23,Mortal Kombat,100.0,Fighting,1992,Warner Bros. Games,Fighting,1990s,35,2.86
+24,Tomb Raider,100.0,Action-adventure,1996,Various,Action-adventure,1990s,31,3.23
+25,Gran Turismo,100.0,Racing,1997,Sony Interactive Entertainment,Racing,1990s,30,3.33
+26,Bejeweled,100.0,Puzzle; tile-matching,2000,Electronic Arts,Puzzle,2000s,27,3.7
+27,Borderlands,100.0,First-person shooter,2009,2K,Shooter,2000s,18,5.56
+28,Tamagotchi,98.1,Virtual pet,1996,Bandai,Virtual pet,1990s,31,3.16
+29,WWE 2K,98.0,Sports; professional wrestling,2000,2K,Sports,2000s,27,3.63
+30,Dragon Quest,97.0,Role-playing,1986,Square Enix,Role-playing,1980s,41,2.37
+31,Just Dance,90.0,Rhythm; dance,2009,Ubisoft,Rhythm,2000s,18,5.0
+32,Battlefield,88.7,First-person shooter,2002,Electronic Arts,Shooter,2000s,25,3.55
+33,The Witcher,85.0,Action role-playing,2007,CD Projekt,Role-playing,2000s,20,4.25
+34,Donkey Kong,82.0,Platformer,1981,Nintendo,Platformer,1980s,46,1.78
+35,Halo,81.0,First-person shooter,2001,Xbox Game Studios,Shooter,2000s,26,3.12
+36,Civilization,80.0,Strategy,1991,2K,Strategy,1990s,36,2.22
+37,The Walking Dead,80.0,Adventure,2012,Telltale Games; Skybound Games,Adventure,2010s,15,5.33
+38,Worms,75.0,Turn-based tactics; artillery,1995,Team17,Turn-based tactics,1990s,32,2.34
+39,Super Smash Bros.,72.0,Platform fighter,1999,Nintendo,Platformer,1990s,28,2.57
+40,Counter-Strike,72.0,First-person shooter,2000,Valve,Shooter,2000s,27,2.67
+41,Animal Crossing,70.0,Social simulation,2001,Nintendo,Social simulation,2000s,26,2.69
+42,Metal Gear,66.1,Action-adventure; stealth,1987,Konami,Action-adventure,1980s,40,1.65
+43,God of War,66.0,Action-adventure,2005,Sony Interactive Entertainment,Action-adventure,2000s,22,3.0
+44,The Oregon Trail,65.0,Strategy,1971,Gameloft,Strategy,1970s,56,1.16
+45,Tekken,61.0,Fighting,1994,Bandai Namco Entertainment,Fighting,1990s,33,1.85
+46,Far Cry,60.0,First-person shooter,2004,Ubisoft,Shooter,2000s,23,2.61
+47,Street Fighter,59.0,Fighting,1987,Capcom,Fighting,1980s,40,1.48
+48,Kirby,50.0,Platformer,1992,Nintendo,Platformer,1990s,35,1.43
+49,Destiny,50.0,First-person shooter,2014,Bungie,Shooter,2010s,13,3.85
+50,Overwatch,50.0,First-person shooter,2016,Blizzard Entertainment,Shooter,2010s,11,4.55
+51,Marvel's Spider-Man,50.0,Action-adventure,2018,Sony Interactive Entertainment,Action-adventure,2010s,9,5.56
