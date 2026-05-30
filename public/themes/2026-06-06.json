@@ -1,0 +1,112 @@
+{
+  "date": "2026-06-06",
+  "title": "Dependency Injection",
+  "description": "Como passar dependências explicitamente para habilitar testes, flexibilidade e baixo acoplamento.",
+  "context": {
+    "relevance": "Dependency Injection é uma das técnicas mais mal compreendidas do desenvolvimento de software: muitos confundem a técnica simples (passar dependências manualmente) com os frameworks que a automatizam (containers IoC), ou a confundem com o Dependency Inversion Principle (DIP) do SOLID, ou ainda com o padrão Service Locator. Entender a distinção é essencial para escrever código testável e para tomar boas decisões de arquitetura em projetos que usam frameworks como Spring, Angular ou NestJS."
+  },
+  "category": "design-patterns",
+  "sources": [
+    {
+      "title": "Inversion of Control Containers and the Dependency Injection pattern (Martin Fowler, 2004)",
+      "url": "https://martinfowler.com/articles/injection.html",
+      "category": "article"
+    },
+    {
+      "title": "Dependency injection - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Dependency_injection",
+      "category": "article"
+    },
+    {
+      "title": "NestJS Dependency Injection (NestJS Docs)",
+      "url": "https://docs.nestjs.com/fundamentals/custom-providers",
+      "category": "docs"
+    }
+  ],
+  "cards": [
+    {
+      "kind": "info",
+      "position": 0,
+      "front": "O que é Dependency Injection e como ela se parece na prática?",
+      "back": "Dependency Injection (DI) é a técnica de fornecer as dependências de um objeto de fora, em vez de criá-las internamente.\n\nRuim (dependência criada internamente):\n```typescript\nclass OrderService {\n  private mailer = new SmtpMailer(); // hard-coded dependency\n\n  async placeOrder(order: Order) {\n    await this.mailer.send(order.userEmail, 'Order confirmed');\n  }\n}\n```\n\nBom (dependência injetada):\n```typescript\nclass OrderService {\n  constructor(private mailer: Mailer) {} // dependency injected\n\n  async placeOrder(order: Order) {\n    await this.mailer.send(order.userEmail, 'Order confirmed');\n  }\n}\n\n// Caller decides which implementation to use\nconst service = new OrderService(new SmtpMailer());\n```\n\nA diferença essencial: quem cria `OrderService` decide qual `Mailer` usar. Isso torna a classe testável e substituível sem alterar seu código."
+    },
+    {
+      "kind": "pair",
+      "position": 1,
+      "conceptA": "Construtor recebe interface em vez de instância concreta",
+      "conceptB": "Dependência ainda é criada dentro da classe",
+      "match": false,
+      "explanation": "Não combinam. Declarar o tipo como interface no construtor é uma boa prática de tipagem, mas não é DI por si só. O que define DI é de onde vem a instância: se a classe ainda chama `new ConcreteImpl()` internamente, ela continua acoplada à implementação concreta e os benefícios de testabilidade se perdem."
+    },
+    {
+      "kind": "info",
+      "position": 2,
+      "front": "Como DI habilita testes unitários?",
+      "back": "Sem DI, a dependência concreta está no interior da classe e não pode ser substituída em testes:\n\n```typescript\n// Hard to test: SmtpMailer connects to a real server\nclass OrderService {\n  private mailer = new SmtpMailer();\n}\n```\n\nCom DI, o teste injeta um substituto (stub ou mock):\n\n```typescript\nclass FakeMailer implements Mailer {\n  sent: string[] = [];\n  async send(to: string, body: string) {\n    this.sent.push(to); // no real email sent\n  }\n}\n\nconst fakeMailer = new FakeMailer();\nconst service = new OrderService(fakeMailer);\nawait service.placeOrder(order);\nexpect(fakeMailer.sent).toContain(order.userEmail);\n```\n\nA testabilidade é uma consequência direta de tornar as dependências explícitas e substituíveis, não um objetivo separado."
+    },
+    {
+      "kind": "pair",
+      "position": 3,
+      "conceptA": "Classe com 8 dependências no construtor",
+      "conceptB": "Violação do Single Responsibility Principle",
+      "match": true,
+      "explanation": "Combinam. Um construtor com muitas dependências injetadas costuma indicar que a classe acumulou responsabilidades demais. DI não resolve esse problema: ela apenas torna o acoplamento excessivo visível e explícito. O número alto de dependências é um sinal para dividir a classe, não para usar um container que esconda a complexidade."
+    },
+    {
+      "kind": "info",
+      "position": 4,
+      "front": "Qual é a diferença entre DI (Dependency Injection) e DIP (Dependency Inversion Principle)?",
+      "back": "São conceitos relacionados mas distintos:\n\n**DIP** (princípio): módulos de alto nível não devem depender de módulos de baixo nível. Ambos devem depender de abstrações.\n\n**DI** (técnica): mecanismo para fornecer dependências de fora da classe.\n\nVocê pode praticar DI sem DIP:\n```typescript\n// DI sem DIP: dependência injetada, mas é uma classe concreta\nconst service = new OrderService(new SmtpMailer());\n```\n\nVocê pode seguir DIP sem DI manual:\n```typescript\n// DIP sem DI manual: código depende de interface, mas usa Service Locator\nconst mailer = container.get<Mailer>('Mailer');\n```\n\nA combinação dos dois (injetar abstrações) costuma ser o objetivo em código de produção. Confundir os dois leva a discussões improdutivas sobre qual princípio foi violado."
+    },
+    {
+      "kind": "pair",
+      "position": 5,
+      "conceptA": "Injetar dependência concreta (sem interface)",
+      "conceptB": "Dependência Injection aplicada incorretamente",
+      "match": false,
+      "explanation": "Não combinam. DI não exige abstrações: injetar uma classe concreta já é DI válida, porque a dependência continua sendo fornecida de fora. A distinção entre injetar concretos ou abstrações diz respeito ao DIP e à flexibilidade de substituição, não à definição de DI em si."
+    },
+    {
+      "kind": "info",
+      "position": 6,
+      "front": "Qual é a diferença entre DI e Service Locator?",
+      "back": "Ambos resolvem o problema de obter dependências, mas de formas opostas:\n\n**Service Locator**: a classe busca sua própria dependência em um registro global.\n```typescript\nclass OrderService {\n  placeOrder(order: Order) {\n    const mailer = ServiceLocator.get<Mailer>('Mailer'); // class pulls dependency\n    mailer.send(order.userEmail, 'Confirmed');\n  }\n}\n```\n\n**DI**: a dependência é empurrada para a classe por quem a cria.\n```typescript\nclass OrderService {\n  constructor(private mailer: Mailer) {} // dependency pushed in\n}\n```\n\nO problema do Service Locator:\n- Dependências são implícitas (não visíveis na assinatura)\n- Testes precisam configurar o locator global antes de rodar\n- Violações de contrato só aparecem em runtime\n\nCom DI, as dependências são explícitas na assinatura do construtor: você sabe exatamente o que a classe precisa para funcionar."
+    },
+    {
+      "kind": "pair",
+      "position": 7,
+      "conceptA": "Container IoC resolve dependências automaticamente",
+      "conceptB": "Dependency Injection como técnica de design",
+      "match": true,
+      "explanation": "Combinam. Um container IoC (como o do Spring, Angular ou NestJS) automatiza a prática de DI: ele inspeciona os construtores, resolve e injeta as dependências sem que o chamador precise fazê-lo manualmente. O container é uma ferramenta que aplica DI em escala, não um conceito separado."
+    },
+    {
+      "kind": "info",
+      "position": 8,
+      "front": "Quais são as formas de injeção e quando usar cada uma?",
+      "back": "Existem três formas principais:\n\n**Constructor injection** (preferida):\n```typescript\nclass OrderService {\n  constructor(private mailer: Mailer, private db: Database) {}\n}\n```\nDependências obrigatórias, visíveis e imutáveis. Facilita testes.\n\n**Property injection** (use com cautela):\n```typescript\nclass OrderService {\n  @Inject() mailer!: Mailer; // set by framework after construction\n}\n```\nUtil quando não há controle sobre o construtor (frameworks legados). Esconde dependências.\n\n**Method injection** (específica):\n```typescript\nclass OrderService {\n  placeOrder(order: Order, mailer: Mailer) {} // injected per call\n}\n```\nDependência varia por chamada, não por instância.\n\nConstructor injection é o padrão recomendado porque torna o contrato da classe explícito e impossibilita o uso de um objeto parcialmente inicializado."
+    },
+    {
+      "kind": "pair",
+      "position": 9,
+      "conceptA": "Usar container IoC em biblioteca utilitária pequena",
+      "conceptB": "Overhead desnecessário para o consumidor",
+      "match": true,
+      "explanation": "Combinam. Containers IoC adicionam dependências de runtime, convenções de configuração e curva de aprendizado. Em uma biblioteca pequena ou utilitária, o custo costuma superar o benefício: DI manual via construtor resolve o problema de acoplamento sem impor o container ao consumidor da biblioteca."
+    },
+    {
+      "kind": "info",
+      "position": 10,
+      "front": "Como DI pode ser mal aplicada mesmo quando a sintaxe está correta?",
+      "back": "DI resolve acoplamento de dependências, não acoplamento de design. Erros comuns mesmo com DI correta:\n\n**Injetar e ignorar a abstração:**\n```typescript\n// Interface exists but is never substituted in practice\ninterface Mailer { send(...): Promise<void>; }\nclass OrderService {\n  constructor(private mailer: Mailer) {}\n}\n// Only one concrete implementation ever exists\n```\nInterface sem substituição real não traz benefício de design.\n\n**God class com DI:**\n```typescript\nclass AppService {\n  constructor(\n    private auth: AuthService,\n    private payments: PaymentService,\n    private notifications: NotificationService,\n    private analytics: AnalyticsService,\n    private cache: CacheService,\n  ) {}\n}\n```\nDI não divide responsabilidades: ela apenas expõe quantas responsabilidades a classe acumulou.\n\nDI é uma ferramenta de baixo acoplamento, não de bom design. O design ainda é responsabilidade do desenvolvedor."
+    },
+    {
+      "kind": "pair",
+      "position": 11,
+      "conceptA": "Dependências injetadas via construtor em todos os serviços",
+      "conceptB": "Código automaticamente bem estruturado e coeso",
+      "match": false,
+      "explanation": "Não combinam. DI torna as dependências explícitas e substituíveis, mas não garante coesão nem responsabilidade única. Uma classe pode ter oito dependências injetadas corretamente e ainda assim violar SRP. DI expõe o acoplamento, mas a responsabilidade de mantê-lo baixo é do design, não da técnica."
+    }
+  ]
+}

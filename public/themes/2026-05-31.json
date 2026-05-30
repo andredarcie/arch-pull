@@ -1,0 +1,112 @@
+{
+  "date": "2026-05-31",
+  "title": "Liskov Substitution Principle",
+  "description": "O L do SOLID: uma subclasse deve poder substituir sua classe-pai sem quebrar o programa.",
+  "category": "solid-oop",
+  "context": {
+    "relevance": "LSP é o princípio mais silenciosamente violado do SOLID. Ao contrário de SRP ou OCP, uma violação de LSP raramente causa um erro imediato: o código compila, os testes passam e o sistema parece funcionar. O problema aparece em runtime, em casos de borda, ou quando um novo desenvolvedor usa a subclasse assumindo que ela se comporta como a base. Dominar LSP significa saber o que realmente significa herança e quando composição é a escolha certa."
+  },
+  "sources": [
+    {
+      "title": "Behavioral Subtyping Using Invariants and Constraints (Barbara Liskov e Jeannette Wing, 1994)",
+      "url": "https://www.cs.cmu.edu/~wing/publications/LiskovWing94.pdf",
+      "category": "paper"
+    },
+    {
+      "title": "The Liskov Substitution Principle (Robert C. Martin, Clean Coder Blog, 2014)",
+      "url": "https://blog.cleancoder.com/uncle-bob/2020/10/18/Solid-Relevance.html",
+      "category": "article"
+    },
+    {
+      "title": "Liskov substitution principle (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Liskov_substitution_principle",
+      "category": "docs"
+    }
+  ],
+  "cards": [
+    {
+      "kind": "info",
+      "position": 0,
+      "front": "O que é o Liskov Substitution Principle na prática?",
+      "back": "LSP diz que qualquer lugar que usa a classe base deve funcionar corretamente com uma subclasse, sem precisar saber qual é.\n\nExemplo clássico de violação:\n```typescript\nclass Rectangle {\n  setWidth(w: number)  { this.width = w; }\n  setHeight(h: number) { this.height = h; }\n  area() { return this.width * this.height; }\n}\n\nclass Square extends Rectangle {\n  // Square força width === height\n  setWidth(w: number)  { this.width = this.height = w; }\n  setHeight(h: number) { this.width = this.height = h; }\n}\n\nfunction testArea(r: Rectangle) {\n  r.setWidth(5);\n  r.setHeight(4);\n  // esperado: 20. Com Square: 16\n  console.log(r.area());\n}\n```\n\nO código compila e não lança exceção. O LSP é violado pelo comportamento inesperado, não por um erro visível."
+    },
+    {
+      "kind": "pair",
+      "position": 1,
+      "conceptA": "Subclasse que lança exceção em método herdado",
+      "conceptB": "Substituição transparente pela classe base",
+      "match": false,
+      "explanation": "Não combinam. Se uma subclasse lança exceção em um método que a classe base executa sem problemas, o código que depende da base para em runtime ao receber a subclasse. A substituição deixa de ser transparente: quem chama o método precisa saber o tipo concreto para se proteger, o que viola LSP."
+    },
+    {
+      "kind": "info",
+      "position": 2,
+      "front": "Como identificar uma violação de LSP no código?",
+      "back": "O sinal mais claro é uma verificação de tipo antes de chamar um método.\n\n```typescript\nfunction processShape(shape: Shape) {\n  // verificacao de tipo e sinal de violacao de LSP\n  if (shape instanceof Circle) {\n    (shape as Circle).drawWithRadius();\n  } else {\n    shape.draw();\n  }\n}\n```\n\nOutros sinais:\n- Subclasse sobrescreve método com corpo vazio (`{}`)\n- Subclasse lança `NotImplementedError` em método herdado\n- Código cliente que funciona com a base quebra com a subclasse em casos específicos\n\nSe você precisa checar o tipo concreto, a abstração não está funcionando."
+    },
+    {
+      "kind": "pair",
+      "position": 3,
+      "conceptA": "Verificação de instanceof antes de chamar método",
+      "conceptB": "Hierarquia de herança que respeita LSP",
+      "match": false,
+      "explanation": "Não combinam. Verificar o tipo concreto de um objeto antes de invocar um método é o sintoma clássico de LSP violado: o código não confia que a subclasse vai se comportar como a base. Uma hierarquia que respeita LSP permite chamar qualquer método da base em qualquer subclasse sem verificação de tipo."
+    },
+    {
+      "kind": "info",
+      "position": 4,
+      "front": "Quais contratos LSP exige que uma subclasse respeite?",
+      "back": "LSP define três regras de contrato:\n\n1. **Pré-condições**: a subclasse não pode ser mais restritiva do que a base.\n```typescript\n// Base aceita qualquer número\nclass Base { process(n: number) { ... } }\n// Violacao: subclasse restringe a positivos\nclass Sub extends Base {\n  process(n: number) {\n    if (n <= 0) throw new Error('Positivo apenas');\n  }\n}\n```\n\n2. **Pós-condições**: a subclasse deve garantir pelo menos o que a base garante.\n\n3. **Invariantes**: propriedades que a base mantém não podem ser quebradas pela subclasse.\n\nViolar qualquer um desses contratos torna a substituição insegura, mesmo que o TypeScript não reclame."
+    },
+    {
+      "kind": "pair",
+      "position": 5,
+      "conceptA": "Subclasse que aceita menos parâmetros válidos que a base",
+      "conceptB": "Pré-condição mais restritiva na subclasse",
+      "match": true,
+      "explanation": "Combinam. Quando uma subclasse rejeita valores que a classe base aceita sem problemas, ela está impondo uma pré-condição mais restritiva. Código que funcionava com a base pode falhar com a subclasse para os mesmos inputs, tornando a substituição insegura. Isso é uma violação direta do contrato LSP."
+    },
+    {
+      "kind": "info",
+      "position": 6,
+      "front": "Por que o exemplo Quadrado-Retângulo é a violação mais famosa de LSP?",
+      "back": "Matematicamente, todo quadrado é um retângulo. Mas em orientação a objetos, herança não é sobre o que um objeto é, é sobre como ele se comporta.\n\nUm `Rectangle` tem a invariante: largura e altura são independentes.\nUm `Square` viola essa invariante: alterar um altera o outro.\n\n```typescript\n// Rectangle garante:\nr.setWidth(5);\nr.setHeight(4);\nassert(r.width === 5);  // passa em Rectangle\nassert(r.width === 5);  // FALHA em Square (width virou 4)\n```\n\nA conclusão é contraintuitiva: o relacionamento correto em código não é `Square extends Rectangle`. É composição ou hierarquias separadas. LSP mostra que herança de código não é equivalente a herança conceitual."
+    },
+    {
+      "kind": "pair",
+      "position": 7,
+      "conceptA": "Herança reflete relacionamento lógico do mundo real",
+      "conceptB": "Hierarquia de classes que respeita LSP",
+      "match": false,
+      "explanation": "Não combinam. LSP mostra que herança de código não é equivalente a herança conceitual. Quadrado é retângulo na matemática, mas Square extends Rectangle viola LSP. A hierarquia deve ser guiada pelo comportamento compartilhado, não pela taxonomia do domínio. Quando o mundo real e o comportamento divergem, composição costuma ser a escolha mais segura."
+    },
+    {
+      "kind": "info",
+      "position": 8,
+      "front": "Como composição evita violações de LSP?",
+      "back": "Quando uma classe precisa de parte do comportamento da base, mas não pode honrar todos os contratos, composição é mais segura que herança.\n\n```typescript\n// Heranca: Square VIOLA o contrato de Rectangle\nclass Square extends Rectangle { ... }\n\n// Composicao: Square usa a logica de area sem herdar o contrato\nclass Square {\n  constructor(private side: number) {}\n\n  area() { return this.side ** 2; }\n  perimeter() { return 4 * this.side; }\n}\n```\n\nNenhum código que depende de `Rectangle` vai receber um `Square` acidentalmente. Cada classe tem o contrato que pode cumprir, e o compilador ajuda a garantir isso."
+    },
+    {
+      "kind": "pair",
+      "position": 9,
+      "conceptA": "Substituir herança por composição",
+      "conceptB": "Eliminar violação de LSP",
+      "match": true,
+      "explanation": "Combinam. Quando uma subclasse não consegue honrar todos os contratos da base, trocar herança por composição é a solução direta. A classe filha passa a usar a lógica necessária sem prometer substituir a base. Isso elimina a violação porque não há mais hierarquia com contrato que não pode ser cumprido."
+    },
+    {
+      "kind": "info",
+      "position": 10,
+      "front": "LSP se aplica a interfaces e duck typing, além de herança?",
+      "back": "Sim. LSP se aplica a qualquer tipo de contrato implícito ou explícito, não só a herança de classe.\n\n```typescript\ninterface Storage {\n  save(key: string, value: string): void;\n  load(key: string): string | null;\n}\n\n// ReadOnlyStorage viola LSP para Storage:\n// save() lanca excecao, quebrando o contrato\nclass ReadOnlyStorage implements Storage {\n  save(key: string, value: string): void {\n    throw new Error('Read only');\n  }\n  load(key: string): string | null { ... }\n}\n```\n\nSe `ReadOnlyStorage` não pode cumprir `save`, ela não deve implementar `Storage`. LSP diz: implemente apenas contratos que você pode honrar completamente."
+    },
+    {
+      "kind": "pair",
+      "position": 11,
+      "conceptA": "Classe que implementa interface mas lança exceção em um método",
+      "conceptB": "Interface segregada com apenas os métodos suportados",
+      "match": true,
+      "explanation": "Combinam. Quando uma classe não consegue implementar todos os métodos de uma interface sem lançar exceção, a solução correta é segregar a interface: criar uma versão menor que a classe pode cumprir completamente. LSP e ISP (Interface Segregation Principle) se reforçam aqui. A classe deve assinar apenas o contrato que consegue honrar."
+    }
+  ]
+}

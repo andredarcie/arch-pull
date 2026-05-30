@@ -1,0 +1,112 @@
+{
+  "date": "2026-06-05",
+  "title": "Test Doubles",
+  "description": "As diferenças precisas entre mock, stub, fake, spy e dummy, e quando usar cada tipo sem exagerar.",
+  "context": {
+    "relevance": "Test doubles são usados em quase todo projeto com testes automatizados, mas a confusão entre os tipos leva a suítes frágeis e difíceis de manter. Saber distinguir mock de stub e fake de spy permite escrever testes mais precisos, com falhas que apontam para a causa real do problema em vez de mascarar dependências mal isoladas."
+  },
+  "category": "quality-testing",
+  "sources": [
+    {
+      "title": "Mocks Aren't Stubs (Martin Fowler, 2007)",
+      "url": "https://martinfowler.com/articles/mocksArentStubs.html",
+      "category": "article"
+    },
+    {
+      "title": "xUnit Test Patterns: Refactoring Test Code (Gerard Meszaros, 2007)",
+      "url": "http://xunitpatterns.com/Test%20Double.html",
+      "category": "article"
+    },
+    {
+      "title": "Unit Testing Principles, Practices, and Patterns (Vladimir Khorikov, 2020)",
+      "url": "https://www.manning.com/books/unit-testing",
+      "category": "article"
+    }
+  ],
+  "cards": [
+    {
+      "kind": "info",
+      "position": 0,
+      "front": "O que é um test double e quais são os cinco tipos?",
+      "back": "Test double é qualquer objeto que substitui uma dependência real em um teste. Os cinco tipos, segundo Gerard Meszaros:\n\n```\nDummy   → preenchimento sem uso real (parâmetros obrigatórios)\nStub    → retorna valores pré-definidos (controla entradas)\nSpy     → grava chamadas para verificação posterior\nMock    → verifica comportamento esperado (falha se não chamado)\nFake    → implementação real, simplificada (ex: banco em memória)\n```\n\nExemplo concreto: para testar um serviço de e-mail:\n- **Stub**: retorna `{ success: true }` sem enviar nada\n- **Spy**: registra quantas vezes `send()` foi chamado\n- **Mock**: falha se `send()` não for chamado exatamente uma vez\n- **Fake**: servidor SMTP em memória que processa de verdade\n- **Dummy**: um objeto `Logger` passado mas nunca usado"
+    },
+    {
+      "kind": "pair",
+      "position": 1,
+      "conceptA": "Mock verifica que método foi chamado",
+      "conceptB": "Stub retorna valor pré-definido",
+      "match": true,
+      "explanation": "Combinam. São complementares e frequentemente usados juntos: o stub controla o estado de entrada (o que a dependência retorna), enquanto o mock verifica o comportamento de saída (se e como o código chamou a dependência). Confundi-los leva a testes que verificam a coisa errada."
+    },
+    {
+      "kind": "info",
+      "position": 2,
+      "front": "Quando usar fake em vez de mock?",
+      "back": "Fakes fazem sentido quando a dependência tem lógica interna relevante para o teste e recriar essa lógica com stubs/mocks tornaria o teste difícil de manter.\n\nRuim (mock onde fake seria melhor):\n```typescript\n// Configurar mock para simular paginação é frágil\njest.spyOn(repo, 'findAll').mockResolvedValueOnce(page1)\n  .mockResolvedValueOnce(page2);\n```\n\nBom (fake com implementação real simplificada):\n```typescript\nclass InMemoryUserRepository implements UserRepository {\n  private users: User[] = [];\n  async findAll(page: number, size: number) {\n    return this.users.slice(page * size, (page + 1) * size);\n  }\n  async save(user: User) { this.users.push(user); }\n}\n```\n\nO fake testa o comportamento de paginação de forma determinística sem acoplamento à implementação interna."
+    },
+    {
+      "kind": "pair",
+      "position": 3,
+      "conceptA": "Repositório fake em memória para testes de integração",
+      "conceptB": "Teste acoplado à implementação interna do repositório",
+      "match": false,
+      "explanation": "Não combinam. Um fake com implementação real simplificada testa o comportamento observável, sem conhecer como o repositório real funciona por dentro. O acoplamento à implementação interna é característica de mocks excessivos que verificam chamadas específicas de métodos privados ou detalhes de infraestrutura."
+    },
+    {
+      "kind": "info",
+      "position": 4,
+      "front": "O que é over-mocking e por que torna os testes frágeis?",
+      "back": "Over-mocking é configurar mocks para cada dependência, mesmo quando elas poderiam ser usadas diretamente ou substituídas por fakes.\n\nSinais de over-mocking:\n```typescript\n// Teste que \"espelha\" a implementação em vez de testar comportamento\nit('should call repo.findById then mapper.toDTO', async () => {\n  mockRepo.findById.mockResolvedValue(userEntity);\n  mockMapper.toDTO.mockReturnValue(userDTO);\n  const result = await service.getUser(1);\n  expect(mockRepo.findById).toHaveBeenCalledWith(1); // verifica detalhe interno\n  expect(mockMapper.toDTO).toHaveBeenCalledWith(userEntity); // idem\n});\n```\n\nProblema: qualquer refatoração interna (renomear método, mudar ordem de chamadas) quebra o teste, mesmo sem mudar o comportamento visível. O teste verifica como o código funciona, não o que ele faz."
+    },
+    {
+      "kind": "pair",
+      "position": 5,
+      "conceptA": "Teste falha após renomear método privado",
+      "conceptB": "Teste verifica comportamento observável",
+      "match": false,
+      "explanation": "Não combinam. Testes que falham por renomeação de métodos internos estão acoplados à implementação, não ao comportamento. Testes que verificam comportamento observável (resultado retornado, estado final, efeito colateral visível) sobrevivem a refatorações internas. A fragilidade costuma vir de mocks que gravam chamadas de métodos privados ou de implementação."
+    },
+    {
+      "kind": "info",
+      "position": 6,
+      "front": "Qual é a diferença prática entre spy e mock?",
+      "back": "Spy e mock verificam interações, mas em momentos diferentes e com intenções diferentes.\n\n```typescript\n// Spy: observa sem expectativa prévia, verifica depois\nconst spy = jest.spyOn(emailService, 'send');\nawait notifyUser(user);\nexpect(spy).toHaveBeenCalledTimes(1); // asserção no final\n\n// Mock: expectativa é declarada antes da execução\nconst mock = jest.fn();\nemailService.send = mock;\nawait notifyUser(user);\nexpect(mock).toHaveBeenCalledWith(user.email, expect.any(String));\n```\n\nNa prática, frameworks como Jest misturam os conceitos. A distinção real importa na intenção: spy é para \"registrar e verificar\", mock é para \"esperar uma interação específica\". Spy costuma ser menos restritivo e mais adequado quando o comportamento exato da chamada pode variar."
+    },
+    {
+      "kind": "pair",
+      "position": 7,
+      "conceptA": "Spy registra chamadas sem falhar por padrão",
+      "conceptB": "Mock falha se comportamento esperado não ocorre",
+      "match": true,
+      "explanation": "Combinam. Essa é a distinção fundamental de intenção: o spy é passivo (observa e permite verificação posterior), enquanto o mock é ativo (tem expectativas embutidas e falha automaticamente se não forem satisfeitas). Usar mock quando spy seria suficiente aumenta a rigidez do teste desnecessariamente."
+    },
+    {
+      "kind": "info",
+      "position": 8,
+      "front": "Quando usar dummy e quando isso é um sinal de problema de design?",
+      "back": "Dummy é um valor nulo ou objeto vazio passado para satisfazer uma assinatura, sem ser usado no teste.\n\n```typescript\n// Dummy: logger é obrigatório mas irrelevante para este teste\nconst dummyLogger = { log: () => {}, error: () => {} };\nconst service = new PaymentService(paymentGateway, dummyLogger);\n```\n\nQuando dummies são frequentes, pode indicar que o construtor tem dependências desnecessárias para muitos casos de uso. Opções de design:\n- Tornar a dependência opcional com valor padrão\n- Separar a classe em duas com responsabilidades menores\n- Usar injeção de dependência com default no container\n\nDummy em excesso é um sinal de que a interface do objeto é mais ampla do que precisa ser para a maioria dos seus usos."
+    },
+    {
+      "kind": "pair",
+      "position": 9,
+      "conceptA": "Muitos dummies em testes de uma mesma classe",
+      "conceptB": "Classe com responsabilidade única e coesa",
+      "match": false,
+      "explanation": "Não combinam. Quando vários testes precisam de múltiplos dummies para instanciar uma classe, isso indica que a classe tem dependências que só fazem sentido para alguns de seus comportamentos. Uma classe coesa com responsabilidade única costuma precisar de poucas dependências, reduzindo a necessidade de dummies para isolar comportamentos específicos."
+    },
+    {
+      "kind": "info",
+      "position": 10,
+      "front": "Como escolher o tipo certo de test double para cada situação?",
+      "back": "Regra de decisão baseada no que o teste precisa verificar:\n\n```\nPreciso apenas satisfazer uma assinatura?  → Dummy\nPreciso controlar o que a dependência retorna? → Stub\nPreciso verificar se um método foi chamado? → Spy (depois) ou Mock (antes)\nPreciso de lógica real mas sem I/O externo? → Fake\n```\n\nHeurística de Fowler: prefira verificar estado (o que o sistema produziu) em vez de comportamento (como ele chegou lá). Reserve mocks para casos onde o comportamento com dependências externas é o que está sendo testado, como enviar e-mail, publicar evento ou gravar log de auditoria.\n\nFake é frequentemente a melhor opção para repositórios e serviços com lógica, porque permite testes de integração rápidos sem infraestrutura real."
+    },
+    {
+      "kind": "pair",
+      "position": 11,
+      "conceptA": "Verificar estado final do objeto após operação",
+      "conceptB": "Preferência por stubs e fakes em vez de mocks",
+      "match": true,
+      "explanation": "Combinam. Testes orientados a estado verificam o resultado observável (valor retornado, campo atualizado, coleção modificada) e naturalmente se apoiam em stubs e fakes, que fornecem dados sem impor expectativas de chamada. Mocks são mais adequados quando o efeito colateral em si (chamar uma API externa, publicar um evento) é exatamente o que precisa ser garantido."
+    }
+  ]
+}

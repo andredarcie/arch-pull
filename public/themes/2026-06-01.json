@@ -1,0 +1,122 @@
+{
+  "date": "2026-06-01",
+  "title": "Tool Use in AI Agents",
+  "description": "Como agentes de IA decidem quando e como chamar ferramentas, e como projetar interfaces que eles usam de forma confiável.",
+  "category": "ai-engineering",
+  "context": {
+    "relevance": "Agentes modernos como Claude, GPT-4 e Gemini dependem de ferramentas para agir no mundo real: executar código, buscar dados, chamar APIs, escrever arquivos. A qualidade dessas interações determina se o agente é útil ou caótico. Engenheiros que projetam sistemas com agentes precisam entender quando o agente chama ferramentas demais, de menos, ou de forma errada, e como o design da interface da ferramenta influencia diretamente esse comportamento."
+  },
+  "sources": [
+    {
+      "title": "Tool Use Overview (Anthropic Docs, 2025)",
+      "url": "https://docs.anthropic.com/en/docs/build-with-claude/tool-use/overview",
+      "category": "docs"
+    },
+    {
+      "title": "Gorilla: Large Language Model Connected with Massive APIs (Patil et al., arXiv, 2023)",
+      "url": "https://arxiv.org/abs/2305.15334",
+      "category": "paper"
+    },
+    {
+      "title": "ToolBench: Facilitating Large Language Models to Master APIs (Qin et al., ICLR 2024)",
+      "url": "https://arxiv.org/abs/2307.16789",
+      "category": "paper"
+    },
+    {
+      "title": "Building Effective Agents (Anthropic Engineering, 2024)",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "category": "article"
+    },
+    {
+      "title": "Best Practices for Tool Definitions (Anthropic Docs, 2025)",
+      "url": "https://docs.anthropic.com/en/docs/build-with-claude/tool-use/best-practices-for-tool-definitions",
+      "category": "docs"
+    }
+  ],
+  "cards": [
+    {
+      "kind": "info",
+      "position": 0,
+      "front": "Como um agente de IA decide quando chamar uma ferramenta?",
+      "back": "O agente avalia se a tarefa exige informação ou ação que está fora do seu conhecimento interno. Ferramentas são chamadas quando o agente precisa de dados atuais, precisa executar algo no mundo real ou precisa de precisão que a geração de texto não garante.\n\nBom uso de ferramenta:\n```\nUsuário: \"Qual é o preço atual do Bitcoin?\"\nAgente: chama search_web(\"bitcoin price\") → retorna $67.432\nAgente: \"O Bitcoin está sendo negociado a $67.432.\"\n```\n\nMau uso de ferramenta:\n```\nUsuário: \"O que é Bitcoin?\"\nAgente: chama search_web(\"what is bitcoin\") → resposta desnecessária\nAgente: repete a definição da busca sem adicionar valor\n```\n\nA regra prática: se o agente já sabe a resposta com alta confiança, chamar a ferramenta só acrescenta latência e custo."
+    },
+    {
+      "kind": "pair",
+      "position": 1,
+      "conceptA": "Ferramenta com nome genérico como 'process_data'",
+      "conceptB": "Agente que chama a ferramenta no momento certo",
+      "match": false,
+      "explanation": "Não combinam. O agente decide quando chamar uma ferramenta com base na descrição do nome e do propósito. Um nome genérico como 'process_data' não comunica o que a ferramenta faz, quando usá-la nem quais são seus efeitos colaterais. O resultado costuma ser chamadas erradas, no momento errado ou simplesmente ignoradas."
+    },
+    {
+      "kind": "info",
+      "position": 2,
+      "front": "O que é over-calling de ferramentas e por que é problemático?",
+      "back": "Over-calling ocorre quando o agente chama ferramentas desnecessariamente: para perguntas que poderia responder com conhecimento próprio, para confirmar resultados óbvios ou para decompor em etapas o que poderia ser resolvido de uma vez.\n\nConsequências:\n- Latência acumulada em cada chamada desnecessária\n- Custo de tokens e de execução da ferramenta\n- Loops de confirmação que nunca terminam\n- Usuário percebe o agente como lento e indeciso\n\nExemplo de over-calling:\n```\nTarefa: calcular 15% de 200\nAgente: chama calculator(\"15 / 100\") → 0.15\nAgente: chama calculator(\"0.15 * 200\") → 30\nAgente: chama calculator(\"200 * 0.15\") → confirmação? → 30\n```\n\nO agente poderia responder 30 diretamente. Cada chamada extra é um sintoma de desconfiança no próprio raciocínio ou de descrição de ferramenta mal calibrada."
+    },
+    {
+      "kind": "pair",
+      "position": 3,
+      "conceptA": "Agente que busca na web para responder '2 + 2'",
+      "conceptB": "Ferramenta de busca com escopo mal definido",
+      "match": true,
+      "explanation": "Combinam. Quando a descrição de uma ferramenta de busca não especifica para quais tipos de pergunta ela deve ser usada, o agente aplica a ferramenta de forma excessivamente ampla, inclusive para respostas que não precisam de busca externa. Escopo mal definido é uma das causas mais comuns de over-calling."
+    },
+    {
+      "kind": "info",
+      "position": 4,
+      "front": "Quais elementos de uma definição de ferramenta mais afetam o comportamento do agente?",
+      "back": "Três elementos são críticos:\n\n**1. Nome**: deve ser um verbo de ação que descreve o que a ferramenta faz.\n```\n# Ruim\n\"data_tool\"\n\n# Bom\n\"search_codebase\"\n```\n\n**2. Descrição**: deve dizer quando usar, quando não usar e quais são os efeitos colaterais.\n```json\n{\n  \"description\": \"Searches the local codebase for files matching a pattern. Use only when you need to find existing files. Do NOT use to verify if a file you just created exists.\"\n}\n```\n\n**3. Parâmetros**: nomes descritivos e exemplos no campo 'description' de cada parâmetro guiam o agente melhor do que tipos sozinhos.\n\nUma definição fraca força o agente a adivinhar o comportamento da ferramenta, o que produz chamadas imprevisíveis."
+    },
+    {
+      "kind": "pair",
+      "position": 5,
+      "conceptA": "Ferramenta com campo 'when not to use' na descrição",
+      "conceptB": "Redução de chamadas desnecessárias pelo agente",
+      "match": true,
+      "explanation": "Combinam. Agentes inferem quando usar uma ferramenta a partir da sua descrição, mas raramente inferem quando não usar. Incluir explicitamente os casos de exclusão na descrição é uma das técnicas mais eficazes para reduzir over-calling, pois o agente passa a descartar a ferramenta em contextos inadequados em vez de tentá-la por padrão."
+    },
+    {
+      "kind": "info",
+      "position": 6,
+      "front": "O que é under-calling de ferramentas e como identificá-lo?",
+      "back": "Under-calling ocorre quando o agente responde sem chamar a ferramenta em casos em que deveria, geralmente fabricando a resposta com base em conhecimento interno desatualizado ou impreciso.\n\nSinais de under-calling:\n- Agente responde datas, versões ou preços sem usar busca\n- Agente afirma que um arquivo existe ou não sem verificar o sistema de arquivos\n- Agente descreve o resultado de uma operação sem executá-la\n\nCausa comum: a ferramenta existe mas sua descrição não deixa claro que o agente deve usá-la para aquela categoria de pergunta.\n\nConsequência direta: o agente parece confiante, mas entrega informação incorreta. Under-calling é frequentemente mais perigoso que over-calling porque o erro é invisível para o usuário."
+    },
+    {
+      "kind": "pair",
+      "position": 7,
+      "conceptA": "Agente que afirma resultado de código sem executá-lo",
+      "conceptB": "Saída determinística e verificável",
+      "match": false,
+      "explanation": "Não combinam. Agentes de linguagem geram texto plausível, não calculam execução real. Afirmar o resultado de um script, consulta SQL ou transformação de dados sem chamar a ferramenta de execução é uma forma de under-calling que produz resultados inventados com aparência de resultado real. Saída verificável exige execução real."
+    },
+    {
+      "kind": "info",
+      "position": 8,
+      "front": "Como o número de ferramentas disponíveis afeta a qualidade das decisões do agente?",
+      "back": "Pesquisas mostram que agentes cometem mais erros de seleção quando têm muitas ferramentas similares disponíveis simultaneamente. A confusão entre ferramentas com propósitos próximos aumenta chamadas incorretas.\n\nPadrões que ajudam:\n\n```markdown\n# Em vez de expor 15 ferramentas sempre\n- Exponha apenas as ferramentas relevantes para a tarefa atual\n- Agrupe ferramentas relacionadas em uma interface unificada com um parâmetro 'action'\n- Remova ferramentas que o agente não deve usar nesta etapa do fluxo\n```\n\nMenos ferramentas com descrições precisas superam muitas ferramentas com descrições genéricas. O conjunto ideal de ferramentas muda conforme o estágio da tarefa, não permanece fixo durante toda a sessão."
+    },
+    {
+      "kind": "pair",
+      "position": 9,
+      "conceptA": "Expor 20 ferramentas distintas ao agente simultaneamente",
+      "conceptB": "Agente escolhe a ferramenta mais adequada para cada passo",
+      "match": false,
+      "explanation": "Não combinam. Agentes têm desempenho melhor com conjuntos menores de ferramentas bem definidas. Quando muitas ferramentas com propósitos similares ou sobrepostos estão disponíveis ao mesmo tempo, o agente comete mais erros de seleção. A estratégia de expor apenas ferramentas relevantes para o contexto atual reduz ambiguidade e melhora a precisão das chamadas."
+    },
+    {
+      "kind": "info",
+      "position": 10,
+      "front": "Como lidar com erros retornados por ferramentas para que o agente se recupere corretamente?",
+      "back": "A forma como o erro é retornado determina se o agente consegue se recuperar ou entra em loop.\n\nRuim: retornar exceção sem contexto\n```json\n{ \"error\": \"TypeError: cannot read property 'id' of undefined\" }\n```\n\nBom: retornar erro estruturado com instrução de recuperação\n```json\n{\n  \"error\": \"file_not_found\",\n  \"message\": \"O arquivo 'config.json' não existe no diretório atual.\",\n  \"suggestion\": \"Use list_files() para verificar quais arquivos estão disponíveis antes de tentar ler.\"\n}\n```\n\nErros acionáveis permitem que o agente ajuste a estratégia sem precisar de intervenção do usuário. Erros opacos forçam o agente a adivinhar o próximo passo, geralmente errado."
+    },
+    {
+      "kind": "pair",
+      "position": 11,
+      "conceptA": "Mensagem de erro com sugestão de próximo passo",
+      "conceptB": "Agente que se recupera sem intervenção do usuário",
+      "match": true,
+      "explanation": "Combinam. Agentes processam erros como parte do contexto e ajustam a estratégia com base no que recebem. Um erro que inclui o que deu errado e o que tentar a seguir fornece exatamente o contexto necessário para uma recuperação autônoma. Sem essa informação, o agente costuma repetir a mesma chamada ou parar e pedir ajuda desnecessariamente."
+    }
+  ]
+}

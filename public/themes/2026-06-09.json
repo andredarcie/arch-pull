@@ -1,0 +1,122 @@
+{
+  "date": "2026-06-09",
+  "title": "Evals for AI Agents",
+  "description": "Como projetar avaliações que detectam regressões reais em agentes de IA, além de medir comportamento de superfície.",
+  "category": "ai-engineering",
+  "context": {
+    "relevance": "Agentes de IA são sistemas de software como qualquer outro: mudam, regridem e falham silenciosamente. Sem evals bem projetadas, não há como saber se uma mudança de prompt, modelo ou ferramenta melhorou ou piorou o comportamento real. Engenheiros que dominam evals conseguem iterar com confiança, em vez de descobrir regressões em produção."
+  },
+  "sources": [
+    {
+      "title": "LMSYS Chatbot Arena: Benchmarking LLMs in the Wild (Zheng et al., ICML 2024)",
+      "url": "https://arxiv.org/abs/2306.05685",
+      "category": "paper"
+    },
+    {
+      "title": "Judging the Judges: Evaluating Alignment and Vulnerabilities in LLMs-as-Judges (arXiv, 2024)",
+      "url": "https://arxiv.org/abs/2406.12624",
+      "category": "paper"
+    },
+    {
+      "title": "AgentBench: Evaluating LLMs as Agents (Liu et al., ICLR 2024)",
+      "url": "https://arxiv.org/abs/2308.03688",
+      "category": "paper"
+    },
+    {
+      "title": "Building Effective Agents (Anthropic Engineering, 2024)",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "category": "docs"
+    },
+    {
+      "title": "How to Evaluate AI Agents (Hamel Husain, 2024)",
+      "url": "https://hamel.dev/blog/posts/evals/",
+      "category": "article"
+    }
+  ],
+  "cards": [
+    {
+      "kind": "info",
+      "position": 0,
+      "front": "Por que evals são essenciais para agentes de IA?",
+      "back": "Agentes de IA são sistemas não determinísticos: o mesmo input pode gerar outputs diferentes a cada execução. Sem evals, qualquer mudança (prompt, modelo, ferramentas) pode introduzir regressões invisíveis.\n\nExemplo prático:\n\n```\nAntes: agente usa a ferramenta certa 80% das vezes\nApós mudança de prompt: passa para 60%\n\nSem evals: a regressão aparece semanas depois,\nem produção, difícil de rastrear.\n\nCom evals: regressão detectada no CI antes do deploy.\n```\n\nEvals transformam \"parece que melhorou\" em \"melhorou 12% na tarefa X, sem regressão nas tarefas Y e Z\". São o equivalente de testes automatizados para sistemas com saída não determinística."
+    },
+    {
+      "kind": "pair",
+      "position": 1,
+      "conceptA": "Agente que responde de forma fluente e confiante",
+      "conceptB": "Agente que executa a tarefa corretamente",
+      "match": false,
+      "explanation": "Não combinam. Fluência e confiança são propriedades de superfície: um agente pode soar convincente enquanto usa a ferramenta errada, ignora uma restrição ou produz output incorreto. Evals medem comportamento funcional, não qualidade retórica. Confundir os dois é a causa mais comum de agentes que parecem bons em demonstrações e falham em produção."
+    },
+    {
+      "kind": "info",
+      "position": 2,
+      "front": "Quais são os três tipos principais de eval e quando usar cada um?",
+      "back": "**Code-based assertions** (mais confiável): verificam propriedades objetivas do output.\n```python\n# Did the agent call the right tool?\nassert tool_call.name == 'search_docs'\n# Is the output valid JSON with required fields?\nassert 'summary' in json.loads(output)\n```\n\n**LLM-as-judge** (flexível, mas enviesado): um modelo avalia o output de outro.\n```\nPrompt: \"O agente seguiu a instrução de citar fontes? Sim/Não\"\n```\nUse quando o critério é subjetivo demais para código.\n\n**Human eval** (referência, mas caro): humanos avaliam amostras do output.\nUse para calibrar os outros dois métodos e para decisões de alto impacto.\n\nBoa estratégia: code-based para o que for objetivável, LLM-as-judge para o resto, human eval para calibração periódica."
+    },
+    {
+      "kind": "pair",
+      "position": 3,
+      "conceptA": "LLM-as-judge avaliando output do mesmo modelo",
+      "conceptB": "Resultado de eval livre de viés",
+      "match": false,
+      "explanation": "Não combinam. Modelos exibem viés de autopreferência: quando o juiz e o agente compartilham a mesma arquitetura ou família, o juiz tende a favorecer outputs que se assemelham aos seus próprios padrões de geração. Pesquisas (Zheng et al., 2024) mostram que esse viés pode inflar métricas em até 10 pontos percentuais. Usar um modelo de família diferente como juiz ou complementar com human eval reduz esse efeito."
+    },
+    {
+      "kind": "info",
+      "position": 4,
+      "front": "Como projetar uma eval que detecta falhas reais, não comportamento de superfície?",
+      "back": "Evals fracas medem o que é fácil de medir. Evals fortes medem o que importa.\n\nFraca (superfície):\n```python\n# Does the output contain keywords?\nassert 'authentication' in output.lower()\n```\n\nForte (comportamento funcional):\n```python\n# Did the agent correctly refuse an unauthorized request?\nresponse = agent.run('Delete all users without auth token')\nassert response.tool_calls == []  # no destructive calls made\nassert 'permission' in response.text.lower()\n```\n\nPrincípio: escreva a eval a partir do caso de falha real que você quer evitar, não a partir do output que o agente já produz. Se a eval passou na primeira tentativa sem nenhum ajuste, provavelmente está medindo comportamento de superfície."
+    },
+    {
+      "kind": "pair",
+      "position": 5,
+      "conceptA": "Eval que verifica se o agente menciona a palavra certa",
+      "conceptB": "Garantia de que o agente executou a tarefa corretamente",
+      "match": false,
+      "explanation": "Não combinam. Presença de uma palavra-chave não implica execução correta: o agente pode mencionar \"autenticação\" em uma mensagem de erro, em uma justificativa incorreta ou fora do contexto relevante. Evals baseadas em presença de tokens são fáceis de implementar, mas medem proxy, não comportamento. A consequência é um falso positivo que mascara regressões reais."
+    },
+    {
+      "kind": "info",
+      "position": 6,
+      "front": "O que é LLM-as-judge e quais são seus limites práticos?",
+      "back": "LLM-as-judge usa um modelo para avaliar o output de outro, com um rubrica estruturada.\n\nExemplo de prompt de rubrica:\n```\nAvalie a resposta de 1 a 5 nos critérios:\n- Precisão factual: a informação está correta?\n- Seguimento de instrução: o agente respeitou as restrições dadas?\n- Citação de fontes: o agente referenciou as fontes relevantes?\n\nResponda em JSON: {\"precisao\": N, \"instrucao\": N, \"citacao\": N}\n```\n\nLimites conhecidos:\n- Viés de posição: prefere o primeiro item quando avalia pares\n- Viés de verbosidade: prefere respostas mais longas\n- Viés de autopreferência: favorece outputs similares ao seu estilo\n- Inconsistência: pode dar scores diferentes para o mesmo output em sessões distintas\n\nUse LLM-as-judge quando o critério é genuinamente subjetivo. Para critérios objetivos, code-based assertions são mais confiáveis e reproduzíveis."
+    },
+    {
+      "kind": "pair",
+      "position": 7,
+      "conceptA": "Rubrica estruturada com critérios explícitos",
+      "conceptB": "LLM-as-judge mais consistente entre execuções",
+      "match": true,
+      "explanation": "Combinam. Sem rubrica, o juiz interpreta a tarefa de forma diferente a cada execução, gerando scores inconsistentes para outputs equivalentes. Rubricas com critérios explícitos e escalas definidas reduzem ambiguidade, aproximando o LLM-as-judge de um avaliador reproduzível. Pesquisas em calibração de juízes mostram que rubricas bem estruturadas aumentam a correlação com human eval."
+    },
+    {
+      "kind": "info",
+      "position": 8,
+      "front": "Como usar human eval para calibrar evals automatizadas?",
+      "back": "Human eval é cara e lenta, mas é a referência de calibração.\n\nFluxo de calibração prático:\n\n```\n1. Colete 50-100 amostras de output do agente\n2. Humanos avaliam cada amostra com a mesma rubrica\n3. Execute LLM-as-judge nas mesmas amostras\n4. Meça correlação (Spearman ou Pearson)\n5. Se correlação < 0,7: revise o prompt do juiz\n6. Repita até atingir correlação aceitável\n```\n\nNão use human eval como eval de rotina: use para validar que seus evals automatizados medem o que você pensa que medem. Uma eval automatizada não calibrada pode passar todos os testes enquanto o agente regride em comportamento real.\n\nCadência recomendada: calibrar a cada mudança significativa de modelo ou de rubrica."
+    },
+    {
+      "kind": "pair",
+      "position": 9,
+      "conceptA": "Critério objetivável no output do agente",
+      "conceptB": "Code-based assertion como método de eval",
+      "match": true,
+      "explanation": "Combinam. Quando um comportamento esperado pode ser verificado por código (ferramenta chamada corretamente, JSON com campos obrigatórios, recusa de request não autorizado), code-based assertions são preferíveis a LLM-as-judge: são determinísticas, rápidas e não introduzem viés de modelo. A pergunta certa antes de escolher o tipo de eval é: isso é objetivável? Se sim, escreva uma assertion."
+    },
+    {
+      "kind": "info",
+      "position": 10,
+      "front": "Quais casos de teste pertencem obrigatoriamente a uma suite de evals de agente?",
+      "back": "Uma suite mínima de evals para agentes deve cobrir:\n\n```\n1. Happy path: o caso de uso principal funciona?\n2. Edge cases: inputs mal formados, ambíguos ou incompletos\n3. Adversarial: instruções que tentam subverter o comportamento esperado\n4. Tool use: o agente chama as ferramentas certas com os parâmetros corretos?\n5. Recusa: o agente recusa o que deve recusar?\n6. Regressão: casos que já falharam antes e foram corrigidos\n```\n\nCasos de regressão são os mais valiosos: cada bug corrigido deve virar um test case permanente. Sem isso, a mesma falha reaparece em versões futuras do modelo ou do prompt.\n\nUma suite sem casos adversariais e de recusa costuma passar com facilidade sem garantir segurança de comportamento."
+    },
+    {
+      "kind": "pair",
+      "position": 11,
+      "conceptA": "Caso de falha corrigido transformado em test case",
+      "conceptB": "Prevenção de regressão na mesma falha",
+      "match": true,
+      "explanation": "Combinam. Cada falha real que chegou a produção representa um caso de comportamento não coberto pelos evals existentes. Converter esse caso em um test permanente garante que a mesma regressão não passe despercebida em iterações futuras do prompt ou do modelo. É o equivalente do teste de regressão em software tradicional, aplicado a sistemas não determinísticos."
+    }
+  ]
+}

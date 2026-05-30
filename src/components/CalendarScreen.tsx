@@ -1,29 +1,15 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import type { Card } from "../data/pairs";
-import { CalendarDays, Play, Flame } from "lucide-react";
-
-interface ThemeCard {
-  kind: "pair" | "info";
-  conceptA: string | null;
-  conceptB: string | null;
-  match: boolean | null;
-  explanation: string | null;
-  front: string | null;
-  back: string | null;
-}
-
-interface DailyTheme {
-  title: string;
-  description: string | null;
-  context?: { relevance: string };
-  sources?: { title: string; url: string }[];
-  cards: ThemeCard[];
-}
+import { CalendarDays, Play, Flame, History, CheckCircle2 } from "lucide-react";
+import { buttonClass } from "../lib/buttonClass";
+import type { DailyTheme } from "../lib/theme";
+import { mapToCards } from "../lib/theme";
 
 interface CalendarScreenProps {
   activeDays: string[];
   onStart: (cards: Card[], themeTitle: string) => void;
+  onArchive: () => void;
 }
 
 const WEEK_DAYS = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
@@ -34,50 +20,36 @@ function localDateISO(date = new Date()): string {
   return new Intl.DateTimeFormat('sv', { timeZone: 'America/Sao_Paulo' }).format(date);
 }
 
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+// Returns the number of consecutive active days ending on today (or yesterday
+// if today has not been played yet). Returns 0 if neither today nor yesterday
+// is in the active set.
+function calcStreak(activeDays: string[]): number {
+  if (activeDays.length === 0) return 0;
+
+  const activeSet = new Set(activeDays);
+
+  // Helper: subtract N days from an ISO date string and return ISO string
+  function subtractDay(iso: string, n = 1): string {
+    const d = new Date(`${iso}T00:00:00`);
+    d.setDate(d.getDate() - n);
+    return d.toISOString().slice(0, 10);
   }
-  return a;
+
+  const today = localDateISO();
+  // If today is not active, anchor from yesterday (streak can still be alive)
+  const anchor = activeSet.has(today) ? today : subtractDay(today, 1);
+
+  if (!activeSet.has(anchor)) return 0;
+
+  let count = 0;
+  let cursor = anchor;
+  while (activeSet.has(cursor)) {
+    count++;
+    cursor = subtractDay(cursor, 1);
+  }
+  return count;
 }
 
-function mapToCards(theme: DailyTheme): Card[] {
-  const result: Card[] = [];
-
-  if (theme.context) {
-    result.push({
-      kind: "context",
-      relevance: theme.context.relevance,
-      sources: theme.sources,
-    });
-  }
-
-  const groups: ThemeCard[][] = [];
-  let current: ThemeCard[] = [];
-
-  for (const c of theme.cards) {
-    if (c.kind === "info" && current.length > 0) {
-      groups.push(current);
-      current = [];
-    }
-    current.push(c);
-  }
-  if (current.length > 0) groups.push(current);
-
-  const [intro, ...rest] = groups;
-  const shuffled = [intro, ...shuffle(rest)];
-
-  for (const group of shuffled) {
-    const [infoCard, ...pairs] = group;
-    result.push({ kind: "info" as const, front: infoCard.front ?? "", back: infoCard.back ?? "" });
-    for (const c of shuffle(pairs)) {
-      result.push({ a: c.conceptA ?? "", b: c.conceptB ?? "", match: c.match ?? false, explanation: c.explanation ?? undefined });
-    }
-  }
-  return result;
-}
 
 function buildWeeks(activeSet: Set<string>) {
   const today = new Date();
@@ -113,7 +85,7 @@ function getMonthPositions(weeks: { date: string }[][]): { label: string; col: n
   return positions;
 }
 
-export function CalendarScreen({ activeDays, onStart }: CalendarScreenProps) {
+export function CalendarScreen({ activeDays, onStart, onArchive }: CalendarScreenProps) {
   const [theme, setTheme] = useState<DailyTheme | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -136,6 +108,10 @@ export function CalendarScreen({ activeDays, onStart }: CalendarScreenProps) {
   const weeks = buildWeeks(activeSet);
   const monthPositions = getMonthPositions(weeks);
   const totalActive = activeDays.length;
+  const streak = calcStreak(activeDays);
+
+  // Detect whether the user has already played today
+  const playedToday = activeDays.includes(todayIso);
 
   function handleStart() {
     if (!theme) return;
@@ -216,16 +192,32 @@ export function CalendarScreen({ activeDays, onStart }: CalendarScreenProps) {
       </div>
 
       {!loading && (
-        <motion.button
-          className="btn-play"
-          onClick={handleStart}
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-        >
-          <Play size={18} strokeWidth={2.5} />
-          Iniciar {theme?.title}
-        </motion.button>
+        <div className="cal-action">
+          {playedToday && theme && (
+            <div className="cal-played-badge">
+              <CheckCircle2 size={15} strokeWidth={2} />
+              Exercício de hoje concluído
+            </div>
+          )}
+          <motion.button
+            className={buttonClass({ variant: "primary", size: "lg" })}
+            onClick={handleStart}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            <Play size={18} strokeWidth={2.5} />
+            {playedToday && theme ? `Jogar novamente` : `Iniciar ${theme?.title}`}
+          </motion.button>
+        </div>
       )}
+
+      <button
+        className={buttonClass({ variant: "ghost", size: "sm", className: "cal-archive-btn" })}
+        onClick={onArchive}
+      >
+        <History size={15} strokeWidth={2} />
+        Ver temas anteriores
+      </button>
     </motion.div>
   );
 }

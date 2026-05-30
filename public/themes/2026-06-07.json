@@ -1,0 +1,112 @@
+{
+  "date": "2026-06-07",
+  "title": "Prompt Caching",
+  "description": "Como estruturar prompts para reutilizar cache e reduzir custo e latência em chamadas repetitivas à API.",
+  "category": "ai-engineering",
+  "context": {
+    "relevance": "Aplicações que chamam a API do Claude repetidamente com system prompts longos, documentos ou ferramentas pagam o custo total de tokens de entrada em cada chamada. Prompt caching permite reaproveitar prefixos computados, reduzindo custo em até 90% e latência em até 85% nos tokens cacheados. Entender quando o cache acerta ou erra, e como estruturar prompts para maximizar reuso, é uma decisão de design com impacto direto em custo operacional."
+  },
+  "sources": [
+    {
+      "title": "Prompt Caching (Anthropic Docs, 2025)",
+      "url": "https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching",
+      "category": "docs"
+    },
+    {
+      "title": "Prompt Caching with Claude (Anthropic News, 2024)",
+      "url": "https://www.anthropic.com/news/prompt-caching",
+      "category": "article"
+    },
+    {
+      "title": "How to Use Prompt Caching for Cost Savings (Anthropic Cookbook, 2025)",
+      "url": "https://github.com/anthropics/anthropic-cookbook/blob/main/misc/prompt_caching.ipynb",
+      "category": "article"
+    }
+  ],
+  "cards": [
+    {
+      "kind": "info",
+      "position": 0,
+      "front": "O que é prompt caching e como ele funciona na prática?",
+      "back": "Prompt caching permite que a API reutilize o processamento de prefixos de prompt já computados, evitando reprocessar os mesmos tokens em chamadas subsequentes.\n\nVocê marca explicitamente os prefixos com `cache_control`:\n\n```python\nmessages.create(\n  model=\"claude-opus-4-5\",\n  system=[\n    {\n      \"type\": \"text\",\n      \"text\": system_prompt,  # long prompt: rules, docs, tools\n      \"cache_control\": {\"type\": \"ephemeral\"}\n    }\n  ],\n  messages=conversation_history\n)\n```\n\nQuando o prefixo marcado bate exatamente com um prefixo cacheado, os tokens são cobrados como `cache_read_input_tokens` (cerca de 10% do preço normal) em vez de `input_tokens`. O cache tem TTL de 5 minutos, renovado a cada acerto."
+    },
+    {
+      "kind": "pair",
+      "position": 1,
+      "conceptA": "Cache marcado em prefixo que muda a cada chamada",
+      "conceptB": "Redução de custo por cache hit",
+      "match": false,
+      "explanation": "Não combinam. O cache só acerta quando o conteúdo marcado com `cache_control` é idêntico ao que foi cacheado anteriormente. Se o prefixo muda entre chamadas (por exemplo, inclui timestamp, ID de usuário ou conteúdo dinâmico), cada chamada gera um cache miss e paga o custo de escrita de cache, que é superior ao custo normal de input."
+    },
+    {
+      "kind": "info",
+      "position": 2,
+      "front": "Quais condições determinam um cache hit versus um cache miss?",
+      "back": "O cache acerta quando:\n- O prefixo marcado é textualmente idêntico ao cacheado\n- O mesmo modelo é usado\n- Os parâmetros `max_tokens` e `tool_choice` são idênticos\n- O cache ainda está dentro do TTL (5 minutos, renovado a cada hit)\n\nO cache erra quando:\n- Qualquer token antes do marcador muda (mesmo um espaço)\n- O modelo ou parâmetros diferem\n- O TTL expirou sem acertos suficientes para renovar\n- O mínimo de tokens cacheáveis não foi atingido (1024 para Sonnet, 2048 para Haiku)\n\nCache miss com marcador gera `cache_creation_input_tokens`, cobrado a 125% do preço normal. O custo de escrita de cache compensa apenas se o prefixo for reutilizado ao menos 1 a 2 vezes antes do TTL expirar."
+    },
+    {
+      "kind": "pair",
+      "position": 3,
+      "conceptA": "System prompt estável com regras e documentos longos",
+      "conceptB": "Alto aproveitamento do cache entre requisições",
+      "match": true,
+      "explanation": "Combinam. System prompts que não variam entre chamadas são o caso ideal para prompt caching: o prefixo é sempre idêntico, o TTL é renovado a cada acerto e o custo de escrita se amortiza rapidamente. Documentos de referência, conjuntos de ferramentas e instruções estáticas são os principais candidatos a colocar antes do marcador de cache."
+    },
+    {
+      "kind": "info",
+      "position": 4,
+      "front": "Como estruturar um prompt para maximizar a taxa de cache hit?",
+      "back": "A regra central: conteúdo estático antes do marcador, conteúdo dinâmico depois.\n\n```\n[system prompt: regras, documentos, ferramentas]  ← cache_control aqui\n[mensagens do usuário, contexto da sessão]         ← varia por chamada\n```\n\nRuim: incluir metadados dinâmicos no prefixo cacheado.\n```python\n# Cache sempre vai errar\nsystem = f\"Usuário: {user_id}. Data: {datetime.now()}. Regras: ...\"\n```\n\nBom: isolar o conteúdo estável.\n```python\n# Prefixo estável: apenas regras e documentos\nsystem = [\n  {\"type\": \"text\", \"text\": static_rules_and_docs,\n   \"cache_control\": {\"type\": \"ephemeral\"}},\n  {\"type\": \"text\", \"text\": f\"Usuário atual: {user_id}\"}\n]\n```\n\nCom múltiplos marcadores (até 4 por chamada), você pode cachear diferentes camadas: ferramentas + system + histórico de conversa."
+    },
+    {
+      "kind": "pair",
+      "position": 5,
+      "conceptA": "Prefixo de 800 tokens marcado com cache_control",
+      "conceptB": "Tokens escritos no cache entre chamadas",
+      "match": false,
+      "explanation": "Não combinam. O limite mínimo de tokens cacheáveis é 1024 para Claude Sonnet e 2048 para Claude Haiku. Prefixos abaixo desse mínimo não são armazenados no cache, mesmo que estejam marcados com `cache_control`. A chamada cobra apenas o custo normal de input, sem penalidade, mas também sem benefício de cache."
+    },
+    {
+      "kind": "info",
+      "position": 6,
+      "front": "Qual é o impacto real de custo e latência com prompt caching?",
+      "back": "Segundo a documentação da Anthropic:\n\n- Tokens lidos do cache: cerca de 10% do custo de input normal\n- Tokens escritos no cache: cerca de 125% do custo de input normal\n- Redução de latência: até 85% para os tokens cacheados\n\nO break-even de custo acontece quando o prefixo é reutilizado mais de 1 vez no TTL de 5 minutos. A partir da segunda leitura, cada chamada economiza 90% do custo do prefixo.\n\nAplicações que se beneficiam mais:\n- Chatbots com system prompts longos e muitas mensagens por sessão\n- Agentes que processam o mesmo documento em múltiplas chamadas\n- Pipelines de análise que aplicam as mesmas regras a entradas diferentes\n\nAplicações que não se beneficiam: chamadas únicas sem repetição do prefixo."
+    },
+    {
+      "kind": "pair",
+      "position": 7,
+      "conceptA": "Cache hit em prefixo de 10 000 tokens",
+      "conceptB": "Latência de resposta reduzida para o usuário",
+      "match": true,
+      "explanation": "Combinam. Quando o prefixo já está cacheado, o modelo não precisa reprocessar aqueles tokens no momento da chamada. Isso reduz o tempo até o primeiro token (TTFT), o que é diretamente perceptível pelo usuário em interfaces interativas. A redução de latência é independente da economia de custo e ocorre mesmo que o modelo ainda precise processar os tokens de entrada dinâmica."
+    },
+    {
+      "kind": "info",
+      "position": 8,
+      "front": "Como o TTL de 5 minutos afeta aplicações com tráfego irregular?",
+      "back": "O TTL é reiniciado a cada cache hit. Se não houver chamadas por mais de 5 minutos, o cache expira e a próxima chamada paga custo de escrita novamente.\n\nCenários problemáticos:\n- Usuário pausa a conversa por mais de 5 minutos: cache da sessão expira\n- Tráfego noturno baixo: cache global expira entre requisições\n- Picos com baixa frequência: custo de escrita sem amortização suficiente\n\nEstratégias para tráfego irregular:\n- Avaliar se o custo de escrita se paga pela frequência real de chamadas\n- Separar caches de camadas com frequências diferentes (system prompt vs. histórico de conversa)\n- Considerar o custo sem cache como baseline: só adotar caching quando o padrão de uso garante reutilização\n\nEm aplicações batch com alto volume e prefixos idênticos, o cache quase sempre compensa. Em aplicações conversacionais de baixa frequência, a análise precisa ser feita caso a caso."
+    },
+    {
+      "kind": "pair",
+      "position": 9,
+      "conceptA": "Prefixo idêntico reutilizado em pipeline de alta frequência",
+      "conceptB": "Custo de input amortizado ao longo das chamadas",
+      "match": true,
+      "explanation": "Combinam. O custo de escrita de cache (125% do normal) se paga a partir da segunda leitura do mesmo prefixo. Em pipelines que aplicam as mesmas regras ou documentos a muitas entradas diferentes, o prefixo estável é lido dezenas de vezes antes do TTL expirar, reduzindo o custo efetivo de input a uma fração do baseline. Quanto maior a frequência e maior o prefixo, maior a economia acumulada."
+    },
+    {
+      "kind": "info",
+      "position": 10,
+      "front": "Quais métricas monitorar para validar a eficácia do prompt caching?",
+      "back": "A resposta da API retorna campos que permitem calcular o aproveitamento real:\n\n```python\nusage = response.usage\n# cache_creation_input_tokens: tokens escritos no cache (custo 125%)\n# cache_read_input_tokens:     tokens lidos do cache (custo 10%)\n# input_tokens:                tokens processados normalmente\n\ncache_hit_rate = usage.cache_read_input_tokens / (\n  usage.cache_read_input_tokens + usage.cache_creation_input_tokens\n)\n```\n\nIndicadores de configuração ruim:\n- `cache_creation_input_tokens` alto e `cache_read_input_tokens` baixo: prefixo muda muito ou TTL expira antes de reutilização\n- Custo total maior que sem caching: poucos hits para amortizar as escritas\n\nIndicadores de boa configuração:\n- Hit rate acima de 80% em aplicações de alto volume\n- Custo de input por chamada significativamente abaixo do baseline sem cache"
+    },
+    {
+      "kind": "pair",
+      "position": 11,
+      "conceptA": "Prompt caching habilitado em toda chamada da aplicação",
+      "conceptB": "Custo total de API sempre menor que sem cache",
+      "match": false,
+      "explanation": "Não combinam. Habilitar caching sem analisar o padrão de uso pode aumentar o custo total. Se o prefixo não for reutilizado antes do TTL expirar, cada chamada paga 125% do custo normal de escrita mais o custo dos tokens dinâmicos, resultando em custo superior ao baseline sem cache. O benefício depende da taxa de reutilização real do prefixo."
+    }
+  ]
+}

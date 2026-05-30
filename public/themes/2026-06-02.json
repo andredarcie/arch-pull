@@ -1,0 +1,112 @@
+{
+  "date": "2026-06-02",
+  "title": "Interface Segregation Principle",
+  "description": "O I do SOLID: clientes não devem ser forçados a depender de métodos que não usam.",
+  "category": "solid-oop",
+  "context": {
+    "relevance": "ISP é frequentemente o princípio SOLID mais ignorado em codebases reais. Interfaces gordas aparecem de forma silenciosa: começam pequenas e acumulam métodos à medida que novos casos de uso surgem. O resultado são dependências desnecessárias que aumentam o acoplamento, dificultam testes e forçam implementações vazias. Reconhecer e corrigir interfaces gordas é habilidade essencial em design orientado a objetos e entrevistas técnicas sobre SOLID."
+  },
+  "sources": [
+    {
+      "title": "Agile Software Development: Principles, Patterns, and Practices (Robert C. Martin, 2002)",
+      "url": "https://www.amazon.com/Software-Development-Principles-Patterns-Practices/dp/0135974445",
+      "category": "paper"
+    },
+    {
+      "title": "The Interface Segregation Principle (Robert C. Martin, Clean Coder Blog, 2014)",
+      "url": "https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html",
+      "category": "article"
+    },
+    {
+      "title": "Interface segregation principle (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Interface_segregation_principle",
+      "category": "docs"
+    }
+  ],
+  "cards": [
+    {
+      "kind": "info",
+      "position": 0,
+      "front": "O que é o Interface Segregation Principle e como ele aparece na prática?",
+      "back": "ISP diz: nenhum cliente deve ser forçado a depender de métodos que não usa.\n\nRuim (interface gorda):\n```typescript\ninterface Worker {\n  work(): void;\n  eat(): void;  // robots don't eat\n  sleep(): void; // robots don't sleep\n}\n\nclass Robot implements Worker {\n  work() { /* ok */ }\n  eat() { throw new Error('Not implemented'); }\n  sleep() { throw new Error('Not implemented'); }\n}\n```\n\nBom (interfaces de papel):\n```typescript\ninterface Workable { work(): void; }\ninterface Eatable  { eat(): void; }\ninterface Sleepable { sleep(): void; }\n\nclass Human implements Workable, Eatable, Sleepable { ... }\nclass Robot implements Workable { ... }\n```\n\nCada cliente implementa apenas o que realmente precisa. Métodos não utilizados são um sinal de que a interface está fazendo papel demais."
+    },
+    {
+      "kind": "pair",
+      "position": 1,
+      "conceptA": "Classe que implementa método lançando NotImplementedError",
+      "conceptB": "Interface Segregation Principle respeitado",
+      "match": false,
+      "explanation": "Não combinam. Quando uma classe é forçada a implementar um método que não faz sentido para ela (resultando em corpo vazio ou exceção), isso é o sinal mais claro de violação de ISP. A interface agrega responsabilidades demais e força dependências desnecessárias sobre quem a implementa."
+    },
+    {
+      "kind": "info",
+      "position": 2,
+      "front": "O que é uma 'interface de papel' (role interface) e por que ela é o mecanismo central do ISP?",
+      "back": "Uma role interface define um único papel ou capacidade, não um tipo completo.\n\n```typescript\n// Role interface: define apenas o papel de serialização\ninterface Serializable {\n  serialize(): string;\n}\n\n// Role interface: define apenas o papel de persistência\ninterface Persistable {\n  save(): Promise<void>;\n}\n\n// Quem precisa de ambos declara ambas\nclass UserRepository implements Serializable, Persistable {\n  serialize() { return JSON.stringify(this); }\n  async save() { await db.save(this); }\n}\n\n// Quem só precisa serializar depende apenas de Serializable\nfunction exportToJson(item: Serializable): string {\n  return item.serialize();\n}\n```\n\nRole interfaces são pequenas, coesas e combinadas conforme necessário. Interfaces de entidade (User, Product, Order) costumam crescer até virar interfaces gordas."
+    },
+    {
+      "kind": "pair",
+      "position": 3,
+      "conceptA": "Interface com 10 métodos obrigatórios para todos os implementadores",
+      "conceptB": "Alta coesão entre os clientes da interface",
+      "match": false,
+      "explanation": "Não combinam. Uma interface com muitos métodos obrigatórios geralmente serve a vários clientes com necessidades diferentes. Cada cliente acaba dependendo de métodos que não usa, o que caracteriza baixo ISP e alto acoplamento. Alta coesão na interface significa que todos os seus métodos são necessários para todos os seus clientes."
+    },
+    {
+      "kind": "info",
+      "position": 4,
+      "front": "Como interfaces gordas aumentam o acoplamento e dificultam testes?",
+      "back": "Quando um módulo depende de uma interface gorda, ele fica acoplado a mudanças que não o afetam.\n\n```typescript\n// Interface gorda\ninterface ReportService {\n  generate(): Report;\n  send(email: string): void;\n  archive(): void;\n  translate(lang: string): Report;\n}\n\n// Módulo que só precisa gerar relatórios\nclass Dashboard {\n  constructor(private svc: ReportService) {}\n  show() { return this.svc.generate(); }\n}\n\n// Mock em teste precisa implementar TODOS os métodos\nconst mockSvc: ReportService = {\n  generate: () => fakeReport,\n  send: () => {},      // irrelevant for Dashboard\n  archive: () => {},   // irrelevant for Dashboard\n  translate: () => fakeReport, // irrelevant for Dashboard\n};\n```\n\nCom ISP: `Dashboard` depende apenas de `{ generate(): Report }`. Mock com um único método."
+    },
+    {
+      "kind": "pair",
+      "position": 5,
+      "conceptA": "Módulo que depende de interface com métodos que não chama",
+      "conceptB": "Módulo isolado de mudanças irrelevantes",
+      "match": false,
+      "explanation": "Não combinam. Quando um módulo depende de uma interface gorda, ele é recompilado (e potencialmente quebrado) toda vez que a interface muda, mesmo que a mudança seja em um método que ele nunca usa. Isolamento de mudanças irrelevantes é justamente o benefício que ISP garante ao dividir a interface."
+    },
+    {
+      "kind": "info",
+      "position": 6,
+      "front": "ISP se aplica apenas a interfaces? Ou também a classes abstratas e tipos?",
+      "back": "ISP se aplica a qualquer contrato que clientes dependem: interfaces, classes abstratas, tipos estruturais e até funções com parâmetros de objeto.\n\n```typescript\n// Violacao de ISP em parâmetro de função\nfunction sendWelcomeEmail(user: {\n  name: string;\n  email: string;\n  address: string;  // not used\n  paymentHistory: Payment[]; // not used\n}) {\n  mail(user.email, `Bem-vindo, ${user.name}!`);\n}\n\n// ISP com tipo mínimo\nfunction sendWelcomeEmail(user: {\n  name: string;\n  email: string;\n}) {\n  mail(user.email, `Bem-vindo, ${user.name}!`);\n}\n```\n\nTipos estruturais (TypeScript, Go) tornam ISP mais fácil: a função declara exatamente o que precisa, e qualquer objeto que satisfaça aquela forma pode ser passado."
+    },
+    {
+      "kind": "pair",
+      "position": 7,
+      "conceptA": "Sistemas com tipagem estrutural (duck typing)",
+      "conceptB": "Aplicação mais natural do ISP",
+      "match": true,
+      "explanation": "Combinam. Em sistemas com tipagem estrutural, como TypeScript e Go, uma função pode declarar exatamente os campos e métodos de que precisa, sem que o chamador precise implementar uma interface nomeada explicitamente. Isso torna a segregação natural: cada contrato é definido pelo que o consumidor realmente usa, não por uma hierarquia de tipos centralizada."
+    },
+    {
+      "kind": "info",
+      "position": 8,
+      "front": "Qual é a diferença entre ISP e SRP?",
+      "back": "SRP e ISP são complementares mas distintos:\n\n- SRP: um módulo deve ter apenas uma razão para mudar (foco no implementador).\n- ISP: clientes não devem depender do que não usam (foco no consumidor).\n\n```typescript\n// Viola SRP: mistura responsabilidades\nclass UserService {\n  authenticate(credentials: Credentials): User { ... }\n  sendEmail(user: User, msg: string): void { ... }\n  generateReport(user: User): Report { ... }\n}\n\n// Viola ISP: quem só autentica precisa do contrato inteiro\ninterface UserService {\n  authenticate(credentials: Credentials): User;\n  sendEmail(user: User, msg: string): void;\n  generateReport(user: User): Report;\n}\n```\n\nViolar SRP costuma levar a violar ISP: uma classe com múltiplas responsabilidades gera uma interface gorda que força dependências desnecessárias sobre quem a consome."
+    },
+    {
+      "kind": "pair",
+      "position": 9,
+      "conceptA": "Classe com múltiplas responsabilidades exposta como interface única",
+      "conceptB": "Violação simultânea de SRP e ISP",
+      "match": true,
+      "explanation": "Combinam. Quando uma classe viola SRP (múltiplas razões de mudança), a interface que a representa tende a reunir métodos de propósitos distintos. Qualquer consumidor que depende dessa interface herda acoplamento às responsabilidades que não usa, o que caracteriza violação de ISP. As duas violações costumam andar juntas."
+    },
+    {
+      "kind": "info",
+      "position": 10,
+      "front": "Como o ISP se relaciona com o princípio da substituição de Liskov (LSP)?",
+      "back": "ISP e LSP são frequentemente violados juntos.\n\nQuando uma interface é gorda, implementadores são forçados a incluir métodos que não fazem sentido para eles. A saída comum é lançar exceção ou deixar o corpo vazio, o que viola LSP: o contrato promete um comportamento que a implementação não entrega.\n\n```typescript\n// ISP violado: interface exige método sem sentido para ReadOnlyCache\ninterface Cache {\n  get(key: string): string | null;\n  set(key: string, value: string): void; // write operation\n  delete(key: string): void;             // write operation\n}\n\nclass ReadOnlyCache implements Cache {\n  get(key: string) { return store[key]; }\n  set() { throw new Error('Read-only'); } // LSP violated\n  delete() { throw new Error('Read-only'); } // LSP violated\n}\n```\n\nSolução ISP: `ReadableCache` e `WritableCache` separados. Cada implementador cumpre o contrato inteiro que assinou."
+    },
+    {
+      "kind": "pair",
+      "position": 11,
+      "conceptA": "Interface segregada em contratos menores",
+      "conceptB": "Cada implementador cumpre o contrato sem exceções",
+      "match": true,
+      "explanation": "Combinam. Quando a interface é segregada, cada implementador assina apenas o contrato que consegue honrar completamente. Isso elimina a necessidade de métodos com corpo vazio ou que lançam exceções, tornando o sistema mais fiel ao LSP. ISP bem aplicado facilita o cumprimento do LSP por consequência."
+    }
+  ]
+}

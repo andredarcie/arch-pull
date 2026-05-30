@@ -1,0 +1,117 @@
+{
+  "date": "2026-06-04",
+  "title": "Dependency Inversion Principle",
+  "description": "O D do SOLID: módulos de alto nível e de baixo nível devem depender de abstrações, nunca um do outro diretamente.",
+  "context": {
+    "relevance": "DIP é o princípio mais mal entendido do SOLID. Confundir inversão de dependência com injeção de dependência é um erro frequente em entrevistas e em código de produção. Entender a distinção, e saber quando aplicar cada um, é o que separa quem segue o SOLID por moda de quem o usa para reduzir acoplamento real em sistemas que crescem."
+  },
+  "category": "solid-oop",
+  "sources": [
+    {
+      "title": "Design Principles and Design Patterns (Robert C. Martin, 2000)",
+      "url": "https://web.archive.org/web/20150906155800/http://www.objectmentor.com/resources/articles/Principles_and_Patterns.pdf",
+      "category": "paper"
+    },
+    {
+      "title": "The Dependency Inversion Principle (Robert C. Martin, C++ Report, 1996)",
+      "url": "https://web.archive.org/web/20110714224327/http://www.objectmentor.com/resources/articles/dip.pdf",
+      "category": "paper"
+    },
+    {
+      "title": "Dependency inversion principle (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Dependency_inversion_principle",
+      "category": "docs"
+    },
+    {
+      "title": "SOLID: The Dependency Inversion Principle (oodesign.com)",
+      "url": "https://www.oodesign.com/dependency-inversion-principle",
+      "category": "article"
+    }
+  ],
+  "cards": [
+    {
+      "kind": "info",
+      "position": 0,
+      "front": "O que é o Dependency Inversion Principle na prática?",
+      "back": "DIP tem duas partes: módulos de alto nível não devem depender de módulos de baixo nível; ambos devem depender de abstrações. E abstrações não devem depender de detalhes; detalhes devem depender de abstrações.\n\nRuim:\n```typescript\n// High-level module depends directly on low-level module\nclass OrderService {\n  private db = new PostgresDatabase();\n\n  save(order: Order) {\n    this.db.query('INSERT INTO orders ...');\n  }\n}\n```\n\nBom:\n```typescript\n// Both depend on the abstraction\ninterface OrderRepository {\n  save(order: Order): Promise<void>;\n}\n\nclass OrderService {\n  constructor(private repo: OrderRepository) {}\n\n  save(order: Order) {\n    return this.repo.save(order);\n  }\n}\n```\n\nAgora `OrderService` e `PostgresOrderRepository` dependem de `OrderRepository`, nunca um do outro."
+    },
+    {
+      "kind": "pair",
+      "position": 1,
+      "conceptA": "Módulo de alto nível instancia dependência concreta",
+      "conceptB": "Segue o Dependency Inversion Principle",
+      "match": false,
+      "explanation": "Não combinam. Quando um módulo de alto nível usa `new ConcreteClass()` internamente, ele passa a depender diretamente do detalhe de implementação. Qualquer troca de implementação exige modificar o módulo de alto nível, que não deveria ter conhecimento desse detalhe. DIP exige que ambos dependam de uma abstração compartilhada."
+    },
+    {
+      "kind": "info",
+      "position": 2,
+      "front": "Qual é a diferença entre Dependency Inversion e Dependency Injection?",
+      "back": "São conceitos relacionados mas distintos.\n\nDependency Inversion Principle (DIP) é um princípio de design: define a direção das dependências. Módulos de alto nível não devem depender de módulos de baixo nível.\n\nDependency Injection (DI) é um padrão de implementação: a forma como dependências chegam a um objeto (por construtor, setter ou interface).\n\n```typescript\n// DI sem DIP: injeta, mas ainda acopla ao concreto\nclass ReportService {\n  constructor(private db: MySQLDatabase) {} // DI sim, DIP nao\n}\n\n// DI com DIP: injeta por abstração\nclass ReportService {\n  constructor(private db: DatabasePort) {}  // DI + DIP\n}\n```\n\nDI é uma técnica que facilita aplicar DIP, mas não o garante automaticamente."
+    },
+    {
+      "kind": "pair",
+      "position": 3,
+      "conceptA": "Injetar dependência concreta via construtor",
+      "conceptB": "Dependency Inversion Principle aplicado",
+      "match": false,
+      "explanation": "Não combinam. Injeção de dependência via construtor é uma técnica de DI, não necessariamente DIP. Se o tipo injetado é uma classe concreta (não uma interface ou classe abstrata), o módulo de alto nível ainda depende do detalhe. DIP exige que o contrato seja uma abstração, independentemente do mecanismo de entrega."
+    },
+    {
+      "kind": "info",
+      "position": 4,
+      "front": "O que significa 'inverter' uma dependência?",
+      "back": "Sem DIP, a direção natural de dependência segue a hierarquia: `OrderService` depende de `PostgresRepository`, que depende de `pg` (driver). A seta aponta para baixo.\n\nCom DIP, o módulo de alto nível define a abstração que precisa, e o módulo de baixo nível implementa essa abstração. A seta que antes ia para baixo passa a ir para cima: o detalhe depende do contrato definido pelo negócio.\n\n```\n# Antes (dependência natural)\nOrderService → PostgresRepository → pg\n\n# Depois (dependência invertida)\nOrderService → OrderRepository (interface)\n               ↑\n         PostgresRepository\n```\n\nA abstração (`OrderRepository`) pertence ao domínio de negócio, não à camada de infraestrutura. Isso é a inversão."
+    },
+    {
+      "kind": "pair",
+      "position": 5,
+      "conceptA": "Interface de repositório definida pelo domínio",
+      "conceptB": "Implementação de banco que satisfaz essa interface",
+      "match": true,
+      "explanation": "Combinam. Isso é exatamente o padrão de DIP em ação: a abstração pertence à camada de alto nível (domínio) e a implementação concreta (infraestrutura) depende dela, nunca o contrário. O domínio de negócio define o contrato; o banco de dados o satisfaz."
+    },
+    {
+      "kind": "info",
+      "position": 6,
+      "front": "Qual é a armadilha de criar abstrações só para 'aplicar DIP'?",
+      "back": "Criar uma interface para cada classe não é DIP: é burocracia.\n\nRuim:\n```typescript\n// Interface trivial que só existe para ter uma interface\ninterface UserNameFormatterInterface {\n  format(name: string): string;\n}\n\nclass UserNameFormatter implements UserNameFormatterInterface {\n  format(name: string) { return name.trim().toLowerCase(); }\n}\n```\n\nNão há segundo implementador previsível. A interface não adiciona flexibilidade real.\n\nDIP faz sentido quando:\n- Há mais de uma implementação possível (banco real vs. in-memory para testes)\n- A implementação está em uma camada diferente (infraestrutura, UI, rede)\n- Você quer proteger o domínio de mudanças em detalhes externos\n\nAbstração sem necessidade é complexidade sem benefício."
+    },
+    {
+      "kind": "pair",
+      "position": 7,
+      "conceptA": "Interface que só tem uma implementação concreta",
+      "conceptB": "Aplicação correta do DIP",
+      "match": false,
+      "explanation": "Não combinam necessariamente. Uma interface com uma única implementação pode indicar over-engineering, especialmente se a motivação foi apenas 'ter uma interface'. DIP justifica a abstração quando ela protege uma camada de mudanças em outra, ou quando uma segunda implementação é realista (como um repositório in-memory para testes). Abstrações criadas por hábito, sem necessidade, adicionam indireção sem reduzir acoplamento real."
+    },
+    {
+      "kind": "info",
+      "position": 8,
+      "front": "Como DIP facilita testes unitários de módulos de negócio?",
+      "back": "Quando o módulo de alto nível depende de uma abstração, qualquer implementação que satisfaça a interface pode ser usada em testes, incluindo doubles em memória.\n\n```typescript\n// Production\nconst service = new OrderService(new PostgresOrderRepository(db));\n\n// Test: no database, no network, no I/O\nclass InMemoryOrderRepository implements OrderRepository {\n  private orders: Order[] = [];\n  async save(order: Order) { this.orders.push(order); }\n  async findById(id: string) { return this.orders.find(o => o.id === id); }\n}\n\nconst service = new OrderService(new InMemoryOrderRepository());\n```\n\nO teste é rápido, determinístico e isolado. DIP é um pré-requisito para isso, não apenas uma boa prática opcional."
+    },
+    {
+      "kind": "pair",
+      "position": 9,
+      "conceptA": "Lógica de negócio testada sem banco de dados real",
+      "conceptB": "Módulo de alto nível que segue DIP",
+      "match": true,
+      "explanation": "Combinam. Testar lógica de negócio sem I/O real só é possível quando o módulo depende de uma abstração que pode ser substituída por um double em memória. Sem DIP, o módulo instancia a dependência concreta internamente e não há como substituí-la. DIP é o que torna esse isolamento possível."
+    },
+    {
+      "kind": "info",
+      "position": 10,
+      "front": "Onde a abstração deve 'morar' no código?",
+      "back": "A abstração deve pertencer à camada que a usa, não à que a implementa. Esse detalhe é central para a inversão.\n\n```\n# Errado: abstração na camada de infraestrutura\ninfra/\n  DatabasePort.ts     (interface aqui)\n  PostgresRepo.ts     (implementa aqui)\n\ndomain/\n  OrderService.ts     (importa de infra)\n```\n\n```\n# Correto: abstração na camada de domínio\ndomain/\n  OrderRepository.ts  (interface aqui, pertence ao dominio)\n  OrderService.ts     (usa a interface)\n\ninfra/\n  PostgresOrderRepo.ts (implementa a interface do dominio)\n```\n\nSe a interface mora em `infra/`, o domínio ainda depende da camada de infraestrutura, mesmo que indiretamente. A inversão real só acontece quando a abstração pertence à camada de alto nível."
+    },
+    {
+      "kind": "pair",
+      "position": 11,
+      "conceptA": "Abstração definida na camada de domínio",
+      "conceptB": "Infraestrutura que importa e implementa essa abstração",
+      "match": true,
+      "explanation": "Combinam. Quando a interface pertence ao domínio e a implementação concreta (banco, API externa) mora em infraestrutura e importa do domínio, a direção da dependência é invertida corretamente. O detalhe técnico passa a depender do negócio, e não o contrário."
+    }
+  ]
+}

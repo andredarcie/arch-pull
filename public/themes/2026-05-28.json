@@ -2,9 +2,27 @@
   "date": "2026-05-28",
   "title": "Specification-Driven Development",
   "description": "Como escrever e refinar especificações que agentes de IA conseguem implementar com precisão.",
+  "category": "ai-engineering",
   "context": {
     "relevance": "Agentes de IA são tão bons quanto as especificações que recebem. SDD é a prática de refinar e estruturar essas especificações antes de pedir a implementação, transformando intenção vaga em contrato preciso."
   },
+  "sources": [
+    {
+      "title": "Spec-driven development: one of 2025's key new AI-assisted engineering practices (Thoughtworks, 2025)",
+      "url": "https://www.thoughtworks.com/en-us/insights/blog/agile-engineering-practices/spec-driven-development-unpacking-2025-new-engineering-practices",
+      "category": "article"
+    },
+    {
+      "title": "Spec-Driven Development (SDD): The Definitive 2026 Guide (BCMS)",
+      "url": "https://thebcms.com/blog/spec-driven-development",
+      "category": "article"
+    },
+    {
+      "title": "SWE-AGI: Benchmarking Specification-Driven Software Construction with Autonomous Agents (arXiv, 2025)",
+      "url": "https://arxiv.org/abs/2602.09447",
+      "category": "paper"
+    }
+  ],
   "cards": [
     {
       "kind": "info",

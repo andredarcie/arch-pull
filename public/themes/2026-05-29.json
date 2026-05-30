@@ -2,9 +2,27 @@
   "date": "2026-05-29",
   "title": "Open/Closed Principle",
   "description": "O O do SOLID: aberto para extensao, fechado para modificacao.",
+  "category": "solid-oop",
   "context": {
     "relevance": "OCP e o que separa codigo que envelhece bem de codigo que vira refatoracao constante. Dominar o principio significa saber quando criar uma abstracao e quando nao criar: a segunda parte e tao importante quanto a primeira. Em entrevistas sobre arquitetura, e comum pedir exemplos concretos de OCP aplicado, nao apenas a definicao."
   },
+  "sources": [
+    {
+      "title": "Object-Oriented Software Construction, 2nd ed. (Bertrand Meyer, 1997)",
+      "url": "https://en.wikipedia.org/wiki/Object-Oriented_Software_Construction",
+      "category": "paper"
+    },
+    {
+      "title": "The Open Closed Principle (Robert C. Martin, Clean Coder Blog, 2014)",
+      "url": "https://blog.cleancoder.com/uncle-bob/2014/05/12/TheOpenClosedPrinciple.html",
+      "category": "article"
+    },
+    {
+      "title": "Open-closed principle (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle",
+      "category": "docs"
+    }
+  ],
   "cards": [
     {
       "kind": "info",

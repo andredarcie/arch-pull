@@ -2,6 +2,7 @@
   "date": "2026-05-30",
   "title": "Context Engineering",
   "description": "Como projetar o ambiente de informação de um agente de IA para obter respostas precisas e consistentes.",
+  "category": "ai-engineering",
   "context": {
     "relevance": "A maioria dos problemas com agentes de IA não é de prompt ruim: é de contexto mal projetado. Context engineering é a prática de selecionar, estruturar e priorizar o que o agente recebe, não apenas o que ele é instruído a fazer. Quem domina isso reduz ciclos de correção e consegue agentes que se comportam de forma previsível em projetos reais."
   },

@@ -54,6 +54,7 @@ Correto: `"aberto para extensão, fechado para modificação"`
   "context": {
     "relevance": "Por que esse tema importa agora, para um engenheiro de software."
   },
+  "category": "solid-oop",
   "sources": [
     { "title": "Título (Autor/Publicação, Ano)", "url": "https://...", "category": "paper" },
     { "title": "Título (Publicação, Ano)", "url": "https://...", "category": "docs" },
@@ -63,7 +64,15 @@ Correto: `"aberto para extensão, fechado para modificação"`
 }
 ```
 
-O campo `sources` é **obrigatório**. Liste apenas fontes reais consultadas. O campo `category` é opcional mas recomendado — controla o agrupamento visual no modal:
+O campo `category` do tema é **obrigatório** e aparece como filtro na tela de temas anteriores. Valores válidos:
+- `"solid-oop"` — SOLID & OOP
+- `"design-patterns"` — Design Patterns
+- `"architecture"` — Arquitetura
+- `"quality-testing"` — Qualidade & Testes
+- `"ai-engineering"` — Engenharia com IA
+- `"distributed-systems"` — Sistemas Distribuídos
+
+O campo `sources` é **obrigatório**. Liste apenas fontes reais consultadas. O campo `category` de cada source é opcional mas recomendado — controla o agrupamento visual no modal:
 - `"paper"` — artigo peer-reviewed ou preprint (arXiv, TACL, NeurIPS...)
 - `"docs"` — documentação oficial (Anthropic, MDN, especificações)
 - `"article"` — post técnico de referência (blogs de engenharia, pesquisa publicada por empresas)
@@ -157,3 +166,4 @@ Execute estes passos nesta ordem após terminar todos os cards:
 - [ ] **Sem repetição**: nenhum conceito central aparece em dois cards diferentes do mesmo tema.
 - [ ] **Precisão técnica**: pesquise o tema antes de escrever para garantir que as afirmações são corretas.
 - [ ] **Fontes**: o campo `sources` está preenchido com as URLs reais consultadas durante a pesquisa. Mínimo 3 fontes.
+- [ ] **Índice**: adicione uma entrada em `public/themes/index.json` com `date`, `title`, `description` e `category` do novo tema.

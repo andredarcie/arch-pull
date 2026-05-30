@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Braces, Play } from "lucide-react";
+import { buttonClass } from "../lib/buttonClass";
 
 interface StartScreenProps {
   onStart: () => void;
@@ -25,7 +26,7 @@ export function StartScreen({ onStart }: StartScreenProps) {
       </div>
 
       <motion.button
-        className="btn-play"
+        className={buttonClass({ variant: "primary", size: "lg" })}
         onClick={onStart}
         whileHover={{ scale: 1.03 }}
         whileTap={{ scale: 0.97 }}

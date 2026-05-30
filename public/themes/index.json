@@ -1,0 +1,86 @@
+[
+  {
+    "date": "2026-05-27",
+    "title": "Single Responsibility Principle",
+    "description": "O S do SOLID: cada módulo deve ter apenas uma razão para mudar.",
+    "category": "solid-oop"
+  },
+  {
+    "date": "2026-05-28",
+    "title": "Specification-Driven Development",
+    "description": "Como escrever e refinar especificações que agentes de IA conseguem implementar com precisão.",
+    "category": "ai-engineering"
+  },
+  {
+    "date": "2026-05-29",
+    "title": "Open/Closed Principle",
+    "description": "O O do SOLID: aberto para extensão, fechado para modificação.",
+    "category": "solid-oop"
+  },
+  {
+    "date": "2026-05-30",
+    "title": "Context Engineering",
+    "description": "Como projetar o ambiente de informação de um agente de IA para obter respostas precisas e consistentes.",
+    "category": "ai-engineering"
+  },
+  {
+    "date": "2026-05-31",
+    "title": "Liskov Substitution Principle",
+    "description": "O L do SOLID: uma subclasse deve poder substituir sua classe-pai sem quebrar o programa.",
+    "category": "solid-oop"
+  },
+  {
+    "date": "2026-06-01",
+    "title": "Tool Use in AI Agents",
+    "description": "Como agentes de IA decidem quando e como chamar ferramentas, e como projetar interfaces que eles usam de forma confiável.",
+    "category": "ai-engineering"
+  },
+  {
+    "date": "2026-06-02",
+    "title": "Interface Segregation Principle",
+    "description": "O I do SOLID: clientes não devem ser forçados a depender de métodos que não usam.",
+    "category": "solid-oop"
+  },
+  {
+    "date": "2026-06-03",
+    "title": "Agentic Loops",
+    "description": "Como o ciclo planejar-agir-observar funciona em agentes autônomos, onde falha e como projetá-lo para ser confiável.",
+    "category": "ai-engineering"
+  },
+  {
+    "date": "2026-06-04",
+    "title": "Dependency Inversion Principle",
+    "description": "O D do SOLID: módulos de alto nível e de baixo nível devem depender de abstrações, nunca um do outro diretamente.",
+    "category": "solid-oop"
+  },
+  {
+    "date": "2026-06-05",
+    "title": "Test Doubles",
+    "description": "As diferenças precisas entre mock, stub, fake, spy e dummy, e quando usar cada tipo sem exagerar.",
+    "category": "quality-testing"
+  },
+  {
+    "date": "2026-06-06",
+    "title": "Dependency Injection",
+    "description": "Como passar dependências explicitamente para habilitar testes, flexibilidade e baixo acoplamento.",
+    "category": "design-patterns"
+  },
+  {
+    "date": "2026-06-07",
+    "title": "Prompt Caching",
+    "description": "Como estruturar prompts para reutilizar cache e reduzir custo e latência em chamadas repetitivas à API.",
+    "category": "ai-engineering"
+  },
+  {
+    "date": "2026-06-08",
+    "title": "Test-Driven Development",
+    "description": "Por que o ciclo vermelho-verde-refatorar importa mais do que apenas ter testes, e o que TDD revela sobre o design do código.",
+    "category": "quality-testing"
+  },
+  {
+    "date": "2026-06-09",
+    "title": "Evals for AI Agents",
+    "description": "Como projetar avaliações que detectam regressões reais em agentes de IA, além de medir comportamento de superfície.",
+    "category": "ai-engineering"
+  }
+]

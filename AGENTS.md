@@ -133,6 +133,8 @@ Cada arquivo JSON representa um tema do dia e segue a interface `DailyThemeInput
 - O campo `position` deve ser sequencial a partir de 0.
 - O campo `context` tem apenas `relevance` ("Por que preciso saber"), exibido ao usuário antes de começar. Os campos `origin` e `motivation` foram removidos.
 - O campo `sources` é **obrigatório**. Lista as fontes reais consultadas para criar o tema. Exibido ao usuário como "Embasamento científico" agrupado por categoria. O campo `category` é opcional mas recomendado: `"paper"` (peer-reviewed / arXiv), `"docs"` (documentação oficial), `"article"` (post técnico de referência). Nunca inventar URLs.
+- O campo `category` do tema é **obrigatório** e alimenta os filtros da tela "Temas anteriores". Valores: `"solid-oop"`, `"design-patterns"`, `"architecture"`, `"quality-testing"`, `"ai-engineering"`, `"distributed-systems"`.
+- Ao criar um novo tema, adicionar uma entrada em `public/themes/index.json` com `date`, `title`, `description` e `category`. Esse arquivo alimenta a tela "Temas anteriores" do app.
 
 **Ordem de corte ao reduzir um tema para 6 pares:**
 

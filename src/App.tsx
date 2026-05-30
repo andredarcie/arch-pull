@@ -2,13 +2,14 @@ import { useCallback, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { StartScreen } from "./components/StartScreen";
 import { CalendarScreen } from "./components/CalendarScreen";
+import { ArchiveScreen } from "./components/ArchiveScreen";
 import { SwipeCard } from "./components/SwipeCard";
 import { ScoreScreen } from "./components/ScoreScreen";
 import type { Card, Pair } from "./data/pairs";
 import { isPair } from "./data/pairs";
 import { config } from "./config";
 
-type Screen = "start" | "calendar" | "game" | "score";
+type Screen = "start" | "calendar" | "archive" | "game" | "score";
 
 const PASS_THRESHOLD = config.passThreshold;
 const ACTIVITY_KEY = "archpull-activity";
@@ -42,6 +43,7 @@ function App() {
   const [activeDays, setActiveDays] = useState<string[]>(loadActivity);
 
   const goToCalendar = useCallback(() => setScreen("calendar"), []);
+  const goToArchive = useCallback(() => setScreen("archive"), []);
 
   const startTheme = useCallback((themeCards: Card[], title: string) => {
     setCards(themeCards);
@@ -76,6 +78,14 @@ function App() {
             key="calendar"
             activeDays={activeDays}
             onStart={startTheme}
+            onArchive={goToArchive}
+          />
+        )}
+        {screen === "archive" && (
+          <ArchiveScreen
+            key="archive"
+            onStart={startTheme}
+            onBack={goToCalendar}
           />
         )}
         {screen === "game" && (

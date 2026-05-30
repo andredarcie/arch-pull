@@ -1,0 +1,117 @@
+{
+  "date": "2026-06-08",
+  "title": "Test-Driven Development",
+  "description": "Por que o ciclo vermelho-verde-refatorar importa mais do que apenas ter testes, e o que TDD revela sobre o design do código.",
+  "category": "quality-testing",
+  "context": {
+    "relevance": "TDD é frequentemente mal praticado: escreve-se o teste depois do código, pula-se a fase de refatoração ou acumula-se casos demais antes de ver o verde. O resultado é uma suite de testes que dá falsa confiança sem os benefícios de design que TDD realmente oferece. Entender o ciclo como disciplina, não como burocracia, muda a forma como código é projetado desde o início."
+  },
+  "sources": [
+    {
+      "title": "Test-Driven Development: By Example (Kent Beck, Addison-Wesley, 2002)",
+      "url": "https://www.oreilly.com/library/view/test-driven-development/0321146530/",
+      "category": "article"
+    },
+    {
+      "title": "TDD Manifesto: The Three Laws of TDD (Robert C. Martin, 2014)",
+      "url": "https://www.butunclebob.com/ArticleS.UncleBob.TheThreeRulesOfTdd",
+      "category": "article"
+    },
+    {
+      "title": "Is TDD Dead? (Martin Fowler, DHH, Kent Beck, 2014)",
+      "url": "https://martinfowler.com/articles/is-tdd-dead/",
+      "category": "article"
+    },
+    {
+      "title": "Mocks Aren't Stubs (Martin Fowler, 2007)",
+      "url": "https://martinfowler.com/articles/mocksArentStubs.html",
+      "category": "article"
+    }
+  ],
+  "cards": [
+    {
+      "kind": "info",
+      "position": 0,
+      "front": "O que é TDD na prática e como o ciclo vermelho-verde-refatorar funciona?",
+      "back": "TDD é uma disciplina de desenvolvimento em três fases obrigatórias:\n\n```\nVermelho   → escreva um teste que falha (e só ele)\nVerde      → escreva o mínimo de código para o teste passar\nRefatorar  → limpe o código sem mudar comportamento\n```\n\nExemplo em TypeScript:\n\n```typescript\n// 1. Vermelho: teste falha porque a função não existe\nit('returns 0 for empty array', () => {\n  expect(sum([])).toBe(0);\n});\n\n// 2. Verde: implementação mínima\nfunction sum(nums: number[]): number {\n  return nums.reduce((acc, n) => acc + n, 0);\n}\n\n// 3. Refatorar: o código já está limpo, nada a fazer aqui\n```\n\nA sequência importa: quem escreve o teste depois do código nunca vê o vermelho e perde a verificação de que o teste realmente detecta falhas."
+    },
+    {
+      "kind": "pair",
+      "position": 1,
+      "conceptA": "Escrever 10 testes antes de qualquer implementação",
+      "conceptB": "Ciclo vermelho-verde-refatorar",
+      "match": false,
+      "explanation": "Não combinam. TDD prescreve um teste por vez: vermelho, verde, refatorar, depois o próximo teste. Acumular vários testes antes de implementar cria um backlog difícil de depurar e ignora o feedback incremental que o ciclo fornece. A disciplina do ciclo é justamente a granularidade: um passo pequeno de cada vez."
+    },
+    {
+      "kind": "info",
+      "position": 2,
+      "front": "Por que é errado pular a fase de refatoração após o verde?",
+      "back": "Verde significa 'funciona', não 'está bem escrito'. A fase de refatoração é onde o design melhora, amparado pela segurança dos testes.\n\nSem refatorar:\n\n```typescript\n// Verde, mas ruim: lógica duplicada e nome sem significado\nfunction calc(a: number, b: number, t: string) {\n  if (t === 'add') return a + b;\n  if (t === 'sub') return a - b;\n  if (t === 'mul') return a * b;\n}\n```\n\nApós refatorar:\n\n```typescript\n// Mesmos testes passam, design melhorou\nconst operations: Record<string, (a: number, b: number) => number> = {\n  add: (a, b) => a + b,\n  subtract: (a, b) => a - b,\n  multiply: (a, b) => a * b,\n};\n\nfunction calculate(a: number, b: number, op: string) {\n  return operations[op](a, b);\n}\n```\n\nQuem nunca refatora acumula dívida técnica mesmo praticando TDD, porque o ciclo está incompleto."
+    },
+    {
+      "kind": "pair",
+      "position": 3,
+      "conceptA": "Código que passa nos testes sem refatoração",
+      "conceptB": "Design limpo garantido pelo TDD",
+      "match": false,
+      "explanation": "Não combinam. Os testes garantem comportamento, não qualidade de design. A fase de refatoração é o único momento em que o design é intencionalmente melhorado, com a rede de segurança dos testes ativa. Sem ela, TDD produz código testado mas não necessariamente bem estruturado."
+    },
+    {
+      "kind": "info",
+      "position": 4,
+      "front": "Como TDD funciona como ferramenta de design, além de cobertura de testes?",
+      "back": "Escrever o teste antes força o desenvolvedor a pensar na interface pública do código antes da implementação.\n\nSe o teste for difícil de escrever, o design costuma estar errado:\n\n```typescript\n// Teste difícil: construtor com muitas dependências sinaliza acoplamento\nconst svc = new OrderService(\n  new DB(), new Mailer(), new Logger(), new Cache(), new Metrics()\n);\n\n// Teste fácil: dependências são injetadas como interfaces\nconst svc = new OrderService({ db: fakeDb, mailer: fakeMailer });\n```\n\nTDD torna o custo do design ruim imediato: você sente a dor no momento de escrever o teste, não meses depois. Por isso, código desenvolvido com TDD rigoroso tende a ter acoplamento menor e interfaces mais claras, não por disciplina extra, mas porque o processo penaliza designs ruins antes de qualquer linha de implementação."
+    },
+    {
+      "kind": "pair",
+      "position": 5,
+      "conceptA": "Teste unitário difícil de configurar e inicializar",
+      "conceptB": "Sinal de acoplamento excessivo no design",
+      "match": true,
+      "explanation": "Combinam. Em TDD, a dificuldade de escrever o teste é informação sobre o design: classes com muitos construtores, dependências concretas ou responsabilidades misturadas tornam os testes verbosos. O teste funciona como primeiro cliente do código, revelando problemas de acoplamento antes da implementação estar completa."
+    },
+    {
+      "kind": "info",
+      "position": 6,
+      "front": "Qual é o erro de escrever testes depois do código em vez de antes?",
+      "back": "Escrever testes depois do código costuma produzir testes que confirmam a implementação, não que especificam o comportamento.\n\nProblemas comuns:\n\n- O teste nunca fica vermelho: se a função já existe e funciona, o teste passa de imediato sem verificar se detectaria uma regressão\n- O teste reflete os detalhes internos da implementação, tornando refatorações frágeis\n- O design já está fixo: o feedback de design do TDD se perde porque o código já foi escrito\n\n```typescript\n// Teste escrito depois: testa o 'como', não o 'o quê'\nit('calls repository.findById with the given id', () => {\n  svc.getUser(42);\n  expect(repo.findById).toHaveBeenCalledWith(42); // detalhe interno\n});\n\n// Teste escrito antes: testa o comportamento observável\nit('returns user when id exists', async () => {\n  const user = await svc.getUser(42);\n  expect(user.id).toBe(42);\n});\n```\n\nTestes escritos depois dão cobertura de linha, mas não a segurança nem o feedback de design que TDD oferece."
+    },
+    {
+      "kind": "pair",
+      "position": 7,
+      "conceptA": "Suite de testes com alta cobertura de linhas",
+      "conceptB": "Código livre de regressões em produção",
+      "match": false,
+      "explanation": "Não combinam necessariamente. Cobertura de linhas mede quais linhas foram executadas durante os testes, não se os comportamentos críticos estão verificados. Testes que executam o código sem fazer asserções relevantes inflam a cobertura sem garantir nada. O que protege contra regressão é a qualidade das asserções, não o percentual de cobertura."
+    },
+    {
+      "kind": "info",
+      "position": 8,
+      "front": "Como decidir o tamanho certo de cada passo no ciclo TDD?",
+      "back": "Kent Beck propõe passos tão pequenos quanto necessário para manter confiança, e tão grandes quanto a situação permitir.\n\nReferência prática:\n\n```\nPasso pequeno demais → teste trivial sem valor\nPasso grande demais → falha difícil de depurar\n```\n\nQuando um teste falha após um passo grande, há muitos candidatos para a causa. Passos pequenos localizam o problema imediatamente.\n\nSinal de passo grande demais:\n- O teste falha e você não sabe por onde começar a depurar\n- Você escreve mais de 10 linhas de implementação para um único teste\n\nSinal de passo pequeno demais:\n- O teste nunca poderia falhar por nenhuma implementação razoável\n- Você está testando detalhes que nenhum usuário do código se importaria\n\nA calibragem muda com experiência: iniciantes se beneficiam de passos menores até desenvolverem intuição para quando acelerar."
+    },
+    {
+      "kind": "pair",
+      "position": 9,
+      "conceptA": "Falha de teste após implementação de um único comportamento",
+      "conceptB": "Depuração rápida e localizada",
+      "match": true,
+      "explanation": "Combinam. TDD com passos pequenos garante que, quando um teste falha, o escopo de investigação é mínimo: apenas o código escrito desde o último verde. Isso transforma a depuração em verificação pontual, ao contrário de suites grandes onde uma falha pode ter dezenas de causas possíveis."
+    },
+    {
+      "kind": "info",
+      "position": 10,
+      "front": "Quando TDD não é a abordagem certa?",
+      "back": "TDD funciona melhor quando o comportamento esperado é conhecido antes de implementar. Há situações em que isso não se aplica:\n\n- **Exploração**: quando você não sabe ainda o que o código deve fazer, escrever testes antes é prematuro. Spike (código exploratório descartável) vem primeiro, TDD depois\n- **UI e interações visuais**: comportamento visual é difícil de especificar em testes antes de ver o resultado\n- **Integração com sistemas externos não determinísticos**: APIs de terceiros com comportamento variável dificultam testes antecipados\n\nNesses casos, a prática mais útil pode ser:\n\n```\nExplore → Prototype → Specify → Test → Implement\n```\n\nTDD é uma ferramenta poderosa, mas pressupõe que você já sabe o que o código deve fazer. Quando essa premissa não vale, insistir no ciclo produz testes frágeis ou design artificialmente restrito pelo teste."
+    },
+    {
+      "kind": "pair",
+      "position": 11,
+      "conceptA": "TDD aplicado a código de exploração (spike)",
+      "conceptB": "Especificação clara do comportamento esperado",
+      "match": false,
+      "explanation": "Não combinam. Spikes existem para descobrir como algo funciona, não para implementar comportamento já conhecido. Aplicar TDD a um spike força a escrita de testes para um comportamento que ainda não foi entendido, resultando em testes que especificam prematuramente. A separação correta é: spike para aprender, depois TDD para implementar com o conhecimento adquirido."
+    }
+  ]
+}

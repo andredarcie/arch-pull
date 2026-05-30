@@ -2,9 +2,27 @@
   "date": "2026-05-27",
   "title": "Single Responsibility Principle",
   "description": "O S do SOLID: cada módulo deve ter apenas uma razão para mudar.",
+  "category": "solid-oop",
   "context": {
     "relevance": "SRP é o princípio mais cobrado em entrevistas sobre SOLID. Saber a definição precisa (razão para mudar, não apenas \"fazer uma coisa\") separa candidatos que decoraram a frase de quem entende o princípio de verdade. No dia a dia, classes que seguem SRP são triviais de testar, fáceis de reutilizar e raramente causam regressões inesperadas."
   },
+  "sources": [
+    {
+      "title": "Design Principles and Design Patterns (Robert C. Martin, 2000)",
+      "url": "https://web.archive.org/web/20150906155800/http://www.objectmentor.com/resources/articles/Principles_and_Patterns.pdf",
+      "category": "paper"
+    },
+    {
+      "title": "The Single Responsibility Principle (Robert C. Martin, Clean Coder Blog, 2014)",
+      "url": "https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html",
+      "category": "article"
+    },
+    {
+      "title": "Single-responsibility principle (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Single-responsibility_principle",
+      "category": "docs"
+    }
+  ],
   "cards": [
     {
       "kind": "info",

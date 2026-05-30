@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Pair } from "../data/pairs";
 import { CheckCircle2, XCircle, RotateCcw, Share2, ClipboardCheck, Check, X } from "lucide-react";
+import { buttonClass } from "../lib/buttonClass";
 
 interface ScoreScreenProps {
   score: number;
@@ -165,7 +166,7 @@ export function ScoreScreen({
         transition={{ delay: 0.5 }}
       >
         <motion.button
-          className="btn-score btn-score--primary"
+          className={buttonClass({ variant: "primary", size: "md" })}
           onClick={() => void handleShare()}
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
@@ -176,7 +177,7 @@ export function ScoreScreen({
           }
         </motion.button>
         <motion.button
-          className="btn-score btn-score--ghost"
+          className={buttonClass({ variant: "ghost", size: "md" })}
           onClick={onRestart}
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}

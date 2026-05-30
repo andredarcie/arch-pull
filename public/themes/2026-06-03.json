@@ -1,0 +1,122 @@
+{
+  "date": "2026-06-03",
+  "title": "Agentic Loops",
+  "description": "Como o ciclo planejar-agir-observar funciona em agentes autônomos, onde falha e como projetá-lo para ser confiável.",
+  "category": "ai-engineering",
+  "context": {
+    "relevance": "Agentes autônomos não executam tarefas em linha reta: eles iteram em loops de planejamento, ação e observação. Entender esse ciclo é essencial para quem projeta ou supervisiona sistemas baseados em LLMs, porque a maioria das falhas catastróficas (loops infinitos, objetivos desviados, erros compostos) vem de loops mal projetados, não de modelos ruins. Engenheiros que entendem como loops falham conseguem adicionar guardrails, condições de parada e pontos de inspeção antes de colocar agentes em produção."
+  },
+  "sources": [
+    {
+      "title": "ReAct: Synergizing Reasoning and Acting in Language Models (Yao et al., ICLR 2023)",
+      "url": "https://arxiv.org/abs/2210.03629",
+      "category": "paper"
+    },
+    {
+      "title": "Reflexion: Language Agents with Verbal Reinforcement Learning (Shinn et al., NeurIPS 2023)",
+      "url": "https://arxiv.org/abs/2303.11366",
+      "category": "paper"
+    },
+    {
+      "title": "Building effective agents (Anthropic Engineering, 2024)",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "category": "docs"
+    },
+    {
+      "title": "Agentic AI: A Brief Overview (arXiv, 2025)",
+      "url": "https://arxiv.org/abs/2503.23048",
+      "category": "paper"
+    },
+    {
+      "title": "The Problem with Agentic Loops (Hamel Husain, 2024)",
+      "url": "https://hamel.dev/blog/posts/agentloop/",
+      "category": "article"
+    }
+  ],
+  "cards": [
+    {
+      "kind": "info",
+      "position": 0,
+      "front": "O que é um agentic loop e como ele se parece na prática?",
+      "back": "Um agentic loop é o ciclo que um agente autônomo repete até completar uma tarefa: planejar uma ação, executá-la com uma ferramenta, observar o resultado e decidir o próximo passo.\n\n```\nwhile not done:\n    thought  = model.think(goal, history)\n    action   = model.choose_tool(thought)\n    result   = tool.run(action)\n    history += [thought, action, result]\n    done     = model.should_stop(history)\n```\n\nEssa estrutura é o núcleo do padrão ReAct (Yao et al., 2023). Cada iteração consome tokens e tempo, portanto a condição de parada e a qualidade de cada observação são tão importantes quanto a ação em si."
+    },
+    {
+      "kind": "pair",
+      "position": 1,
+      "conceptA": "Agente que só executa ações sem registrar observações",
+      "conceptB": "Loop convergindo para o objetivo correto",
+      "match": false,
+      "explanation": "Não combinam. A fase de observação é o que permite ao agente ajustar o plano com base no que aconteceu. Sem registrar e interpretar o resultado de cada ação, o agente perde a capacidade de detectar desvios e repetiria as mesmas ações independentemente do feedback, um dos padrões mais comuns de loop infinito."
+    },
+    {
+      "kind": "info",
+      "position": 2,
+      "front": "Como um loop agentico pode entrar em loop infinito?",
+      "back": "As causas mais comuns são:\n\n1. **Condição de parada nunca satisfeita**: o agente verifica `task_complete()` mas a ferramenta nunca retorna o estado esperado.\n2. **Observação ignorada**: o agente não usa o resultado da ação anterior para atualizar o plano.\n3. **Objetivo ambíguo**: sem critério claro de sucesso, o agente gera ações indefinidamente.\n\n```python\n# Ruim: condição de parada depende de estado externo sem timeout\nwhile not db.record_exists(id):\n    agent.create_record(id)   # pode nunca criar por permissão\n\n# Bom: limite explícito de iterações como guardrail\nfor attempt in range(MAX_STEPS):\n    if db.record_exists(id): break\n    agent.create_record(id)\nelse:\n    raise AgentLoopError(\"Max steps reached\")\n```\n\nUm `MAX_STEPS` explícito é o guardrail mais simples e mais frequentemente esquecido."
+    },
+    {
+      "kind": "pair",
+      "position": 3,
+      "conceptA": "Critério de sucesso definido antes do loop",
+      "conceptB": "Condição de parada confiável",
+      "match": true,
+      "explanation": "Combinam. A condição de parada do loop precisa checar algo concreto e mensurável. Sem um critério de sucesso definido antes de iniciar, o agente pode declarar a tarefa concluída de forma prematura, continuar além do necessário ou nunca parar. Definir o critério antecipadamente também força a verificar se ele é verificável com as ferramentas disponíveis."
+    },
+    {
+      "kind": "info",
+      "position": 4,
+      "front": "O que são erros compostos em loops agenticos e por que são difíceis de depurar?",
+      "back": "Erros compostos ocorrem quando a saída incorreta de uma iteração alimenta a próxima, amplificando o desvio a cada ciclo.\n\n```\nIteração 1: extrai dado errado do arquivo (erro pequeno)\nIteração 2: usa dado errado para gerar SQL (erro maior)\nIteração 3: executa SQL incorreto e salva resultado no banco (dano)\nIteração 4: usa resultado do banco para próxima ação...\n```\n\nSão difíceis de depurar porque:\n- O erro original pode estar muito atrás no histórico\n- Cada passo parece localmente razoável dado o input que recebeu\n- O log mostra ações válidas executadas sobre premissas erradas\n\nPontos de verificação humana (human-in-the-loop checkpoints) após ações irreversíveis são a principal mitigação."
+    },
+    {
+      "kind": "pair",
+      "position": 5,
+      "conceptA": "Loop com 20 iterações e log completo de cada passo",
+      "conceptB": "Fácil de depurar quando falha",
+      "match": false,
+      "explanation": "Não combinam. Log completo ajuda, mas um loop com muitas iterações produz histórico longo onde erros compostos se disfarçam de ações localmente coerentes. Depurabilidade real vem de loops curtos com checkpoints explícitos, não de volume de log. Mais log sem estrutura pode até dificultar encontrar a iteração onde o desvio começou."
+    },
+    {
+      "kind": "info",
+      "position": 6,
+      "front": "Como projetar um loop agentico que seja fácil de depurar?",
+      "back": "Quatro práticas que tornam loops inspecionáveis:\n\n```markdown\n1. Passos pequenos e verificáveis\n   - Cada ação deve ter um resultado observável e verificável\n   - Evite ações que combinam múltiplos efeitos colaterais\n\n2. Histórico estruturado\n   - Registre thought, action, result separadamente por iteração\n   - Inclua timestamp e número da iteração\n\n3. Checkpoints antes de ações irreversíveis\n   - Delete, deploy, send email: peça confirmação ou pause o loop\n\n4. Limite de iterações sempre presente\n   - MAX_STEPS é documentação do comportamento esperado, não só um guardrail\n```\n\nUm loop bem projetado permite responder \"em qual iteração o plano começou a divergir?\" sem precisar reler todo o histórico."
+    },
+    {
+      "kind": "pair",
+      "position": 7,
+      "conceptA": "Agente que pausa antes de ações destrutivas",
+      "conceptB": "Human-in-the-loop checkpoint",
+      "match": true,
+      "explanation": "Combinam. Pausar antes de ações irreversíveis (deletar dados, enviar mensagens, fazer deploy) é a implementação concreta de um human-in-the-loop checkpoint. Sem essa pausa, erros compostos de iterações anteriores podem causar dano antes que um humano tenha chance de intervir."
+    },
+    {
+      "kind": "info",
+      "position": 8,
+      "front": "O que é goal drift em loops agenticos e como ele ocorre?",
+      "back": "Goal drift é quando o agente gradualmente substitui o objetivo original por um subobjetivo mais fácil de otimizar, sem perceber.\n\nExemplo clássico:\n```\nObjetivo: \"encontre e corrija o bug que causa falha no login\"\n\nIteração 1: busca o arquivo de login\nIteração 2: encontra varios problemas de estilo no arquivo\nIteração 3: começa a corrigir estilo (mais fácil de verificar)\nIteração 4: declara tarefa concluída após reformatar o código\n(bug original intocado)\n```\n\nOcorre porque o modelo otimiza para parecer que progrediu, especialmente quando o objetivo original é ambíguo ou de difícil verificação. Incluir o objetivo original explicitamente em cada iteração do prompt reduz o drift."
+    },
+    {
+      "kind": "pair",
+      "position": 9,
+      "conceptA": "Objetivo original incluído em cada iteração do prompt",
+      "conceptB": "Agente resistente a goal drift",
+      "match": true,
+      "explanation": "Combinam. O modelo não tem memória automática do objetivo entre iterações: ele processa o histórico acumulado, onde o objetivo original pode ficar enterrado no meio do contexto. Repetir o objetivo a cada iteração, especialmente no início ou no final do prompt, mantém o critério de sucesso saliente e reduz a probabilidade de o agente desviar para subobjetivos mais fáceis."
+    },
+    {
+      "kind": "info",
+      "position": 10,
+      "front": "Quando um loop agentico deve ser substituído por um pipeline linear?",
+      "back": "Loops são adequados quando o número de passos necessários é desconhecido de antemão. Quando o fluxo é previsível, um pipeline linear costuma ser mais confiável.\n\n```markdown\n# Use loop quando:\n- Número de iterações depende do ambiente (ex: debugar até os testes passarem)\n- O agente precisa decidir o próximo passo com base no resultado anterior\n- O problema é exploratório\n\n# Use pipeline quando:\n- Os passos são fixos e conhecidos (ex: extrair, transformar, carregar)\n- Cada etapa tem input e output bem definidos\n- Falhas em um passo devem parar o fluxo (não tentar de novo)\n```\n\nA complexidade de loops (condição de parada, erros compostos, goal drift) só se justifica quando a flexibilidade do loop é realmente necessária. Em muitos casos, uma sequência de chamadas diretas é mais simples, mais testável e mais previsível."
+    },
+    {
+      "kind": "pair",
+      "position": 11,
+      "conceptA": "Número de passos desconhecido antes de executar",
+      "conceptB": "Pipeline linear com etapas fixas",
+      "match": false,
+      "explanation": "Não combinam. Pipelines lineares pressupõem que as etapas e sua ordem são conhecidas antes da execução. Quando o número de passos depende do ambiente ou do resultado de cada ação, a rigidez do pipeline se torna um problema: ou o pipeline falha cedo demais, ou precisa ser estendido com tanta lógica condicional que passa a imitar um loop de qualquer forma."
+    }
+  ]
+}

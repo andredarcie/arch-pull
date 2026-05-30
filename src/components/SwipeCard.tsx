@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSwipe } from "../hooks/useSwipe";
 import type { Card, Pair, SourceCategory } from "../data/pairs";
 import { isPair, isContext } from "../data/pairs";
+import { buttonClass } from "../lib/buttonClass";
 import { X, Check, ArrowRight, Layers, Box, GraduationCap, Brain, Zap, Heart, BookOpen, ExternalLink } from "lucide-react";
 import { RichText } from "./RichText";
 
@@ -330,13 +331,13 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
                   </div>
                 </div>
                 {currentCard.sources && currentCard.sources.length > 0 && (
-                  <button className="btn-sources" onClick={() => setShowSources(true)}>
+                  <button className={buttonClass({ variant: "subtle", size: "sm", fullWidth: true, className: "btn-sources" })} onClick={() => setShowSources(true)}>
                     <BookOpen size={13} strokeWidth={2} />
                     Embasamento científico
                   </button>
                 )}
                 <motion.button
-                  className="btn-play context-card-btn"
+                  className={buttonClass({ variant: "primary", size: "lg", className: "context-card-btn" })}
                   onClick={handleInfoContinue}
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
@@ -357,7 +358,7 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
                       <div className="sources-modal-header">
                         <BookOpen size={13} strokeWidth={2} />
                         <span className="sources-modal-title">Embasamento científico</span>
-                        <button className="sources-modal-close" onClick={() => setShowSources(false)}>
+                        <button className={buttonClass({ variant: "icon", className: "sources-modal-close" })} onClick={() => setShowSources(false)}>
                           <X size={16} strokeWidth={2} />
                         </button>
                       </div>
@@ -389,7 +390,7 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
                           ))
                         }
                       </div>
-                      <button className="sources-back-btn" onClick={() => setShowSources(false)}>
+                      <button className={buttonClass({ variant: "subtle", size: "md", fullWidth: true, className: "sources-back-btn" })} onClick={() => setShowSources(false)}>
                         Voltar
                       </button>
                     </motion.div>
@@ -490,7 +491,7 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
                   <RichText text={currentCard.back} />
                 </div>
                 <motion.button
-                  className="btn-play info-card-btn"
+                  className={buttonClass({ variant: "primary", size: "lg", className: "info-card-btn" })}
                   onClick={handleInfoContinue}
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
@@ -507,7 +508,7 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
       {isPair(currentCard) && (
         <div className="action-buttons">
           <motion.button
-            className="btn-action btn-nope"
+            className={buttonClass({ variant: "secondary", className: "btn-action" })}
             onClick={() => handleAnswer(false)}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.92 }}
@@ -517,7 +518,7 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
             Não combina
           </motion.button>
           <motion.button
-            className="btn-action btn-like"
+            className={buttonClass({ variant: "secondary", className: "btn-action" })}
             onClick={() => handleAnswer(true)}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.92 }}
@@ -574,7 +575,7 @@ export function SwipeCard({ cards, onFinish }: SwipeCardProps) {
               </div>
               <p className="explanation-text">{currentCard.explanation}</p>
               <motion.button
-                className="btn-play explanation-btn"
+                className={buttonClass({ variant: "primary", size: "lg", className: "explanation-btn" })}
                 onClick={handleLearnedIt}
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
