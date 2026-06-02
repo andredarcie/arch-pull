@@ -8,6 +8,7 @@ import { ScoreScreen } from "./components/ScoreScreen";
 import type { Card, Pair } from "./data/pairs";
 import { isPair } from "./data/pairs";
 import { config } from "./config";
+import type { ThemeCategory } from "./lib/theme";
 import { recordWrongPairs, hasWeaknesses, buildWeaknessSession, WEAKNESS_SESSION_TITLE } from "./lib/weaknesses";
 
 type Screen = "start" | "calendar" | "archive" | "game" | "score";
@@ -40,6 +41,7 @@ function App() {
   const [finalMaxCombo, setFinalMaxCombo] = useState(0);
   const [finalElapsed, setFinalElapsed] = useState(0);
   const [themeTitle, setThemeTitle] = useState("");
+  const [themeCategory, setThemeCategory] = useState<ThemeCategory | undefined>(undefined);
   const [isWeaknessSession, setIsWeaknessSession] = useState(false);
   const [gameStartedAt, setGameStartedAt] = useState<number | null>(null);
   const [activeDays, setActiveDays] = useState<string[]>(loadActivity);
@@ -53,14 +55,16 @@ function App() {
     if (cards.length === 0) return;
     setCards(cards);
     setThemeTitle(WEAKNESS_SESSION_TITLE);
+    setThemeCategory(undefined);
     setIsWeaknessSession(true);
     setGameStartedAt(Date.now());
     setScreen("game");
   }, []);
 
-  const startTheme = useCallback((themeCards: Card[], title: string) => {
+  const startTheme = useCallback((themeCards: Card[], title: string, category?: ThemeCategory) => {
     setCards(themeCards);
     setThemeTitle(title);
+    setThemeCategory(category);
     setIsWeaknessSession(false);
     setGameStartedAt(Date.now());
     setScreen("game");
@@ -119,6 +123,7 @@ function App() {
             wrongPairs={wrongPairs}
             onRestart={goToCalendar}
             nodeTitle={themeTitle}
+            category={themeCategory}
             passed={passed}
             maxCombo={finalMaxCombo}
             elapsedSeconds={finalElapsed}

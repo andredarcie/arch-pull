@@ -3,12 +3,12 @@ import { motion } from "framer-motion";
 import type { Card } from "../data/pairs";
 import { CalendarDays, Play, Flame, History, CheckCircle2, Zap } from "lucide-react";
 import { buttonClass } from "../lib/buttonClass";
-import type { DailyTheme } from "../lib/theme";
+import type { DailyTheme, ThemeCategory } from "../lib/theme";
 import { mapToCards } from "../lib/theme";
 
 interface CalendarScreenProps {
   activeDays: string[];
-  onStart: (cards: Card[], themeTitle: string) => void;
+  onStart: (cards: Card[], themeTitle: string, category?: ThemeCategory) => void;
   onArchive: () => void;
   onReviewWeaknesses: () => void;
   hasWeaknesses: boolean;
@@ -117,7 +117,7 @@ export function CalendarScreen({ activeDays, onStart, onArchive, onReviewWeaknes
 
   function handleStart() {
     if (!theme) return;
-    onStart(mapToCards(theme), theme.title);
+    onStart(mapToCards(theme), theme.title, theme.category);
   }
 
   return (

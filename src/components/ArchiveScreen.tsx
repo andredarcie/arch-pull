@@ -28,7 +28,7 @@ function chipVars(style: ChipStyle): React.CSSProperties {
 }
 
 interface ArchiveScreenProps {
-  onStart: (cards: Card[], themeTitle: string) => void;
+  onStart: (cards: Card[], themeTitle: string, category?: ThemeCategory) => void;
   onBack: () => void;
 }
 
@@ -79,7 +79,7 @@ export function ArchiveScreen({ onStart, onBack }: ArchiveScreenProps) {
       const res = await fetch(`${import.meta.env.BASE_URL}themes/${date}.json`, { cache: "no-store" });
       if (!res.ok) return;
       const theme = await res.json() as DailyTheme;
-      onStart(mapToCards(theme), title);
+      onStart(mapToCards(theme), title, theme.category);
     } finally {
       setStarting(null);
     }

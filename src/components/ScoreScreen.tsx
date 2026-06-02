@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { Pair } from "../data/pairs";
 import { CheckCircle2, XCircle, RotateCcw, Share2, ClipboardCheck, Check, X } from "lucide-react";
 import { buttonClass } from "../lib/buttonClass";
+import type { ThemeCategory } from "../lib/theme";
 
 interface ScoreScreenProps {
   score: number;
@@ -10,10 +11,23 @@ interface ScoreScreenProps {
   wrongPairs: Pair[];
   onRestart: () => void;
   nodeTitle?: string;
+  category?: ThemeCategory;
   passed?: boolean;
   maxCombo?: number;
   elapsedSeconds?: number;
 }
+
+// Provocative call to action tied to each theme, to bait whoever receives the share.
+const SHARE_TAUNTS: Record<ThemeCategory, string> = {
+  "ai-engineering": "Estou virando especialista em Engenharia de IA. E você, vai ficar para trás?",
+  "solid-oop": "Já domino os princípios SOLID. Seu código ainda é uma bola de lama?",
+  "design-patterns": "Aprendi os Design Patterns que todo mundo finge conhecer na entrevista. E você?",
+  "architecture": "Estou pensando como arquiteto de software. Você ainda empilha gambiarra?",
+  "quality-testing": "Escrevo testes que pegam bug de verdade. Os seus existem?",
+  "distributed-systems": "Entendo sistemas distribuídos. Você ainda acha que a rede é confiável?",
+};
+
+const DEFAULT_TAUNT = "Estou treinando fundamentos de software todo dia. E você, parou?";
 
 function getMessage(percentage: number): string {
   if (percentage === 100) return "Perfeito! Você é um arquiteto nato!";
@@ -36,6 +50,7 @@ export function ScoreScreen({
   wrongPairs,
   onRestart,
   nodeTitle,
+  category,
   passed,
   maxCombo = 0,
   elapsedSeconds = 0,
@@ -56,11 +71,12 @@ export function ScoreScreen({
     const aiLine =
       percentage === 100 ? "Gabarito perfeito. Zero ajuda de IA." :
       percentage >= 80   ? "Consegui sem ajuda de IA." :
-      percentage >= 60   ? "Quase tudo na memoria, sem IA." :
-                           "Sem ChatGPT, sem cola.";
-    const comboLine = maxCombo >= 2 ? `\nCombo maximo: ${maxCombo}x` : "";
+      percentage >= 60   ? "Quase tudo na memória, sem IA." :
+                           "Sem IA, sem cola.";
+    const comboLine = maxCombo >= 2 ? `\nCombo máximo: ${maxCombo}x` : "";
     const timeLine = elapsedSeconds > 0 ? `\nTempo: ${formatElapsed(elapsedSeconds)}` : "";
-    const text = `Completei "${nodeTitle ?? "Arch Pull"}" no Arch Pull!\nAcertei ${score}/${total} (${percentage}%)${comboLine}${timeLine}\n${aiLine}\n\nTe desafio tambem: https://andredarcie.github.io/arch-pull/`;
+    const taunt = category ? SHARE_TAUNTS[category] : DEFAULT_TAUNT;
+    const text = `Completei "${nodeTitle ?? "Arch Pull"}" no Arch Pull!\nAcertei ${score}/${total} (${percentage}%)${comboLine}${timeLine}\n${aiLine}\n\n${taunt}\nAceita o desafio? https://andredarcie.github.io/arch-pull/`;
     if (navigator.share) {
       await navigator.share({ text }).catch(() => {});
     } else {

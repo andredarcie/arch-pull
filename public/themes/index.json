@@ -31,8 +31,8 @@
   },
   {
     "date": "2026-06-01",
-    "title": "Tool Use in AI Agents",
-    "description": "Como agentes de IA decidem quando e como chamar ferramentas, e como projetar interfaces que eles usam de forma confiável.",
+    "title": "Verification Loops for AI Agents",
+    "description": "Por que dar ao agente um meio de verificar o próprio trabalho (testes, build, screenshot) é a prática mais importante ao trabalhar com IA.",
     "category": "ai-engineering"
   },
   {
